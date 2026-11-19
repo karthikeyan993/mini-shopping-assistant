@@ -6,7 +6,7 @@ import time
 import numpy as np
 import openai
 
-from .config import EMBED_DIM, EMBED_MODEL, client
+from .config import CHAT_MODEL, EMBED_DIM, EMBED_MODEL, FALLBACK_MODEL, client
 
 # Worth retrying: rate limits (429), timeouts, dropped connections, server errors (5xx).
 # Not worth retrying: 400 (our request is wrong), 401/403 (bad key).
@@ -47,3 +47,19 @@ def json_call(model: str, system: str, user: str, schema: dict, name: str = "res
         **kw,
     ))
     return json.loads(resp.choices[0].message.content)
+
+
+def chat(messages: list[dict], tools: list[dict] | None = None, **kw):
+    """One chat completion with tools. If the main model keeps failing (overloaded, rate-limited, timing out),
+    fall back to a second model: the same idea a gateway such as LiteLLM implements with routing rules.
+    Returns (response, model_used)."""
+    last = None
+    for model in dict.fromkeys([CHAT_MODEL, FALLBACK_MODEL]):  # de-duplicated, order kept
+        try:
+            resp = with_retries(lambda: client().chat.completions.create(
+                model=model, messages=messages, tools=tools or None, temperature=0.2, **kw), attempts=3)
+            return resp, model
+        except RETRYABLE as e:
+            print(f"  {model} unavailable ({type(e).__name__}); falling back")
+            last = e
+    raise last

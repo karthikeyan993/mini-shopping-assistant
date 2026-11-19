@@ -50,6 +50,37 @@ def cmd_explain_sql(args):
         print(row["detail"])
 
 
+def _print_turn(r):
+    for t in r.trace:
+        if "tool" in t:
+            err = f"  ERROR {t['error']}" if t.get("error") else ""
+            print(f"  · {t['tool']}({json.dumps(t['args'], ensure_ascii=False)}) {t['ms']} ms{err}")
+        else:
+            print(f"  · {t}")
+    print(f"\nAssistant: {r.answer}")
+    print(f"  [{r.seconds}s · {r.usage['prompt']} prompt + {r.usage['completion']} completion tokens · "
+          f"{len(r.models)} model calls ({', '.join(dict.fromkeys(r.models))})]\n")
+
+
+def cmd_ask(args):
+    """One or more messages as consecutive turns of one conversation."""
+    from .agent import Session, turn
+    conn = db.connect(DB_PATH)
+    session = Session(user_id=args.user)
+    for m in args.messages:
+        print(f"You ({args.user}): {m}")
+        _print_turn(turn(session, m, conn))
+
+
+def cmd_chat(args):
+    from .agent import Session, turn
+    conn = db.connect(DB_PATH)
+    session = Session(user_id=args.user)
+    print(f"Chatting as {args.user}. Empty line to quit.")
+    while (m := input("You: ").strip()):
+        _print_turn(turn(session, m, conn))
+
+
 def main():
     p = argparse.ArgumentParser(prog="shop")
     sub = p.add_subparsers(required=True)
@@ -68,6 +99,13 @@ def main():
     e = sub.add_parser("explain-sql", help='query plan for filters, e.g. \'{"category": "running shoes", "in_stock": true}\'')
     e.add_argument("filters_json")
     e.set_defaults(fn=cmd_explain_sql)
+    q = sub.add_parser("ask", help="send messages to the assistant as consecutive turns")
+    q.add_argument("messages", nargs="+")
+    q.add_argument("--user", default="u1", help="the logged-in customer (u1, u2, u3)")
+    q.set_defaults(fn=cmd_ask)
+    c = sub.add_parser("chat", help="interactive chat with the assistant")
+    c.add_argument("--user", default="u1")
+    c.set_defaults(fn=cmd_chat)
     x = sub.add_parser("export-vectors", help="write model vectors to vectors/model_vectors.npz")
     x.set_defaults(fn=lambda a: print(index.export_vectors(db.connect(DB_PATH)), "vectors exported"))
     args = p.parse_args()

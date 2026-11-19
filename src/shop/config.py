@@ -9,7 +9,8 @@ from openai import OpenAI
 BASE_URL = os.environ.get("LLM_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai/")
 API_KEY = os.environ.get("GEMINI_API_KEY", "")
 
-CHAT_MODEL = os.environ.get("CHAT_MODEL", "gemini-flash-latest")        # answers, tool use
+CHAT_MODEL = os.environ.get("CHAT_MODEL", "gemini-flash-lite-latest")   # answers, tool use
+FALLBACK_MODEL = os.environ.get("FALLBACK_MODEL", "gemini-2.5-flash")     # used when CHAT_MODEL keeps failing
 FAST_MODEL = os.environ.get("FAST_MODEL", "gemini-flash-lite-latest")   # small jobs: filter extraction
 EMBED_MODEL = os.environ.get("EMBED_MODEL", "gemini-embedding-001")
 EMBED_DIM = int(os.environ.get("EMBED_DIM", "768"))                     # 3072 by default; 768 is 4x smaller

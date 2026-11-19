@@ -57,8 +57,8 @@ Point it at another model server without code changes: `LLM_BASE_URL=http://loca
 | Step | What | Status |
 |---|---|---|
 | A | Catalog, filter extraction, hybrid search (SQL + BM25 + vectors), Thai segmentation, incremental embedding job | done |
-| B | Agent loop by hand: tools for search, stock and orders, date injection, follow-ups | next |
-| C | Guardrails, PII masking, grounding check, eval set, cache, model gateway | |
+| B | Agent loop by hand: tools for search, stock and orders, date injection, follow-ups | done |
+| C | Guardrails, PII masking, grounding check, eval set, cache, model gateway | next |
 | D | Shirt photo → attributes → search, PDF size chart → rows, intent classifier | |
 
 ## Layout
@@ -73,7 +73,10 @@ src/shop/
   index.py    the embedding job: per model, content hashes, rate limiter, export/import
   query.py    message → validated filters + free text
   search.py   SQL filters → BM25 + vectors → RRF → one result per model → diversity
-  cli.py      shop load | search | explain-sql | export-vectors
+  timeutil.py the clock: Bangkok time, named periods resolved in code
+  tools.py    tool schemas (from pydantic) and implementations; the user id comes from the session
+  agent.py    the loop: model → tool calls → results → model, with a step limit
+  cli.py      shop load | search | ask | chat | explain-sql | export-vectors
 tests/        offline tests (no API calls)
 vectors/      model_vectors.npz: 486 × 768 Gemini embeddings
 ```
