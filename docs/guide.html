@@ -1039,26 +1039,29 @@ flowchart TD
   <li>Stream tokens; run independent tool calls in parallel; route with a small model; precompute embeddings offline; cap output tokens; serve from a region close to Thailand.</li>
 </ul>
 <figure class="dg">
-<div class="sc"><svg class="wide" viewBox="0 0 680 152" role="img" aria-label="Where the time goes in one search. Gemini API free tier: 7.7 seconds, almost all of it the filter-extraction LLM call; the embedding takes 0.17 seconds. Through OpenRouter: 2.2 seconds, of which the LLM call is 1.5 seconds.">
+<div class="sc"><svg class="wide" viewBox="0 0 680 190" role="img" aria-label="Where the time goes in one search. Gemini API free tier: 7.7 seconds, almost all of it the filter-extraction LLM call. Through OpenRouter: 2.2 seconds. Gemini API paid tier: 1.1 seconds, of which the LLM call is 0.9 seconds.">
   <rect x="170" y="4" width="12" height="12" class="fa"/><text x="188" y="14" class="ts">filter extraction (LLM call)</text>
   <rect x="380" y="4" width="12" height="12" class="bxg"/><text x="398" y="14" class="ts">keyword search</text>
   <rect x="500" y="4" width="12" height="12" class="fr"/><text x="518" y="14" class="ts">query embedding</text>
   <text x="10" y="53" class="ts tb">Gemini API, free tier</text>
   <rect x="170" y="36" width="449" height="24" class="fa"/><rect x="619" y="36" width="10" height="24" class="fr"/>
   <text x="635" y="53" class="ts tb">7.7 s</text>
-  <text x="10" y="101" class="ts tb">via OpenRouter</text>
-  <rect x="170" y="84" width="92" height="24" class="fa"/><rect x="262" y="84" width="25" height="24" class="bxg"/><rect x="287" y="84" width="14" height="24" class="fr"/>
-  <text x="307" y="101" class="ts tb">2.2 s</text>
-  <line x1="170" y1="124" x2="650" y2="124" class="lm"/>
+  <text x="10" y="93" class="ts tb">via OpenRouter</text>
+  <rect x="170" y="76" width="92" height="24" class="fa"/><rect x="262" y="76" width="25" height="24" class="bxg"/><rect x="287" y="76" width="14" height="24" class="fr"/>
+  <text x="307" y="93" class="ts tb">2.2 s</text>
+  <text x="10" y="133" class="ts tb">Gemini API, paid tier</text>
+  <rect x="170" y="116" width="56" height="24" class="fa"/><rect x="226" y="116" width="12" height="24" class="fr"/>
+  <text x="244" y="133" class="ts tb">1.1 s</text>
+  <line x1="170" y1="160" x2="650" y2="160" class="lm"/>
   <g class="ts tm" text-anchor="middle">
-    <line x1="170" y1="120" x2="170" y2="128" class="lm"/><text x="170" y="142">0 s</text>
-    <line x1="290" y1="120" x2="290" y2="128" class="lm"/><text x="290" y="142">2 s</text>
-    <line x1="410" y1="120" x2="410" y2="128" class="lm"/><text x="410" y="142">4 s</text>
-    <line x1="530" y1="120" x2="530" y2="128" class="lm"/><text x="530" y="142">6 s</text>
-    <line x1="650" y1="120" x2="650" y2="128" class="lm"/><text x="650" y="142">8 s</text>
+    <line x1="170" y1="156" x2="170" y2="164" class="lm"/><text x="170" y="180">0 s</text>
+    <line x1="290" y1="156" x2="290" y2="164" class="lm"/><text x="290" y="180">2 s</text>
+    <line x1="410" y1="156" x2="410" y2="164" class="lm"/><text x="410" y="180">4 s</text>
+    <line x1="530" y1="156" x2="530" y2="164" class="lm"/><text x="530" y="180">6 s</text>
+    <line x1="650" y1="156" x2="650" y2="164" class="lm"/><text x="650" y="180">8 s</text>
   </g>
 </svg></div>
-<figcaption>Two real searches from the build, timed step by step (<code>shop search</code> prints this). The SQL filter takes 0 ms in both. One LLM call is nearly all the latency, so that's where optimisation starts, not the database. (The 0.4 s keyword step on the second run includes loading the Thai dictionary.)</figcaption>
+<figcaption>Real searches from the build, timed step by step (<code>shop search</code> prints this). The SQL filter takes 0 ms every time. One LLM call is nearly all the latency, so that's where optimisation starts, not the database. The same code got 7× faster just by moving off the free tier. (The 0.4 s keyword step on the OpenRouter run includes loading the Thai dictionary.)</figcaption>
 </figure>
 <h3>What it costs (measured in the build)</h3>
 <div class="tbl"><table>
@@ -1359,7 +1362,7 @@ flowchart LR
 <pre><code>brew install uv                     # once
 git clone https://github.com/karthikeyan993/mini-shopping-assistant
 cd mini-shopping-assistant
-export OPENROUTER_API_KEY=... SHOP_PROVIDER=openrouter   # fastest; or GEMINI_API_KEY=... for Gemini directly
+export GEMINI_API_KEY=...           # your prepaid AI Studio key (the default route)
 uv sync --extra dev
 uv run shop load                    # catalog + shipped vectors, no embedding calls
 uv run shop search "blue running shoes in stock under 3000 baht"
@@ -1632,6 +1635,7 @@ LLM_BASE_URL=http://localhost:11434/v1 LLM_API_KEY=ollama CHAT_MODEL=qwen3:8b FA
 <tr><th>Chat route</th><th>Eval</th><th>Whole run</th><th>Avg agent case</th></tr>
 <tr><td>Gemini API, free tier (Flash-Lite)</td><td>21/21</td><td>3.2 min</td><td>11.6 s, 2,822 tokens</td></tr>
 <tr><td>OpenRouter → Gemini 3.5 Flash-Lite</td><td>21/21</td><td>1.0 min</td><td>4.3 s, 2,177 tokens</td></tr>
+<tr><td><b>Gemini API, paid tier (the default now)</b></td><td>21/21</td><td>0.6 min</td><td>3.4 s, 2,927 tokens</td></tr>
 </table></div>
 <p>The fallback can be a different provider: <code>FALLBACK_BASE_URL</code> and <code>FALLBACK_API_KEY</code>. With the main endpoint made unreachable on purpose, the client retried twice, logged <code>gemini-flash-lite-latest unavailable (APIConnectionError); falling back</code>, and the answer came through OpenRouter. That's the S21 story with evidence: one provider's quota or outage doesn't stop the bot, and the same eval tells you the second route is safe.</p>
 <pre><code>export FALLBACK_BASE_URL=https://openrouter.ai/api/v1 FALLBACK_API_KEY=$OPENROUTER_API_KEY \
@@ -1658,24 +1662,33 @@ LLM_BASE_URL=http://localhost:11434/v1 LLM_API_KEY=ollama CHAT_MODEL=qwen3:8b FA
 <h3 id="step-d">Step D · Photo search, PDF tables, intent classifier</h3>
 <p class="pill">done · commit 231d09d</p>
 <h4>Run it</h4>
-<pre><code>uv run shop photo samples/shirt.png                         # then try a photo of your own shirt or shoes
+<pre><code>uv run shop photo samples/shirt_photo.jpg                   # then try a photo of your own shirt or shoes
 uv run shop size-chart samples/size_chart.pdf --chest 102
 uv run shop intents train "can I talk to a real person" "มีรองเท้าวิ่งไซส์ 42 ที่สาขาลาดพร้าวไหม"</code></pre>
 
 <h4>D1 · "Do you have this?" with a shirt photo (<code>vision.py</code>, S11)</h4>
-<pre><code>Read from the photo (1223 prompt tokens): {"is_product_photo": true, "category": "polo shirt",
-  "colors": ["navy", "white"], "pattern": "striped", "sleeve": "short", "details": "buttons, short sleeve, striped, collar"}
-Filters: {"category": "polo shirt", "colors": ["navy"], "text": "striped short sleeve white buttons, ..."}
-1. Nike Club Polo 6 · navy        ฿ 1,790  in stock
-2. Nike Club Polo 3 · navy        ฿   690  in stock
-3. Adidas Classic Pique 5 · navy  ฿   790  in stock</code></pre>
+<figure class="dg" style="display:grid;grid-template-columns:minmax(0,200px) minmax(0,1fr);gap:16px;align-items:start">
+<img src="shirt_photo.jpg" alt="A navy polo shirt with thin white horizontal stripes on a wooden hanger against a light grey wall" style="width:100%;border-radius:8px;border:1px solid var(--line)">
+<pre style="margin:0"><code>Read from the photo (1223 prompt tokens):
+  category: polo shirt
+  colors:   navy, white
+  pattern:  striped
+  sleeve:   short
+  details:  collar, buttons, sporty
+Filters: category = polo shirt, colour = navy
+  (white goes into the ranking text)
+1. Nike Club Polo 6 · navy        ฿1,790
+2. Nike Club Polo 3 · navy        ฿  690
+3. Under Armour Fairway 7 · navy  ฿  890</code></pre>
+<figcaption style="grid-column:1/-1">The sample photo, generated with Gemini's image model once the paid tier was on, and what <code>shop photo</code> read from it. The first version of this step used a drawing, because image generation isn't on the free tier.</figcaption>
+</figure>
 <ul>
 <li><b>Path 1, attributes</b> (built): the photo goes to Flash-Lite as an image part with a JSON schema whose category and colour fields are the catalog's own values. The attributes become the same <code>Filters</code> a typed message produces, and step A's search runs unchanged.</li>
 <li><b>An image costs tokens</b>: this one was 1,223 prompt tokens, against about 15 for the words "navy striped polo". Resize uploads before sending.</li>
 <li><b>A lesson from the build</b>: the first version filtered on "navy OR white" and returned white polos. A striped shirt has two colours; filter on the dominant one and put the others in the ranking text.</li>
 <li>Guards in the prompt and schema: <code>is_product_photo</code> (a selfie or a cat gets "not a product photo"), and "don't guess brands" for <code>visible_text</code>.</li>
 <li><b>Path 2, visual similarity</b> (explained, not built: the synthetic catalog has no images). Embed every catalog image once with an image-text model (CLIP, SigLIP, or a multimodal embedding API), embed the uploaded photo at query time, and take nearest neighbours: "looks like this". In production, combine both: category from path 1 as a filter, ranking by visual similarity.</li>
-<li>Real photos bring real problems: crop the garment first (background clutter, several items in one photo), lighting shifts colours, and faces mean privacy rules. The sample here is a drawing because image generation isn't on the free tier, so try a phone photo on your Mac.</li>
+<li>Real photos bring real problems: crop the garment first (background clutter, several items in one photo), lighting shifts colours, and faces mean privacy rules. Try a phone photo of your own on your Mac: a shadow, a crumpled shirt, two items in one picture.</li>
 </ul>
 
 <h4>D2 · A size chart in a PDF (<code>pdftable.py</code>, S12)</h4>

@@ -18,7 +18,7 @@ git clone https://github.com/karthikeyan993/mini-shopping-assistant && cd mini-s
 ```
 
 ```bash
-export OPENROUTER_API_KEY=... SHOP_PROVIDER=openrouter   # fastest; or GEMINI_API_KEY=... for the Gemini API directly
+export GEMINI_API_KEY=...   # Gemini API (default); or OPENROUTER_API_KEY=... SHOP_PROVIDER=openrouter
 ```
 
 ```bash
@@ -58,7 +58,7 @@ uv run shop eval            # 21 cases, about 3 minutes on the free tier
 ```
 
 ```bash
-uv run shop photo samples/shirt.png          # or a photo of your own
+uv run shop photo samples/shirt_photo.jpg    # or a photo of your own
 ```
 
 ```bash
@@ -129,7 +129,8 @@ src/shop/
 tests/        offline tests (no API calls)
 vectors/      model_vectors.npz: 486 × 768 Gemini embeddings
 evals/        cases.json (21 eval cases), intents.jsonl (324 labelled messages, Thai and English)
-samples/      shirt.png and size_chart.pdf for step D, and the script that makes them
+samples/      shirt_photo.jpg (generated with Gemini's image model), shirt.png (a drawing), size_chart.pdf,
+              and the script that makes the drawing and the PDF
 ```
 
 ## Decisions
@@ -168,11 +169,13 @@ samples/      shirt.png and size_chart.pdf for step D, and the script that makes
 - **OpenRouter serves the same embedding model** (google/gemini-embedding-001): cosine 1.0 against the stored vector,
   so `SHOP_PROVIDER=openrouter` keeps the shipped vectors. OpenAI's text-embedding-3-small scored Thai vs English
   "blue running shoe" at 0.36 against Gemini's 0.86: for a Thai shop, test multilingual quality before choosing.
-- **Two routes, one eval set.** Same 21 cases: Gemini free tier 21/21 in 3.2 min (11.6 s per agent case);
-  Gemini 3.5 Flash-Lite through OpenRouter 21/21 in 1.0 min (4.3 s). The fallback can be a different provider
-  (`FALLBACK_BASE_URL`); a simulated Gemini outage was answered through OpenRouter.
+- **Three routes, one eval set.** Same 21 cases, 21/21 on each: Gemini API free tier 3.2 min (11.6 s per agent
+  case); Gemini 3.5 Flash-Lite through OpenRouter 1.0 min (4.3 s); Gemini API paid tier 0.6 min (3.4 s), now the
+  default. The fallback can be a different provider (`FALLBACK_BASE_URL`); a simulated Gemini outage was answered
+  through OpenRouter.
 - **Free-tier limits met during the build**: 100 embedded texts a minute and a 1,000 limit named in the daily-quota
-  error. Hence the shipped vectors and the cached classifier vectors.
+  error, and no image generation. Hence the shipped vectors and the cached classifier vectors. The paid tier (from
+  19 Nov) removed all three; on the free tier set `EMBED_PER_MINUTE=90`.
 - **Flash-Lite for filter extraction**: a small, frequent job. Its latency varies (1–8 s on the free tier), which the
   timing line in `shop search` shows.
 

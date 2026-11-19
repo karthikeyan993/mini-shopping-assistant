@@ -24,7 +24,7 @@ if PROVIDER == "openrouter":
               fb_model="gemini-flash-lite-latest" if GEMINI_KEY else "google/gemini-3.5-flash")
 else:
     _d = dict(url=GEMINI_URL, key=GEMINI_KEY, chat="gemini-flash-lite-latest", fast="gemini-flash-lite-latest",
-              embed="gemini-embedding-001", fb_url=GEMINI_URL, fb_key=GEMINI_KEY, fb_model="gemini-2.5-flash")
+              embed="gemini-embedding-001", fb_url=GEMINI_URL, fb_key=GEMINI_KEY, fb_model="gemini-flash-latest")
 
 # Chat. Point LLM_BASE_URL at Ollama (http://localhost:11434/v1) or a LiteLLM proxy and nothing else changes.
 BASE_URL = os.environ.get("LLM_BASE_URL", _d["url"])
@@ -41,8 +41,9 @@ EMBED_BASE_URL = os.environ.get("EMBED_BASE_URL", _d["url"])
 EMBED_API_KEY = os.environ.get("EMBED_API_KEY", _d["key"])
 EMBED_MODEL = os.environ.get("EMBED_MODEL", _d["embed"])
 EMBED_DIM = int(os.environ.get("EMBED_DIM", "768"))            # 3072 by default; 768 is 4x smaller
-# Client-side rate limit for embedding jobs: the Gemini free tier allows 100 texts a minute.
-EMBED_PER_MINUTE = int(os.environ.get("EMBED_PER_MINUTE", "90" if PROVIDER == "gemini" else "3000"))
+# Client-side rate limit for embedding jobs. Paid tiers allow thousands a minute; on the Gemini free tier
+# (100 texts a minute) set EMBED_PER_MINUTE=90.
+EMBED_PER_MINUTE = int(os.environ.get("EMBED_PER_MINUTE", "1500"))
 
 DB_PATH = os.environ.get("SHOP_DB", "data/shop.db")
 
