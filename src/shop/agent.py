@@ -6,10 +6,11 @@ and stops on an answer or a limit. About 60 lines of logic, no framework, so eve
         model returns text ─► final answer
 """
 import json
+import re
 import time
 from dataclasses import dataclass, field
 
-from . import timeutil, tools
+from . import guard, timeutil, tools
 from .llm import chat
 
 MAX_STEPS = 5       # a runaway loop costs money and time; stop and hand over instead
@@ -38,8 +39,9 @@ Rules:
 @dataclass
 class Session:
     user_id: str
-    history: list[dict] = field(default_factory=list)   # user/assistant text only; tool traffic stays in its turn
+    history: list[dict] = field(default_factory=list)   # user/assistant text only, PII masked
     state: dict = field(default_factory=dict)
+    pii: guard.PiiMasker = field(default_factory=guard.PiiMasker)
 
 
 @dataclass
@@ -49,6 +51,7 @@ class TurnResult:
     usage: dict
     seconds: float
     models: list[str]
+    tools_used: list[str] = field(default_factory=list)
 
 
 def state_block(state: dict) -> str:
@@ -62,14 +65,27 @@ def state_block(state: dict) -> str:
     return ("\nConversation state:\n" + "\n".join(lines)) if lines else ""
 
 
-def turn(session: Session, message: str, conn, now=None, complete=chat, cache=None) -> TurnResult:
+def turn(session: Session, message: str, conn, now=None, complete=chat, cache=None,
+         screen=guard.check_input, log_path: str | None = None) -> TurnResult:
     start = time.time()
     now = now or timeutil.now()
+    trace, usage, models, seen = [], {"prompt": 0, "completion": 0}, [], {}
+
+    # 1. Input layer: mask PII first, so neither the model provider nor our logs see it.
+    masked = session.pii.mask(message)
+    if masked != message:
+        trace.append({"guard": "PII masked", "as": masked})
+    verdict = screen(masked)
+    if not verdict.allow:
+        trace.append({"guard": f"blocked by {verdict.layer}: {verdict.reason}"})
+        return _finish(session, masked, verdict.reply, trace, usage, start, models, log_path)
+
+    # 2. The loop.
     ctx = tools.Ctx(conn=conn, user_id=session.user_id, now=now, state=session.state, cache=cache)
     messages = ([{"role": "system", "content": SYSTEM.format(now=timeutil.header(now), state=state_block(session.state))}]
                 + session.history[-2 * HISTORY_TURNS:]
-                + [{"role": "user", "content": message}])
-    trace, usage, models, seen = [], {"prompt": 0, "completion": 0}, [], {}
+                + [{"role": "user", "content": masked}])
+    allowed = guard.numbers_in(masked) | {p for _, _, p in session.state.get("last_results", [])}
     answer = None
     for _step in range(MAX_STEPS):
         resp, model = complete(messages, tools.specs())
@@ -80,6 +96,21 @@ def turn(session: Session, message: str, conn, now=None, complete=chat, cache=No
         msg = resp.choices[0].message
         if not msg.tool_calls:
             answer = msg.content or ""
+            # 3. Output layer: every price must come from a tool result (or the customer's own words).
+            bad = guard.ungrounded_prices(answer, allowed)
+            if bad and not seen.get("regrounded"):
+                seen["regrounded"] = 1
+                trace.append({"guard": f"ungrounded prices {sorted(bad)}; asked the model to fix them"})
+                messages += [{"role": "assistant", "content": answer},
+                             {"role": "user", "content": f"(System check) Your answer has prices that are not in any tool "
+                              f"result: {sorted(bad)}. Rewrite it using only prices from tool results."}]
+                answer = None
+                continue
+            if bad:
+                trace.append({"guard": f"still ungrounded {sorted(bad)}; removed them"})
+                for b in bad:
+                    answer = re.sub(rf"(฿\s?{b:,}|฿\s?{b}|{b:,}\s?(baht|บาท)|{b}\s?(baht|บาท))",
+                                    "(see the product page for the price)", answer)
             break
         # Send the assistant message back exactly as received: with Gemini it carries a "thought signature"
         # that must come back with the tool results.
@@ -92,12 +123,25 @@ def turn(session: Session, message: str, conn, now=None, complete=chat, cache=No
                 result = {"error": "You already made this exact call twice. Use the earlier result or answer."}
             else:
                 result = tools.run(ctx, tc.function.name, tc.function.arguments)
+            allowed |= guard.numbers_in(result)
             trace.append({"tool": tc.function.name, "args": json.loads(tc.function.arguments or "{}"),
-                          "ms": int((time.time() - t0) * 1000), "error": result.get("error")})
+                          "ms": int((time.time() - t0) * 1000), "error": result.get("error"),
+                          "cache": result.get("cache")})
             messages.append({"role": "tool", "tool_call_id": tc.id,
                              "content": json.dumps(result, ensure_ascii=False)})
     if answer is None:
         answer = "Sorry, I couldn't finish that one. I can connect you with a member of our team."
         trace.append({"stop": f"step limit {MAX_STEPS} reached"})
-    session.history += [{"role": "user", "content": message}, {"role": "assistant", "content": answer}]
-    return TurnResult(answer, trace, usage, round(time.time() - start, 1), models)
+    return _finish(session, masked, answer, trace, usage, start, models, log_path)
+
+
+def _finish(session, masked, answer, trace, usage, start, models, log_path) -> TurnResult:
+    session.history += [{"role": "user", "content": masked}, {"role": "assistant", "content": answer}]
+    used = [t["tool"] for t in trace if "tool" in t]
+    r = TurnResult(session.pii.unmask(answer), trace, usage, round(time.time() - start, 1), models, used)
+    if log_path:  # the trace log: masked text only, so it can feed evals and analytics safely
+        with open(log_path, "a") as f:
+            f.write(json.dumps({"ts": time.time(), "user": session.user_id, "message": masked, "answer": answer,
+                                "tools": used, "tokens": usage, "seconds": r.seconds, "models": models,
+                                "guards": [t["guard"] for t in trace if "guard" in t]}, ensure_ascii=False) + "\n")
+    return r

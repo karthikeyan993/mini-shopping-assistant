@@ -5,7 +5,10 @@ import time
 
 from . import db, index
 from .config import DB_PATH, EMBED_MODEL, FAST_MODEL
+from .cache import TTLCache
 from .search import build_where, search
+
+LOG_PATH = "data/turns.jsonl"
 
 
 def cmd_load(args):
@@ -54,7 +57,8 @@ def _print_turn(r):
     for t in r.trace:
         if "tool" in t:
             err = f"  ERROR {t['error']}" if t.get("error") else ""
-            print(f"  · {t['tool']}({json.dumps(t['args'], ensure_ascii=False)}) {t['ms']} ms{err}")
+            hit = "  (cache hit)" if t.get("cache") else ""
+            print(f"  · {t['tool']}({json.dumps(t['args'], ensure_ascii=False)}) {t['ms']} ms{hit}{err}")
         else:
             print(f"  · {t}")
     print(f"\nAssistant: {r.answer}")
@@ -66,19 +70,29 @@ def cmd_ask(args):
     """One or more messages as consecutive turns of one conversation."""
     from .agent import Session, turn
     conn = db.connect(DB_PATH)
-    session = Session(user_id=args.user)
+    session, cache = Session(user_id=args.user), TTLCache()
     for m in args.messages:
         print(f"You ({args.user}): {m}")
-        _print_turn(turn(session, m, conn))
+        _print_turn(turn(session, m, conn, cache=cache, log_path=LOG_PATH))
 
 
 def cmd_chat(args):
     from .agent import Session, turn
     conn = db.connect(DB_PATH)
-    session = Session(user_id=args.user)
+    session, cache = Session(user_id=args.user), TTLCache()
     print(f"Chatting as {args.user}. Empty line to quit.")
     while (m := input("You: ").strip()):
-        _print_turn(turn(session, m, conn))
+        _print_turn(turn(session, m, conn, cache=cache, log_path=LOG_PATH))
+
+
+def cmd_eval(args):
+    from . import evals
+    conn = db.connect(DB_PATH)
+    out = evals.run(conn, only=args.only, pace=args.pace)
+    print("\n" + json.dumps(out["summary"], ensure_ascii=False))
+    with open("data/eval_report.json", "w") as f:
+        json.dump(out, f, ensure_ascii=False, indent=1)
+    print("Full report: data/eval_report.json")
 
 
 def main():
@@ -106,6 +120,10 @@ def main():
     c = sub.add_parser("chat", help="interactive chat with the assistant")
     c.add_argument("--user", default="u1")
     c.set_defaults(fn=cmd_chat)
+    v = sub.add_parser("eval", help="run evals/cases.json")
+    v.add_argument("--only", help="a kind (search, agent, guard) or a case id")
+    v.add_argument("--pace", type=float, default=2.0, help="seconds between cases (free-tier rate limits)")
+    v.set_defaults(fn=cmd_eval)
     x = sub.add_parser("export-vectors", help="write model vectors to vectors/model_vectors.npz")
     x.set_defaults(fn=lambda a: print(index.export_vectors(db.connect(DB_PATH)), "vectors exported"))
     args = p.parse_args()

@@ -45,12 +45,27 @@ uv run shop explain-sql '{"category": "running shoes", "in_stock": true, "max_pr
 uv run pytest -q
 ```
 
+```bash
+uv run shop ask "blue running shoes under 3000 baht" "is the second one in stock in size 42 at CentralWorld?"
+```
+
+```bash
+uv run shop ask "show my orders from last week" --user u1
+```
+
+```bash
+uv run shop eval            # 21 cases, about 3 minutes on the free tier
+```
+
 Embed with your own key: `uv run shop load --fresh --limit 45` embeds one batch. A full run is 486 texts, about 6
 minutes at the free tier's 100 texts a minute, and the free tier also caps texts per day, so use `--limit` unless you
 need all of them.
 
-Point it at another model server without code changes: `LLM_BASE_URL=http://localhost:11434/v1` (Ollama),
-`CHAT_MODEL=...`, `FAST_MODEL=...`, `EMBED_MODEL=...`.
+Point the chat at another model server without code changes, e.g. a local model in Ollama:
+`LLM_BASE_URL=http://localhost:11434/v1 LLM_API_KEY=ollama CHAT_MODEL=qwen3:8b FAST_MODEL=qwen3:8b`.
+Embeddings keep their own setting (`EMBED_BASE_URL`, `EMBED_MODEL`): the shipped vectors come from
+gemini-embedding-001, and queries must be embedded by the same model. `FALLBACK_MODEL` is used when the chat model
+keeps failing.
 
 ## Steps
 
@@ -58,8 +73,8 @@ Point it at another model server without code changes: `LLM_BASE_URL=http://loca
 |---|---|---|
 | A | Catalog, filter extraction, hybrid search (SQL + BM25 + vectors), Thai segmentation, incremental embedding job | done |
 | B | Agent loop by hand: tools for search, stock and orders, date injection, follow-ups | done |
-| C | Guardrails, PII masking, grounding check, eval set, cache, model gateway | next |
-| D | Shirt photo → attributes → search, PDF size chart → rows, intent classifier | |
+| C | Guardrails, PII masking, grounding check, eval set, cache, model fallback | done |
+| D | Shirt photo → attributes → search, PDF size chart → rows, intent classifier | next |
 
 ## Layout
 
@@ -75,7 +90,10 @@ src/shop/
   search.py   SQL filters → BM25 + vectors → RRF → one result per model → diversity
   timeutil.py the clock: Bangkok time, named periods resolved in code
   tools.py    tool schemas (from pydantic) and implementations; the user id comes from the session
-  agent.py    the loop: model → tool calls → results → model, with a step limit
+  agent.py    the loop: model → tool calls → results → model, with a step limit and the guard layers
+  guard.py    PII masking (with checksums), scope and injection screening, price grounding
+  cache.py    a TTL cache for search results (Redis in production)
+  evals.py    the eval runner for evals/cases.json
   cli.py      shop load | search | ask | chat | explain-sql | export-vectors
 tests/        offline tests (no API calls)
 vectors/      model_vectors.npz: 486 × 768 Gemini embeddings
@@ -96,6 +114,17 @@ vectors/      model_vectors.npz: 486 × 768 Gemini embeddings
 - **A client-side rate limiter** at 90 texts a minute, under the free tier's 100, instead of retrying into 429s.
 - **Reciprocal Rank Fusion** combines keyword and vector ranks without calibrating their scores.
 - **Thai**: PyThaiNLP segmentation, with brand and colour spellings added to its dictionary so ไนกี้ stays one word.
+- **The agent loop is written by hand** (about 60 lines in `agent.py`): every step visible; a framework (LangGraph)
+  would add checkpoints and branching when needed.
+- **The user id is never a tool argument.** It comes from the session; `get_order` answers the same way for "doesn't
+  exist" and "someone else's".
+- **Dates are computed in code.** The model picks a named period; `timeutil.resolve` returns exact Bangkok dates; the
+  answer states them. "Last week" = the previous Monday–Sunday.
+- **Guardrails in layers**: PII masked before the model or the log sees it (Thai ID and card numbers validated by
+  checksum, so order numbers and prices stay); regex rules then a small model screen scope and injection; every
+  price in the answer must appear in a tool result, else one rewrite, else it is removed.
+- **Evals before opinions**: `shop eval` runs 21 cases (search, agent, guard). The first run caught a real false
+  positive: "what's the date today?" was blocked as out of scope.
 - **Flash-Lite for filter extraction**: a small, frequent job. Its latency varies (1–8 s on the free tier), which the
   timing line in `shop search` shows.
 

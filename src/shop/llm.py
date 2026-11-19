@@ -6,7 +6,7 @@ import time
 import numpy as np
 import openai
 
-from .config import CHAT_MODEL, EMBED_DIM, EMBED_MODEL, FALLBACK_MODEL, client
+from .config import CHAT_MODEL, EMBED_DIM, EMBED_MODEL, FALLBACK_MODEL, client, embed_client
 
 # Worth retrying: rate limits (429), timeouts, dropped connections, server errors (5xx).
 # Not worth retrying: 400 (our request is wrong), 401/403 (bad key).
@@ -32,7 +32,7 @@ def embed(texts: list[str]) -> np.ndarray:
     Normalising matters: shortened Gemini embeddings (768 of 3072) are not unit length, and with unit
     vectors cosine similarity is a plain dot product.
     """
-    resp = with_retries(lambda: client().embeddings.create(model=EMBED_MODEL, input=texts, dimensions=EMBED_DIM))
+    resp = with_retries(lambda: embed_client().embeddings.create(model=EMBED_MODEL, input=texts, dimensions=EMBED_DIM))
     v = np.array([d.embedding for d in resp.data], dtype=np.float32)
     return v / np.linalg.norm(v, axis=1, keepdims=True)
 
