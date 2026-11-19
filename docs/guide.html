@@ -8,16 +8,19 @@
 :root {
   --bg: #f3f6f5; --surface: #ffffff; --fg: #13201e; --muted: #56655f; --line: #d6e0dd;
   --accent: #0d6e64; --accent-soft: #e1f1ee; --warn: #9a4a0a; --warn-soft: #fbefe3; --code-bg: #eaf0ee;
+  --repo: #3653c9; --repo-soft: #e5eafc; --gs: #8a6a00; --gs-soft: #faf0d2;
   --display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
   --body: "Inter", "Segoe UI", system-ui, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
   --bg: #0b1312; --surface: #111c1a; --fg: #e1eae8; --muted: #95a8a3; --line: #23322f;
-  --accent: #45c9b6; --accent-soft: #102e2a; --warn: #f0a865; --warn-soft: #2f210f; --code-bg: #16231f; color-scheme: dark } }
+  --accent: #45c9b6; --accent-soft: #102e2a; --warn: #f0a865; --warn-soft: #2f210f; --code-bg: #16231f;
+  --repo: #93a6ff; --repo-soft: #1b2348; --gs: #e5bf55; --gs-soft: #2e2611; color-scheme: dark } }
 :root[data-theme="dark"] {
   --bg: #0b1312; --surface: #111c1a; --fg: #e1eae8; --muted: #95a8a3; --line: #23322f;
-  --accent: #45c9b6; --accent-soft: #102e2a; --warn: #f0a865; --warn-soft: #2f210f; --code-bg: #16231f; color-scheme: dark }
+  --accent: #45c9b6; --accent-soft: #102e2a; --warn: #f0a865; --warn-soft: #2f210f; --code-bg: #16231f;
+  --repo: #93a6ff; --repo-soft: #1b2348; --gs: #e5bf55; --gs-soft: #2e2611; color-scheme: dark }
 body { background: var(--bg); color: var(--fg); font: 16px/1.65 var(--body); }
 .wrap { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 48px; max-width: 1120px; margin: 0 auto;
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 32px 80px; }
@@ -75,6 +78,32 @@ th { font: 600 12px/1.3 var(--mono); letter-spacing: .05em; text-transform: uppe
 .scn h4 { font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 14px 0 4px; }
 .scn p, .scn ul, .scn ol { margin: 4px 0; }
 .pill { display: inline-block; font: 500 12px/1.6 var(--mono); padding: 0 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+figure.dg { margin: 22px 0; }
+figure.dg .sc { overflow-x: auto; }
+figure.dg svg { display: block; width: 100%; height: auto; color: var(--fg); }
+figure.dg svg.wide { min-width: 560px; }
+figure.dg figcaption { font-size: 13.5px; color: var(--muted); margin-top: 8px; max-width: 70ch; }
+.dg text { fill: currentColor; font-family: var(--body); font-size: 12px; }
+.dg .ts { font-size: 11px; } .dg .tb { font-weight: 600; } .dg .tm { fill: var(--muted); }
+.dg .ta { fill: var(--accent); } .dg .tw { fill: var(--warn); } .dg .tr { fill: var(--repo); }
+.dg .ln { stroke: currentColor; fill: none; stroke-width: 1.4; }
+.dg .lm { stroke: var(--muted); fill: none; stroke-width: 1.1; }
+.dg .la { stroke: var(--accent); fill: none; stroke-width: 2.2; }
+.dg .lw { stroke: var(--warn); fill: none; stroke-width: 2.2; }
+.dg .dash { stroke-dasharray: 4 3; }
+.dg .bx { fill: var(--surface); stroke: var(--line); stroke-width: 1.2; }
+.dg .bxs { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.2; }
+.dg .bxr { fill: var(--repo-soft); stroke: var(--repo); stroke-width: 1.2; }
+.dg .bxw { fill: var(--warn-soft); stroke: var(--warn); stroke-width: 1.2; }
+.dg .bxg { fill: var(--gs-soft); stroke: var(--gs); stroke-width: 1.2; }
+.dg .bxm { fill: var(--surface); stroke: var(--muted); stroke-width: 1.2; }
+.dg .fa { fill: var(--accent); } .dg .fas { fill: var(--accent-soft); } .dg .fm { fill: var(--muted); }
+.dg .fw { fill: var(--warn); } .dg .fws { fill: var(--warn-soft); } .dg .fr { fill: var(--repo); } .dg .frs { fill: var(--repo-soft); }
+.dg .fg { fill: var(--gs-soft); } .dg .fl { fill: var(--line); } .dg .fc { fill: currentColor; }
+.kind { display: inline-block; font: 600 11px/1.7 var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 0 7px; border-radius: 4px; }
+.kind.study { background: var(--accent-soft); color: var(--accent); }
+.kind.repo { background: var(--repo-soft); color: var(--repo); }
+.kind.practice { background: var(--warn-soft); color: var(--warn); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
 </style>
@@ -83,7 +112,7 @@ th { font: 600 12px/1.3 var(--mono); letter-spacing: .05em; text-transform: uppe
 <nav class="side" aria-label="Guide sections">
   <div class="grp">Start</div>
   <a href="#path">The path (roadmap)</a>
-  <a href="#days">Days until Tuesday</a>
+  <a href="#days">Study or repo: the plan</a>
   <div class="grp">Fundamentals</div>
   <a href="#llm">1 · How LLMs work</a>
   <a href="#embed">2 · Embeddings &amp; vectors</a>
@@ -107,7 +136,7 @@ th { font: 600 12px/1.3 var(--mono); letter-spacing: .05em; text-transform: uppe
 <p class="lede">The path below is the order. Todoist only books the time. If you are faster than the plan, open the next module and keep going.</p>
 
 <details class="toc"><summary>Sections</summary>
-  <a href="#path">The path (roadmap)</a><a href="#days">Days until Tuesday</a>
+  <a href="#path">The path (roadmap)</a><a href="#days">Study or repo: the plan</a>
   <a href="#llm">1 · How LLMs work</a><a href="#embed">2 · Embeddings &amp; vectors</a><a href="#rag">3 · RAG that works</a>
   <a href="#agents">4 · Agents &amp; tools</a><a href="#frameworks">5 · LangGraph, LiteLLM</a><a href="#safety">6 · Guardrails, PII, evals</a>
   <a href="#models">7 · Fine-tuning &amp; classifiers</a><a href="#vision">8 · Vision &amp; PDFs</a><a href="#cost">9 · Cost &amp; system design</a>
@@ -213,16 +242,100 @@ th { font: 600 12px/1.3 var(--mono); letter-spacing: .05em; text-transform: uppe
 <div class="note"><span class="label">After the interview</span>
 <p>If this path stays your main one, the Deeper column becomes the plan, in this order: Raschka's book end to end (you build a GPT, then fine-tune it as a classifier and as an assistant), Karpathy's <a href="https://www.youtube.com/watch?v=7xTGNNLPyMI">Deep Dive into LLMs</a>, <i>AI Engineering</i> cover to cover, the <a href="https://huggingface.co/learn/agents-course">Hugging Face Agents course</a>.</p></div>
 
-<h2 id="days">Days until Tuesday</h2>
-<p>Times are IST and match Todoist. A block is time, not a gate: finish early and you move on to the next module.</p>
+<h2 id="days">Study or repo: the plan to Tuesday</h2>
+<div class="note"><span class="label">The rule</span>
+<ul>
+<li><span class="kind study">Study</span> in the <b>morning</b> (fresh head): the guide section, one Core resource, then its "Say it" box out loud.</li>
+<li><span class="kind repo">Repo</span> in the <b>evening at 19:00</b>, on your Mac: the build is finished, so repo time means run the step, read its section with the code open, do one "Try these" item, and comment on the Todoist task any line you can't explain.</li>
+<li><span class="kind practice">Practice</span> at <b>20:30</b>: scenarios out loud, 2 minutes each.</li>
+<li><b>Weekends</b>: study first, then the repo step that uses it, then practice. Theory always comes right before the step that uses it.</li>
+<li><b>Ahead of plan?</b> Start the next block's work. Todoist books the time; it never holds you back.</li>
+</ul></div>
+
+<figure class="dg" id="fig-week">
+<div class="sc"><svg class="wide" viewBox="0 0 680 330" role="img" aria-label="The six days until the interview as rows of blocks, coloured by kind: study in the mornings and at the start of weekend sessions, repo work in the evenings and after each study block on weekends, practice at 20:30, plus the DSA habit and Good Sleep on weekends.">
+  <text x="10" y="49" class="tb">Thu 19</text>
+  <rect x="90" y="30" width="70" height="30" rx="5" class="bxm"/><text x="125" y="49" text-anchor="middle" class="ts">DSA</text>
+  <rect x="164" y="30" width="70" height="30" rx="5" class="bxs"/><text x="199" y="49" text-anchor="middle" class="ts">M1 · M2</text>
+  <rect x="238" y="30" width="35" height="30" rx="5" class="bxw"/><text x="255.5" y="49" text-anchor="middle" class="ts">S1–3</text>
+
+  <text x="10" y="93" class="tb">Fri 20</text>
+  <rect x="90" y="74" width="140" height="30" rx="5" class="bxs"/><text x="160" y="93" text-anchor="middle" class="ts">M3 · M4 · guardrails</text>
+  <rect x="234" y="74" width="70" height="30" rx="5" class="bxm"/><text x="269" y="93" text-anchor="middle" class="ts">DSA</text>
+  <rect x="308" y="74" width="70" height="30" rx="5" class="bxr"/><text x="343" y="93" text-anchor="middle" class="ts">Step A</text>
+  <rect x="382" y="74" width="35" height="30" rx="5" class="bxw"/><text x="399.5" y="93" text-anchor="middle" class="ts">S4–7</text>
+
+  <text x="10" y="137" class="tb">Sat 21</text>
+  <rect x="90" y="118" width="70" height="30" rx="5" class="bxr"/><text x="125" y="137" text-anchor="middle" class="ts">Step B</text>
+  <rect x="164" y="118" width="35" height="30" rx="5" class="bxs"/><text x="181.5" y="137" text-anchor="middle" class="ts">M6</text>
+  <rect x="203" y="118" width="70" height="30" rx="5" class="bxr"/><text x="238" y="137" text-anchor="middle" class="ts">Step C</text>
+  <rect x="277" y="118" width="35" height="30" rx="5" class="bxs"/><text x="294.5" y="137" text-anchor="middle" class="ts">M5</text>
+  <rect x="316" y="118" width="52" height="30" rx="5" class="bxs"/><text x="342" y="137" text-anchor="middle" class="ts">M7</text>
+  <rect x="372" y="118" width="210" height="30" rx="5" class="bxg"/><text x="477" y="137" text-anchor="middle" class="ts">Good Sleep · 3h</text>
+  <rect x="586" y="118" width="70" height="30" rx="5" class="bxm"/><text x="621" y="137" text-anchor="middle" class="ts">DSA</text>
+
+  <text x="10" y="181" class="tb">Sun 22</text>
+  <rect x="90" y="162" width="35" height="30" rx="5" class="bxs"/><text x="107.5" y="181" text-anchor="middle" class="ts">M8</text>
+  <rect x="129" y="162" width="70" height="30" rx="5" class="bxr"/><text x="164" y="181" text-anchor="middle" class="ts">Step D</text>
+  <rect x="203" y="162" width="70" height="30" rx="5" class="bxs"/><text x="238" y="181" text-anchor="middle" class="ts">M9 design</text>
+  <rect x="277" y="162" width="70" height="30" rx="5" class="bxw"/><text x="312" y="181" text-anchor="middle" class="ts">Scenarios</text>
+  <rect x="372" y="162" width="210" height="30" rx="5" class="bxg"/><text x="477" y="181" text-anchor="middle" class="ts">Good Sleep · 3h</text>
+  <rect x="586" y="162" width="70" height="30" rx="5" class="bxm"/><text x="621" y="181" text-anchor="middle" class="ts">DSA</text>
+
+  <text x="10" y="225" class="tb">Mon 23</text>
+  <rect x="90" y="206" width="140" height="30" rx="5" class="bxw"/><text x="160" y="225" text-anchor="middle" class="ts">Mock interview</text>
+  <rect x="234" y="206" width="70" height="30" rx="5" class="bxm"/><text x="269" y="225" text-anchor="middle" class="ts">DSA</text>
+  <rect x="308" y="206" width="70" height="30" rx="5" class="bxw"/><text x="343" y="225" text-anchor="middle" class="ts">Stories</text>
+  <rect x="382" y="206" width="35" height="30" rx="5" class="bxw"/><text x="399.5" y="225" text-anchor="middle" class="ts">Skim</text>
+
+  <text x="10" y="269" class="tb">Tue 24</text>
+  <rect x="90" y="250" width="35" height="30" rx="5" class="bxw"/><text x="107.5" y="269" text-anchor="middle" class="ts">Skim</text>
+  <rect x="129" y="250" width="140" height="30" rx="5" class="bx dash"/><text x="199" y="269" text-anchor="middle" class="ts tb">Interview</text>
+  <rect x="273" y="250" width="70" height="30" rx="5" class="bxm"/><text x="308" y="269" text-anchor="middle" class="ts">DSA</text>
+
+  <rect x="90" y="304" width="14" height="14" rx="3" class="bxs"/><text x="110" y="315" class="ts">Study</text>
+  <rect x="160" y="304" width="14" height="14" rx="3" class="bxr"/><text x="180" y="315" class="ts">Repo, on your Mac</text>
+  <rect x="300" y="304" width="14" height="14" rx="3" class="bxw"/><text x="320" y="315" class="ts">Practice out loud</text>
+  <rect x="430" y="304" width="14" height="14" rx="3" class="bxm"/><text x="450" y="315" class="ts">DSA habit</text>
+  <rect x="520" y="304" width="14" height="14" rx="3" class="bxg"/><text x="540" y="315" class="ts">Good Sleep</text>
+</svg></div>
+<figcaption>Each row is a day, blocks in order, width roughly proportional to time (1 hour = one DSA block). Weekday mornings are study, 19:00 is repo, 20:30 is practice; weekends alternate study and the repo step that uses it.</figcaption>
+</figure>
+
+<pre class="mermaid">
+flowchart LR
+  M1["M1 How LLMs work"] --> A["Step A: search"]
+  M2["M2 Embeddings"] --> A
+  M3["M3 RAG"] --> A
+  M4["M4 Agents and tools"] --> B["Step B: agent loop"]
+  M6["M6 Guardrails, evals"] --> C["Step C: guardrails, evals, providers"]
+  M5["M5 Frameworks, gateways"] --> C
+  M7["M7 Fine-tuning, classifiers"] --> D["Step D: photo, PDF, classifier"]
+  M8["M8 Vision, PDFs"] --> D
+  M9["M9 Cost, system design"] --> SD["Their bot on paper"]
+  A --> P["Scenarios and mock"]
+  B --> P
+  C --> P
+  D --> P
+  SD --> P
+</pre>
+
 <div class="tbl"><table>
-<tr><th>Day</th><th>Morning</th><th>Evening</th></tr>
-<tr><td>Thu 19</td><td>(gone)</td><td>18:00 DSA · 19:00 M1–M2 · 20:30 scenarios S1–S3</td></tr>
-<tr><td>Fri 20</td><td>6:15–8:15 M3 finish, M4, guardrails half of M6</td><td>18:00 DSA · 19:00 build step A · 20:30 scenarios S4–S7</td></tr>
-<tr><td>Sat 21</td><td colspan="2">AI prep 4h: build steps B and C, M5, M6 evals, M7 · Good Sleep 3h · DSA</td></tr>
-<tr><td>Sun 22</td><td colspan="2">AI prep 4h: build step D, M8, M9, all scenarios out loud, their bot on paper · Good Sleep 3h · DSA</td></tr>
-<tr><td>Mon 23</td><td>6:15 mock interview with Claude</td><td>18:00 DSA · 19:00 weak answers and stories · 20:30 light skim</td></tr>
-<tr><td>Tue 24</td><td>6:15 30-min skim</td><td>Interview</td></tr>
+<tr><th>Day</th><th>Block (IST)</th><th>Kind</th><th>What</th></tr>
+<tr><td>Thu 19</td><td>18:00</td><td>DSA</td><td>Product of Array Except Self</td></tr>
+<tr><td></td><td>19:00–20:00</td><td><span class="kind study">Study</span></td><td>M1 → M2 (§1–2)</td></tr>
+<tr><td></td><td>20:30–21:00</td><td><span class="kind practice">Practice</span></td><td>S1–S3</td></tr>
+<tr><td>Fri 20</td><td>6:15–8:15</td><td><span class="kind study">Study</span></td><td>M3 → M4 → guardrails half of M6 (§3, §4, §6)</td></tr>
+<tr><td></td><td>18:00</td><td>DSA</td><td>Valid Sudoku</td></tr>
+<tr><td></td><td>19:00–20:00</td><td><span class="kind repo">Repo</span></td><td>Step A: search (uses M1–M3)</td></tr>
+<tr><td></td><td>20:30–21:00</td><td><span class="kind practice">Practice</span></td><td>S4–S7</td></tr>
+<tr><td>Sat 21</td><td>4h, breaks as you like</td><td><span class="kind repo">Repo</span> <span class="kind study">Study</span></td><td>Step B (uses M4) → M6 evals half → Step C → M5 → M7 (for Sunday)</td></tr>
+<tr><td></td><td>3h</td><td>Good Sleep</td><td>Register header → sensor bytes to samples</td></tr>
+<tr><td>Sun 22</td><td>4h</td><td><span class="kind study">Study</span> <span class="kind repo">Repo</span> <span class="kind practice">Practice</span></td><td>M8 → Step D (uses M7, M8) → M9 + their bot on paper → scenarios not ticked yet</td></tr>
+<tr><td></td><td>3h</td><td>Good Sleep</td><td>Ring buffer, parts 1 and 2</td></tr>
+<tr><td>Mon 23</td><td>6:15–8:15</td><td><span class="kind practice">Practice</span></td><td>Mock interview with Claude</td></tr>
+<tr><td></td><td>19:00 · 20:30</td><td><span class="kind practice">Practice</span></td><td>Weak answers and stories · light skim</td></tr>
+<tr><td>Tue 24</td><td>6:15–6:45</td><td><span class="kind practice">Practice</span></td><td>Skim: weak answers, stories, the build's README</td></tr>
 </table></div>
 
 <!-- ============================ §1 ============================ -->
@@ -252,11 +365,52 @@ th { font: 600 12px/1.3 var(--mono); letter-spacing: .05em; text-transform: uppe
 </table></div>
 <p>Even at temperature 0 output is not perfectly deterministic (batching and floating point), so tests check properties ("valid JSON with these fields"), not exact strings.</p>
 
+<figure class="dg">
+<div class="sc"><svg class="wide" viewBox="0 0 660 190" role="img" aria-label="Three bar charts of next-token probabilities after 'Blue running'. At temperature 0.3 'shoes' gets 96 percent; at 1.0 it gets 55 percent; at 1.5 only 43 percent, with the rest spread over shoe, shorts, socks and jacket.">
+  <text x="10" y="18" class="tb">temperature 0.3</text>
+  <text x="230" y="18" class="tb">temperature 1.0</text>
+  <text x="450" y="18" class="tb">temperature 1.5</text>
+  <g class="ts">
+    <text x="62" y="46" text-anchor="end">shoes</text><text x="62" y="70" text-anchor="end">shoe</text><text x="62" y="94" text-anchor="end">shorts</text><text x="62" y="118" text-anchor="end">socks</text><text x="62" y="142" text-anchor="end">jacket</text>
+    <text x="282" y="46" text-anchor="end">shoes</text><text x="282" y="70" text-anchor="end">shoe</text><text x="282" y="94" text-anchor="end">shorts</text><text x="282" y="118" text-anchor="end">socks</text><text x="282" y="142" text-anchor="end">jacket</text>
+    <text x="502" y="46" text-anchor="end">shoes</text><text x="502" y="70" text-anchor="end">shoe</text><text x="502" y="94" text-anchor="end">shorts</text><text x="502" y="118" text-anchor="end">socks</text><text x="502" y="142" text-anchor="end">jacket</text>
+  </g>
+  <rect x="68" y="34" width="115" height="16" class="fa"/><rect x="68" y="58" width="4" height="16" class="fa"/><rect x="68" y="82" width="1" height="16" class="fa"/><rect x="68" y="106" width="1" height="16" class="fa"/><rect x="68" y="130" width="1" height="16" class="fa"/>
+  <rect x="288" y="34" width="66" height="16" class="fa"/><rect x="288" y="58" width="24" height="16" class="fa"/><rect x="288" y="82" width="14" height="16" class="fa"/><rect x="288" y="106" width="10" height="16" class="fa"/><rect x="288" y="130" width="6" height="16" class="fa"/>
+  <rect x="508" y="34" width="51" height="16" class="fa"/><rect x="508" y="58" width="26" height="16" class="fa"/><rect x="508" y="82" width="18" height="16" class="fa"/><rect x="508" y="106" width="14" height="16" class="fa"/><rect x="508" y="130" width="10" height="16" class="fa"/>
+  <g class="ts tm">
+    <text x="187" y="46">0.96</text><text x="76" y="70">0.03</text><text x="73" y="94">&lt;0.01</text><text x="73" y="118">&lt;0.01</text><text x="73" y="142">&lt;0.01</text>
+    <text x="358" y="46">0.55</text><text x="316" y="70">0.20</text><text x="306" y="94">0.12</text><text x="302" y="118">0.08</text><text x="298" y="142">0.05</text>
+    <text x="563" y="46">0.43</text><text x="538" y="70">0.22</text><text x="530" y="94">0.15</text><text x="526" y="118">0.12</text><text x="522" y="142">0.09</text>
+  </g>
+  <text x="330" y="176" text-anchor="middle" class="tm">the model's next-token probabilities after "Blue running …"</text>
+</svg></div>
+<figcaption>Same model, same input; only the temperature changes before one token is sampled. At 0.3 the sampler almost always picks "shoes"; at 1.5 it picks something else more than half the time. Tool arguments and filters want the left chart. (Illustrative probabilities.)</figcaption>
+</figure>
+
 <h3>"Parameters" also means weights</h3>
 <p>"7B" means 7 billion learned numbers. Memory needed ≈ parameters × bytes per parameter: 7B × 2 bytes (16-bit) ≈ 14 GB; at 4-bit ≈ 4 GB. More parameters usually means more capable, slower and more expensive to serve. This is the maths behind "what fits on my MacBook" and "what our GPU can serve".</p>
 
 <h3>Context window and memory</h3>
 <p>The context window is everything the model sees in one call: system prompt + tool definitions + chat history + retrieved documents + the question + the answer it writes. The model keeps <b>nothing</b> between calls. "Memory" is your code re-sending the history (trimmed or summarised) or retrieving stored facts. Long contexts cost money, add latency, and models use the middle of a long context less reliably than the start and end ("lost in the middle").</p>
+
+<figure class="dg">
+<div class="sc"><svg class="wide" viewBox="0 0 660 120" role="img" aria-label="One model call from the build, measured in tokens: system prompt 328, tool definitions 375, conversation state 65, the user's message 10, and the tool call with its result about 330.">
+  <text x="30" y="16" class="tb">One model call in the build, in tokens (measured)</text>
+  <text x="449" y="30" text-anchor="middle" class="ts tw tb">your message: 10</text>
+  <line x1="449" y1="33" x2="449" y2="40" class="lw"/>
+  <rect x="30" y="40" width="178" height="28" class="bxs"/>
+  <rect x="208" y="40" width="203" height="28" class="bxr"/>
+  <rect x="411" y="40" width="35" height="28" class="bxg"/>
+  <rect x="446" y="40" width="6" height="28" class="fw"/>
+  <rect x="452" y="40" width="178" height="28" class="bxm"/>
+  <text x="119" y="88" text-anchor="middle" class="ts">System prompt</text><text x="119" y="104" text-anchor="middle" class="ts tm">328 · fixed</text>
+  <text x="309" y="88" text-anchor="middle" class="ts">Tool definitions</text><text x="309" y="104" text-anchor="middle" class="ts tm">375 · fixed</text>
+  <text x="428" y="88" text-anchor="middle" class="ts">State</text><text x="428" y="104" text-anchor="middle" class="ts tm">65</text>
+  <text x="541" y="88" text-anchor="middle" class="ts">Tool call + result</text><text x="541" y="104" text-anchor="middle" class="ts tm">≈330</text>
+</svg></div>
+<figcaption>The second model call of a search turn, measured with the build's own prompt. The customer's message is 10 of about 1,100 tokens; the rules and tool definitions are a fixed prefix sent every time, which is exactly what context caching makes cheaper.</figcaption>
+</figure>
 
 <h3>System prompt</h3>
 <p>The instructions sent first on every call: role, scope, tone, rules, how to use tools, output format, and runtime facts such as today's date and the user's language. It steers; it does not enforce. Anything that must never happen (showing another customer's order, inventing a discount) is enforced in code. See <a href="#safety">§6</a>.</p>
@@ -290,6 +444,30 @@ th { font: 600 12px/1.3 var(--mono); letter-spacing: .05em; text-transform: uppe
   <li><b>The embedding model and the chat model are independent.</b> Google embeddings for retrieval with a fine-tuned open model for generation is fine: the LLM only ever sees the retrieved <i>text</i>, never the vectors.</li>
 </ul>
 
+<figure class="dg">
+<div class="sc"><svg class="wide" viewBox="0 0 660 244" role="img" aria-label="Two sketches of embedding spaces. In Gemini's space the English and Thai phrases for blue running shoe are close, cosine 0.86, and a red handbag is far, 0.58. In OpenAI's small model the same English and Thai phrases are far apart, 0.36. Vectors from different models can't be compared.">
+  <text x="20" y="16" class="tb">gemini-embedding-001</text>
+  <text x="350" y="16" class="tb">text-embedding-3-small</text>
+  <rect x="10" y="24" width="310" height="190" rx="8" class="bx"/>
+  <rect x="340" y="24" width="310" height="190" rx="8" class="bx"/>
+  <line x1="80" y1="80" x2="110" y2="112" class="la dash"/>
+  <line x1="80" y1="80" x2="290" y2="195" class="lm dash"/>
+  <circle cx="80" cy="80" r="5" class="fa"/><text x="88" y="66" class="ts">blue running shoe</text>
+  <circle cx="110" cy="112" r="5" class="fa"/><text x="112" y="134" text-anchor="end" class="ts">รองเท้าวิ่งสีน้ำเงิน</text>
+  <text x="62" y="104" class="ts ta tb">0.86</text>
+  <circle cx="175" cy="84" r="5" class="fm"/><text x="183" y="88" class="ts tm">stability running shoe</text>
+  <circle cx="225" cy="150" r="5" class="fm"/><text x="233" y="154" class="ts tm">hiking socks</text>
+  <text x="198" y="128" class="ts tm tb">0.58</text>
+  <circle cx="290" cy="195" r="5" class="fm"/><text x="282" y="199" text-anchor="end" class="ts tm">red handbag</text>
+  <line x1="400" y1="75" x2="560" y2="168" class="lw dash"/>
+  <circle cx="400" cy="75" r="5" class="fr"/><text x="408" y="70" class="ts">blue running shoe</text>
+  <circle cx="560" cy="168" r="5" class="fr"/><text x="560" y="190" text-anchor="middle" class="ts">รองเท้าวิ่งสีน้ำเงิน</text>
+  <text x="488" y="114" class="ts tw tb">0.36</text>
+  <text x="330" y="234" text-anchor="middle" class="ts tm">numbers are cosine similarities measured during the build · each model has its own space: never compare across them</text>
+</svg></div>
+<figcaption>A sketch (positions aren't to scale; the numbers are real). Gemini puts the English and Thai phrases for "blue running shoe" close together; OpenAI's small model puts them far apart. For a Thai shop, test the embedding model on Thai before choosing it.</figcaption>
+</figure>
+
 <h3>Dimensions and size</h3>
 <p>Gemini's <code>gemini-embedding-001</code> returns 3072 numbers by default and can be shortened to 1536 or 768 (it is trained so the first numbers carry most of the meaning). Sizing for 2 million products: 2,000,000 × 768 × 4 bytes ≈ <b>6 GB</b> of raw vectors; at 3072 it is ≈ 25 GB, before index overhead. Choosing 768, or compressing to int8, is a real cost decision.</p>
 
@@ -300,12 +478,58 @@ th { font: 600 12px/1.3 var(--mono); letter-spacing: .05em; text-transform: uppe
   <li><b>IVF</b>: cluster the vectors (k-means), search only the nearest few clusters (<code>nprobe</code>). Less memory, needs a training step.</li>
 </ul>
 
+<figure class="dg">
+<div class="sc"><svg class="wide" viewBox="0 0 660 214" role="img" aria-label="HNSW search: three layers of linked nodes. The query enters at the sparse top layer, hops toward the target, drops to the middle layer, hops again, drops to the bottom layer and reaches the nearest node in a few steps.">
+  <defs><marker id="ahH" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L8,4 L0,8 z" class="fa"/></marker></defs>
+  <text x="10" y="44" class="ts tm">layer 2 · sparse</text>
+  <text x="10" y="114" class="ts tm">layer 1</text>
+  <text x="10" y="184" class="ts tm">layer 0 · every vector</text>
+  <line x1="110" y1="40" x2="565" y2="40" class="lm"/>
+  <line x1="90" y1="110" x2="620" y2="110" class="lm"/>
+  <line x1="70" y1="180" x2="610" y2="180" class="lm"/>
+  <line x1="340" y1="40" x2="340" y2="180" class="lm dash"/><line x1="565" y1="40" x2="565" y2="180" class="lm dash"/><line x1="430" y1="110" x2="430" y2="180" class="lm dash"/>
+  <g class="fm">
+    <circle cx="110" cy="40" r="6"/><circle cx="340" cy="40" r="6"/><circle cx="565" cy="40" r="6"/>
+    <circle cx="90" cy="110" r="5"/><circle cx="200" cy="110" r="5"/><circle cx="340" cy="110" r="5"/><circle cx="430" cy="110" r="5"/><circle cx="565" cy="110" r="5"/><circle cx="620" cy="110" r="5"/>
+    <circle cx="160" cy="180" r="4"/><circle cx="205" cy="180" r="4"/><circle cx="250" cy="180" r="4"/><circle cx="295" cy="180" r="4"/><circle cx="340" cy="180" r="4"/><circle cx="385" cy="180" r="4"/><circle cx="430" cy="180" r="4"/><circle cx="520" cy="180" r="4"/><circle cx="565" cy="180" r="4"/><circle cx="610" cy="180" r="4"/>
+  </g>
+  <path d="M116,36 C200,22 260,22 332,36" class="la" marker-end="url(#ahH)"/>
+  <path d="M346,46 L346,102" class="la" marker-end="url(#ahH)"/>
+  <path d="M348,106 C380,96 400,96 422,106" class="la" marker-end="url(#ahH)"/>
+  <path d="M436,116 L436,172" class="la" marker-end="url(#ahH)"/>
+  <path d="M438,176 C450,170 458,170 467,176" class="la" marker-end="url(#ahH)"/>
+  <circle cx="475" cy="180" r="7" class="fa"/>
+  <text x="110" y="24" text-anchor="middle" class="ts ta tb">entry</text>
+  <text x="475" y="204" text-anchor="middle" class="ts ta tb">nearest to the query</text>
+</svg></div>
+<figcaption>HNSW search: enter at the sparse top layer, hop greedily toward the query, drop a layer, repeat. Five hops instead of comparing against every vector; the price is memory for all those links, and an occasional miss (approximate, not exact).</figcaption>
+</figure>
+
 <h3>Filters with vectors (the "in stock and blue" problem)</h3>
 <ul>
   <li><b>Post-filter</b>: take the vector top 50, then drop what isn't blue and in stock. Fast, but a selective filter can leave 3 results or none.</li>
   <li><b>Pre-filter</b>: restrict to blue, in-stock items first, then rank by vector. Correct, can be slow for broad filters without the right index.</li>
   <li><b>Filter-aware search</b>: the index keeps searching until it has enough results that pass the filter (pgvector 0.8's iterative index scans; Qdrant's payload indexes).</li>
 </ul>
+
+<figure class="dg">
+<div class="sc"><svg class="wide" viewBox="0 0 680 176" role="img" aria-label="Two lanes. Post-filter: 2,048 products, take the 50 nearest by vector, then filter, leaving 0 to 2 results. Pre-filter as in step A: 2,048 products, SQL filter to 2 candidates, then rank by keywords and vectors, giving 2 ranked results.">
+  <defs><marker id="ahF" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L8,4 L0,8 z" class="fc"/></marker></defs>
+  <text x="20" y="18" class="tb">Post-filter: rank first, filter after</text>
+  <rect x="20" y="28" width="130" height="44" rx="6" class="bxm"/><text x="85" y="55" text-anchor="middle">2,048 products</text>
+  <line x1="150" y1="50" x2="273" y2="50" class="ln" marker-end="url(#ahF)"/><text x="212" y="43" text-anchor="middle" class="ts tm">vector top 50</text>
+  <rect x="275" y="28" width="130" height="44" rx="6" class="bxm"/><text x="340" y="55" text-anchor="middle">50 nearest</text>
+  <line x1="405" y1="50" x2="528" y2="50" class="ln" marker-end="url(#ahF)"/><text x="467" y="43" text-anchor="middle" class="ts tm">then filter</text>
+  <rect x="530" y="28" width="130" height="44" rx="6" class="bxw"/><text x="595" y="55" text-anchor="middle" class="tb">0–2 left</text>
+  <text x="20" y="108" class="tb">Pre-filter: filter first, then rank (step A)</text>
+  <rect x="20" y="118" width="130" height="44" rx="6" class="bxm"/><text x="85" y="145" text-anchor="middle">2,048 products</text>
+  <line x1="150" y1="140" x2="273" y2="140" class="ln" marker-end="url(#ahF)"/><text x="212" y="133" text-anchor="middle" class="ts tm">SQL filter</text>
+  <rect x="275" y="118" width="130" height="44" rx="6" class="bxs"/><text x="340" y="145" text-anchor="middle">2 candidates</text>
+  <line x1="405" y1="140" x2="528" y2="140" class="ln" marker-end="url(#ahF)"/><text x="467" y="133" text-anchor="middle" class="ts tm">BM25 + vectors</text>
+  <rect x="530" y="118" width="130" height="44" rx="6" class="bxs"/><text x="595" y="145" text-anchor="middle" class="tb">2 ranked results</text>
+</svg></div>
+<figcaption>"Blue running shoes in stock under ฿3,000" matches only 2 of 2,048 products. Ranking first and filtering after can lose both, because the 50 nearest vectors don't know about stock or price. Filtering first can't lose them.</figcaption>
+</figure>
 
 <h3>Where to store vectors</h3>
 <div class="tbl"><table>
@@ -359,6 +583,25 @@ flowchart LR
   <li><b>Generate</b> with clear rules: answer only from these sources, cite them, say so when the answer isn't there.</li>
   <li><b>Log</b> query, retrieved ids, answer and feedback: that's your future eval set.</li>
 </ol>
+
+<figure class="dg">
+<div class="sc"><svg class="wide" viewBox="0 0 660 210" role="img" aria-label="Fused scores for five real results of the query 'something comfortable for flat feet'. Each bar is the keyword part plus the vector part. Hoka Racer Lite 8, ranked 1 by keywords and 2 by vectors, wins with 0.0325.">
+  <text x="10" y="14" class="tb">Fused score = keyword part + vector part</text>
+  <rect x="360" y="4" width="12" height="12" class="fa"/><text x="378" y="14" class="ts">1/(60 + keyword rank)</text>
+  <rect x="510" y="4" width="12" height="12" class="fr"/><text x="528" y="14" class="ts">1/(60 + vector rank)</text>
+  <text x="10" y="42" class="ts tb">Hoka Racer Lite 8</text><text x="10" y="56" class="ts tm">keyword #1 · vector #2</text>
+  <rect x="190" y="34" width="151" height="18" class="fa"/><rect x="341" y="34" width="149" height="18" class="fr"/><text x="496" y="47" class="ts tb">0.0325</text>
+  <text x="10" y="78" class="ts tb">Nike Racer Lite 1</text><text x="10" y="92" class="ts tm">keyword #4 · vector #20</text>
+  <rect x="190" y="70" width="144" height="18" class="fa"/><rect x="334" y="70" width="115" height="18" class="fr"/><text x="455" y="83" class="ts">0.0281</text>
+  <text x="10" y="114" class="ts tb">Adidas Daily Trainer 3</text><text x="10" y="128" class="ts tm">keyword #17 · vector #11</text>
+  <rect x="190" y="106" width="120" height="18" class="fa"/><rect x="310" y="106" width="130" height="18" class="fr"/><text x="446" y="119" class="ts">0.0271</text>
+  <text x="10" y="150" class="ts tb">Hoka Swift Run 4</text><text x="10" y="164" class="ts tm">keyword #7 · vector #26</text>
+  <rect x="190" y="142" width="138" height="18" class="fa"/><rect x="328" y="142" width="107" height="18" class="fr"/><text x="441" y="155" class="ts">0.0266</text>
+  <text x="10" y="186" class="ts tb">Adidas Daily Trainer 7</text><text x="10" y="200" class="ts tm">keyword #13 · vector #21</text>
+  <rect x="190" y="178" width="126" height="18" class="fa"/><rect x="316" y="178" width="114" height="18" class="fr"/><text x="436" y="191" class="ts">0.0260</text>
+</svg></div>
+<figcaption>Real output of step A for "something comfortable for flat feet". RRF only uses positions, so a product near the top of <i>both</i> lists (first row) beats one that is high in only one. No tuning of weights between BM25 scores and cosine similarities, which live on different scales.</figcaption>
+</figure>
 
 <h3>Follow-up questions and context</h3>
 <ul>
@@ -421,6 +664,24 @@ flowchart TD
   <li>The model answers from the result, or calls another tool (several calls can run in parallel).</li>
 </ol>
 
+<pre class="mermaid">
+sequenceDiagram
+  participant C as Customer
+  participant H as Harness (agent.py)
+  participant M as Model
+  participant DB as Orders table
+  C->>H: show my orders from last week
+  H->>M: rules + clock + message + tool definitions
+  M-->>H: call get_orders with period = last_week
+  Note over H: validate the arguments<br/>user id from the login, not the model<br/>dates in code: Mon 9 to Sun 15 Nov
+  H->>DB: orders of u1 between two Bangkok midnights (stored as UTC)
+  DB-->>H: 6 orders
+  H->>M: tool result as JSON
+  M-->>H: Here are your orders from Mon 9 Nov to Sun 15 Nov
+  H-->>C: answer, after the price check
+</pre>
+<p class="ts" style="color:var(--muted);font-size:13.5px">The real exchange from step B. The model never touches the database; it only asks, and the harness decides what the request is allowed to do.</p>
+
 <h4>Designing tools that work</h4>
 <ul>
   <li>Few tools, clear names, descriptions that say when to use and when not to.</li>
@@ -453,6 +714,36 @@ flowchart TD
 <tr><td>Skill</td><td>A folder of instructions (SKILL.md) plus optional scripts and files that teaches an agent a task. Only its name and one-line description sit in context; the full text loads when relevant, which saves tokens.</td><td>"How we write promotion copy in Thai", "how to run our eval suite".</td></tr>
 <tr><td>Plugin</td><td>An installable bundle that packages skills, MCP servers, slash commands, sub-agents and hooks, so a whole team gets one setup.</td><td>A Claude Code plugin for the team's release process.</td></tr>
 </table></div>
+<figure class="dg">
+<div class="sc"><svg class="wide" viewBox="0 0 680 236" role="img" aria-label="A plugin bundles a skill, an MCP server connection and commands. The MCP server exposes tools such as get_orders and get_order, and the same server serves the shop bot, a support app and Claude Code.">
+  <defs><marker id="ahM" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L8,4 L0,8 z" class="fc"/></marker></defs>
+  <rect x="20" y="30" width="290" height="190" rx="10" class="bx"/>
+  <text x="34" y="52" class="tb">Plugin · one install for the team</text>
+  <rect x="36" y="64" width="258" height="52" rx="6" class="bxs"/>
+  <text x="48" y="84" class="ts tb">Skill: SKILL.md + scripts</text>
+  <text x="48" y="102" class="ts tm">only its name and description sit in context</text>
+  <rect x="36" y="124" width="258" height="40" rx="6" class="bxr"/>
+  <text x="48" y="148" class="ts tb">MCP server connection</text>
+  <rect x="36" y="172" width="258" height="36" rx="6" class="bxm"/>
+  <text x="48" y="194" class="ts">Slash commands, hooks, sub-agents</text>
+  <line x1="294" y1="144" x2="378" y2="124" class="ln" marker-end="url(#ahM)"/>
+  <text x="336" y="126" text-anchor="middle" class="ts tm">connects</text>
+  <text x="455" y="64" text-anchor="middle" class="ts ta">each tool = one function</text>
+  <rect x="380" y="74" width="150" height="96" rx="8" class="bxr"/>
+  <text x="455" y="96" text-anchor="middle" class="ts tb">Orders MCP server</text>
+  <text x="455" y="120" text-anchor="middle" class="ts">tool: get_orders</text>
+  <text x="455" y="138" text-anchor="middle" class="ts">tool: get_order</text>
+  <text x="455" y="156" text-anchor="middle" class="ts">resource: return policy</text>
+  <text x="455" y="192" text-anchor="middle" class="ts tm">write once, any MCP client uses it</text>
+  <line x1="530" y1="110" x2="568" y2="59" class="ln" marker-end="url(#ahM)"/>
+  <line x1="530" y1="122" x2="568" y2="122" class="ln" marker-end="url(#ahM)"/>
+  <line x1="530" y1="134" x2="568" y2="185" class="ln" marker-end="url(#ahM)"/>
+  <rect x="570" y="42" width="100" height="34" rx="6" class="bxm"/><text x="620" y="63" text-anchor="middle" class="ts">Shop bot</text>
+  <rect x="570" y="105" width="100" height="34" rx="6" class="bxm"/><text x="620" y="126" text-anchor="middle" class="ts">Support app</text>
+  <rect x="570" y="168" width="100" height="34" rx="6" class="bxm"/><text x="620" y="189" text-anchor="middle" class="ts">Claude Code</text>
+</svg></div>
+<figcaption>How the four fit together. A tool is one function; an MCP server is a program that offers tools and data to any MCP client; a skill is packaged know-how loaded only when relevant; a plugin bundles skills, server connections and commands so a whole team installs one thing.</figcaption>
+</figure>
 <p>One line: <i>tools are functions; MCP is how tools are shared across apps; skills are know-how loaded on demand; plugins ship all of those together.</i> Security: an MCP server's tool descriptions go straight into the prompt, so only connect vetted servers and give each the least access it needs.</p>
 
 <div class="say"><span class="label">Say it</span>
@@ -466,6 +757,31 @@ flowchart TD
   <li><b>LiteLLM</b>: one OpenAI-style API in front of 100+ providers (Gemini, Vertex AI, OpenAI, Anthropic, Ollama, your own vLLM server). Use it as a Python SDK or as a proxy server (gateway) with fallbacks (Gemini rate-limited → your open model), retries, load balancing across keys, per-team keys and budgets, cost and token tracking, logging callbacks. That fits "fine-tuned open models + Gemini" exactly.</li>
   <li><b>Google ADK</b> (Agent Development Kit): Google's open-source agent framework, Gemini-first, deploys to Vertex AI Agent Engine. Worth knowing by name at a Google Cloud shop.</li>
 </ul>
+<p><b>The shop bot as a LangGraph graph</b>: each box is a node, each labelled arrow a conditional edge on the state, and the checkpointer saves the state after every node, per conversation.</p>
+<pre class="mermaid">
+flowchart TD
+  S(["START: customer message"]) --> G["screen node: mask PII, check scope"]
+  G -- blocked --> X["refuse politely"]
+  G -- ok --> R{"router node: intent"}
+  R -- product --> PS["search node"]
+  R -- order --> OR["orders node"]
+  R -- policy --> FQ["FAQ RAG node"]
+  R -- human --> HO["handoff: interrupt, wait for a person"]
+  PS --> AN["answer node: grounding check"]
+  OR --> AN
+  FQ --> AN
+  AN --> E(["END"])
+  X --> E
+  CP[("checkpointer: state per conversation")] -.- R
+</pre>
+<p><b>The gateway idea, as the build does it</b> (<code>llm.chat</code>, about 15 lines; LiteLLM does the same with config and adds budgets and cost tracking):</p>
+<pre class="mermaid">
+flowchart LR
+  APP["agent.py"] --> CH{"llm.chat"}
+  CH -- "first: CHAT_MODEL" --> P["Gemini API"]
+  CH -- "429, 5xx or timeout after retries" --> F["OpenRouter: Gemini 3.5 Flash-Lite"]
+  APP -- "embeddings: one fixed model" --> EM["gemini-embedding-001, direct or via OpenRouter"]
+</pre>
 <div class="say"><span class="label">Say it</span>
 <p><b>"Do you use a framework?"</b> I write the tool loop by hand first (it's about 40 lines), so I know exactly what goes to the model. When I need branching, persistent state per conversation and human approval steps, LangGraph models that cleanly as nodes, conditional edges and a checkpointer. In front of the models I'd put LiteLLM as a gateway: one API for Gemini and our fine-tuned models, with fallbacks, retries and cost tracking per route.</p></div>
 
@@ -482,6 +798,30 @@ flowchart TD
 <tr><td>Output</td><td>Grounding check (every price, stock level and order fact must match a tool result), product cards rendered from catalog data by id instead of model text, schema validation, PII leak check, safety filter, tone policy, a safe fallback message.</td></tr>
 <tr><td>Operations</td><td>Tracing and logs, a red-team test set (jailbreaks, injections, Thai-language attacks) run before every release, alerts on block rates, handoff to a human.</td></tr>
 </table></div>
+<figure class="dg">
+<div class="sc"><svg class="wide" viewBox="0 0 680 206" role="img" aria-label="A message passes three guard layers: input (mask PII, injection rules, small-model scope check), model plus tools (user id from login, no discount tool, validated arguments), and output (prices only from tools, restore the customer's own PII). Under each layer, a problem it caught during the build.">
+  <defs><marker id="ahG" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L8,4 L0,8 z" class="fc"/></marker></defs>
+  <rect x="10" y="72" width="76" height="40" rx="20" class="bxm"/><text x="48" y="96" text-anchor="middle" class="ts">Customer</text>
+  <line x1="86" y1="92" x2="108" y2="92" class="ln" marker-end="url(#ahG)"/>
+  <rect x="110" y="40" width="156" height="104" rx="8" class="bxs"/>
+  <text x="188" y="62" text-anchor="middle" class="tb">Input</text>
+  <text x="188" y="84" text-anchor="middle" class="ts">mask PII</text><text x="188" y="102" text-anchor="middle" class="ts">rules: injection</text><text x="188" y="120" text-anchor="middle" class="ts">small model: scope</text>
+  <line x1="266" y1="92" x2="288" y2="92" class="ln" marker-end="url(#ahG)"/>
+  <rect x="290" y="40" width="156" height="104" rx="8" class="bxr"/>
+  <text x="368" y="62" text-anchor="middle" class="tb">Model + tools</text>
+  <text x="368" y="84" text-anchor="middle" class="ts">user id from the login</text><text x="368" y="102" text-anchor="middle" class="ts">no discount tool</text><text x="368" y="120" text-anchor="middle" class="ts">validated arguments</text>
+  <line x1="446" y1="92" x2="468" y2="92" class="ln" marker-end="url(#ahG)"/>
+  <rect x="470" y="40" width="156" height="104" rx="8" class="bxg"/>
+  <text x="548" y="62" text-anchor="middle" class="tb">Output</text>
+  <text x="548" y="84" text-anchor="middle" class="ts">prices only from tools</text><text x="548" y="102" text-anchor="middle" class="ts">rewrite, then remove</text><text x="548" y="120" text-anchor="middle" class="ts">restore own PII</text>
+  <line x1="626" y1="92" x2="664" y2="92" class="ln" marker-end="url(#ahG)"/><text x="645" y="84" text-anchor="middle" class="ts">reply</text>
+  <text x="10" y="176" class="ts tb tm">caught in</text><text x="10" y="190" class="ts tb tm">the build</text>
+  <text x="188" y="176" text-anchor="middle" class="ts tm">"ignore your previous</text><text x="188" y="190" text-anchor="middle" class="ts tm">instructions" → refused</text>
+  <text x="368" y="176" text-anchor="middle" class="ts tm">another customer's order</text><text x="368" y="190" text-anchor="middle" class="ts tm">→ "no order on this account"</text>
+  <text x="548" y="176" text-anchor="middle" class="ts tm">invented ฿1,234</text><text x="548" y="190" text-anchor="middle" class="ts tm">→ rewritten, then removed</text>
+</svg></div>
+<figcaption>Defence in depth, as built in step C. The middle layer is the strongest: the bot simply has no tool that could do the harmful thing. The bottom row shows a real case each layer handled during the build or its tests.</figcaption>
+</figure>
 <p>Measure both sides: misses, and false positives. Blocking a real shopper costs sales. Names to know: NeMo Guardrails, Guardrails AI, Llama Guard, Gemini safety settings, Model Armor, Presidio.</p>
 
 <h3>Prompt injection</h3>
@@ -500,6 +840,19 @@ flowchart TD
   <li><b>Logs</b>: redact before storing, set retention, restrict access.</li>
   <li><b>Law</b>: Thailand's PDPA (similar to GDPR): purpose limitation, consent, rules on sending personal data abroad, which matters when calling an external API. Check vendor terms (no training on your data, data region). Sensitive flows can run on a self-hosted model where nothing leaves your network: one reason to run fine-tuned open models next to Gemini.</li>
 </ul>
+<pre class="mermaid">
+sequenceDiagram
+  participant C as Customer
+  participant G as Guard (masker)
+  participant M as Model provider
+  participant L as Log
+  C->>G: my phone is 081-234-5678
+  G->>M: my phone is ‹PHONE_1›
+  G->>L: masked text only
+  M-->>G: I'll note ‹PHONE_1› for delivery
+  G-->>C: I'll note 081-234-5678 for delivery
+  Note over G: the mapping ‹PHONE_1› = 081-234-5678 stays on our server
+</pre>
 
 <h3>Evals: how you know the bot is good</h3>
 <ul>
@@ -522,6 +875,17 @@ flowchart TD
   <li><b>RAG for knowledge that changes</b>: catalog, prices, stock, policies, promotions. Fine-tuning does not reliably teach facts, goes stale the day a price changes, and produces confident wrong answers.</li>
   <li><b>Fine-tuning for behaviour</b>: a fixed output format (filter JSON), brand voice and tone in Thai, a narrow task (intent classification, query rewriting), or a small model doing one job as well as a big one, cheaper and faster.</li>
 </ul>
+<pre class="mermaid">
+flowchart TD
+  Q["What should the model get better at?"] --> K{"Knowing facts that change?<br/>catalog, prices, policies"}
+  K -- yes --> RAG["RAG and tools"]
+  K -- no --> B{"Behaviour?<br/>format, tone, Thai, one narrow task"}
+  B -- no --> P["A better prompt with examples"]
+  B -- yes --> T{"Is a prompt alone good enough<br/>on the eval set?"}
+  T -- yes --> P
+  T -- no --> FT["Fine-tune: LoRA on an open model, or Gemini tuning"]
+  FT --> EV["Compare with the base model on held-out data, then A/B test"]
+</pre>
 <h3>Kinds</h3>
 <ul>
   <li><b>SFT</b> (supervised fine-tuning): pairs of input and ideal output.</li>
@@ -530,6 +894,30 @@ flowchart TD
 </ul>
 <h3>LoRA and QLoRA</h3>
 <p><b>LoRA</b> freezes the base model and trains two small low-rank matrices added to some layers, often under 1% of the parameters. Training is cheap, and adapters are small files you can swap per task on one base model. <b>QLoRA</b> loads the base model in 4-bit, so fine-tuning a 7–8B model fits on one consumer GPU.</p>
+<figure class="dg">
+<div class="sc"><svg class="wide" viewBox="0 0 660 222" role="img" aria-label="LoRA: the input x goes through the frozen weight matrix W, 4096 by 4096, and in parallel through two small trainable matrices A and B; the outputs are added: h equals W x plus B A x. Only A and B are trained, 65,536 numbers, 0.4 percent of W.">
+  <defs><marker id="ahL" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L8,4 L0,8 z" class="fc"/></marker></defs>
+  <rect x="20" y="86" width="50" height="40" rx="6" class="bxm"/><text x="45" y="111" text-anchor="middle" class="tb">x</text>
+  <text x="45" y="142" text-anchor="middle" class="ts tm">input</text>
+  <rect x="150" y="20" width="130" height="130" rx="4" class="bxm"/>
+  <text x="215" y="66" text-anchor="middle" class="tb">W</text>
+  <text x="215" y="86" text-anchor="middle" class="ts tm">frozen</text>
+  <text x="215" y="106" text-anchor="middle" class="ts">4096 × 4096</text>
+  <text x="215" y="124" text-anchor="middle" class="ts tm">16.8M numbers</text>
+  <rect x="140" y="172" width="72" height="24" rx="4" class="bxs"/><text x="176" y="188" text-anchor="middle" class="ts">A · 8 × 4096</text>
+  <rect x="240" y="172" width="72" height="24" rx="4" class="bxs"/><text x="276" y="188" text-anchor="middle" class="ts">B · 4096 × 8</text>
+  <line x1="70" y1="100" x2="148" y2="85" class="ln" marker-end="url(#ahL)"/>
+  <line x1="70" y1="114" x2="138" y2="180" class="ln" marker-end="url(#ahL)"/>
+  <line x1="212" y1="184" x2="238" y2="184" class="ln" marker-end="url(#ahL)"/>
+  <line x1="280" y1="85" x2="365" y2="101" class="ln" marker-end="url(#ahL)"/>
+  <polyline points="312,184 380,184 380,122" class="ln" marker-end="url(#ahL)"/>
+  <circle cx="380" cy="106" r="14" class="bx"/><text x="380" y="111" text-anchor="middle" class="tb">+</text>
+  <line x1="394" y1="106" x2="438" y2="106" class="ln" marker-end="url(#ahL)"/>
+  <rect x="440" y="86" width="200" height="40" rx="6" class="bxs"/><text x="540" y="111" text-anchor="middle" class="tb">h = Wx + BAx</text>
+  <text x="226" y="214" text-anchor="middle" class="ts ta tb">trained: 2 × 4096 × 8 = 65,536 numbers (0.4% of W)</text>
+</svg></div>
+<figcaption>LoRA on one weight matrix, rank 8. W stays frozen; only the thin matrices A and B learn. The adapter is a small file, so one base model can serve many tasks by swapping adapters.</figcaption>
+</figure>
 <h3>Data, evaluation, serving</h3>
 <ul>
   <li>500–5,000 clean examples beat 100,000 noisy ones. Sources: real chats (PII scrubbed) and synthetic examples from Gemini, checked by people. Include hard cases and "I don't know" cases. Keep a held-out test set that never touches training.</li>
@@ -570,8 +958,57 @@ flowchart TD
   <li>Transformer layers let patches attend to each other, so the collar patch "knows" it belongs to a shirt.</li>
   <li>In a multimodal LLM (Gemini, Qwen-VL, Gemma), a projector maps those vectors into the LLM's own token space, and the LLM reads them interleaved with the text tokens. So <b>images cost tokens</b> (a few hundred per image in Gemini; large images are tiled), and the model reasons over an image the same way it reasons over words.</li>
 </ol>
+<figure class="dg">
+<div class="sc"><svg class="wide" viewBox="0 0 680 210" role="img" aria-label="A photo is cut into a grid of patches; each patch becomes a vector; a projector maps the vectors into the language model's token space; the model reads image tokens and text tokens such as 'what is this' as one sequence.">
+  <defs><marker id="ahV" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L8,4 L0,8 z" class="fc"/></marker></defs>
+  <rect x="20" y="40" width="120" height="30" class="frs"/><rect x="20" y="70" width="120" height="30" class="fl"/>
+  <rect x="20" y="100" width="120" height="30" class="frs"/><rect x="20" y="130" width="120" height="30" class="fl"/>
+  <line x1="50" y1="40" x2="50" y2="160" class="lm"/><line x1="80" y1="40" x2="80" y2="160" class="lm"/><line x1="110" y1="40" x2="110" y2="160" class="lm"/>
+  <line x1="20" y1="70" x2="140" y2="70" class="lm"/><line x1="20" y1="100" x2="140" y2="100" class="lm"/><line x1="20" y1="130" x2="140" y2="130" class="lm"/>
+  <rect x="20" y="40" width="120" height="120" class="ln"/>
+  <text x="80" y="180" text-anchor="middle" class="ts">photo, cut into patches</text>
+  <text x="80" y="196" text-anchor="middle" class="ts tm">(real models: hundreds)</text>
+  <line x1="146" y1="100" x2="180" y2="100" class="ln" marker-end="url(#ahV)"/>
+  <text x="240" y="82" text-anchor="middle" class="ts tm">one vector per patch</text>
+  <rect x="184" y="91" width="18" height="18" rx="3" class="bxr"/><rect x="206" y="91" width="18" height="18" rx="3" class="bxr"/><rect x="228" y="91" width="18" height="18" rx="3" class="bxr"/><rect x="250" y="91" width="18" height="18" rx="3" class="bxr"/><rect x="272" y="91" width="18" height="18" rx="3" class="bxr"/>
+  <text x="302" y="105" class="tb">…</text>
+  <line x1="316" y1="100" x2="340" y2="100" class="ln" marker-end="url(#ahV)"/>
+  <rect x="342" y="76" width="84" height="48" rx="6" class="bxm"/><text x="384" y="104" text-anchor="middle" class="ts">projector</text>
+  <line x1="426" y1="100" x2="452" y2="100" class="ln" marker-end="url(#ahV)"/>
+  <rect x="454" y="36" width="216" height="128" rx="8" class="bx"/>
+  <text x="562" y="58" text-anchor="middle" class="ts tb">LLM reads one sequence</text>
+  <rect x="466" y="86" width="20" height="20" rx="3" class="bxr"/><rect x="490" y="86" width="20" height="20" rx="3" class="bxr"/><rect x="514" y="86" width="20" height="20" rx="3" class="bxr"/><rect x="538" y="86" width="20" height="20" rx="3" class="bxr"/>
+  <rect x="566" y="86" width="34" height="20" rx="3" class="bxs"/><text x="583" y="100" text-anchor="middle" class="ts">what</text>
+  <rect x="604" y="86" width="20" height="20" rx="3" class="bxs"/><text x="614" y="100" text-anchor="middle" class="ts">is</text>
+  <rect x="628" y="86" width="34" height="20" rx="3" class="bxs"/><text x="645" y="100" text-anchor="middle" class="ts">this</text>
+  <text x="512" y="124" text-anchor="middle" class="ts tm">image tokens</text><text x="614" y="124" text-anchor="middle" class="ts tm">text tokens</text>
+  <text x="562" y="152" text-anchor="middle" class="ts ta tb">sample shirt photo: 1,223 tokens</text>
+</svg></div>
+<figcaption>Why an image "costs tokens": after the vision encoder and projector, its patches are tokens like any word, read in the same sequence. The step D sample photo cost 1,223 prompt tokens; resize uploads before sending.</figcaption>
+</figure>
 <h3>CLIP and shared spaces</h3>
 <p>CLIP-style models (CLIP, SigLIP) train an image encoder and a text encoder together on millions of (image, caption) pairs, pulling matching pairs together and pushing others apart. Result: one vector space for images and text. That is what makes "find products that look like this photo" and "search images with the words <i>navy striped polo</i>" work. Multimodal embedding models from Google offer the same idea as an API.</p>
+<figure class="dg">
+<div class="sc"><svg class="wide" viewBox="0 0 660 200" role="img" aria-label="An image encoder and a text encoder map into one shared space. The polo shirt photo and the text 'navy striped polo' land close together; a shoe photo and the text 'red running shoe' land close to each other and far from the polo pair.">
+  <defs><marker id="ahC" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L8,4 L0,8 z" class="fm"/></marker></defs>
+  <text x="95" y="22" text-anchor="middle" class="ts tm">a photo</text>
+  <rect x="20" y="30" width="150" height="40" rx="6" class="bxr"/><text x="95" y="55" text-anchor="middle" class="ts">image encoder</text>
+  <text x="95" y="112" text-anchor="middle" class="ts tm">"navy striped polo"</text>
+  <rect x="20" y="120" width="150" height="40" rx="6" class="bxs"/><text x="95" y="145" text-anchor="middle" class="ts">text encoder</text>
+  <rect x="260" y="16" width="380" height="170" rx="10" class="bx"/>
+  <text x="450" y="36" text-anchor="middle" class="ts tb tm">one shared space</text>
+  <line x1="170" y1="50" x2="424" y2="90" class="lm" marker-end="url(#ahC)"/>
+  <line x1="170" y1="140" x2="446" y2="106" class="lm" marker-end="url(#ahC)"/>
+  <circle cx="430" cy="92" r="6" class="fr"/><circle cx="452" cy="106" r="6" class="fa"/>
+  <line x1="430" y1="92" x2="452" y2="106" class="la dash"/>
+  <text x="462" y="96" class="ts">polo photo</text><text x="462" y="122" class="ts">"navy striped polo"</text>
+  <circle cx="330" cy="150" r="6" class="fr"/><circle cx="350" cy="162" r="6" class="fa"/>
+  <text x="322" y="138" text-anchor="end" class="ts tm">shoe photo</text><text x="360" y="174" class="ts tm">"red running shoe"</text>
+  <rect x="540" y="150" width="12" height="12" class="fr"/><text x="556" y="160" class="ts">image</text>
+  <rect x="596" y="150" width="12" height="12" class="fa"/><text x="612" y="160" class="ts">text</text>
+</svg></div>
+<figcaption>Training pulls each matching (image, caption) pair together and pushes other pairs apart, over millions of examples. Afterwards a photo can be searched with words, or with another photo, by plain nearest-neighbour search.</figcaption>
+</figure>
 <h3>OCR vs VLM</h3>
 <p>Classic OCR reads characters. A vision-language model reads characters, layout and meaning (it understands that a grid is a table) but can misread or invent digits. Verify numbers.</p>
 
@@ -601,6 +1038,37 @@ flowchart TD
   <li>Measure first: retrieval, model time to first token, tool calls, output length.</li>
   <li>Stream tokens; run independent tool calls in parallel; route with a small model; precompute embeddings offline; cap output tokens; serve from a region close to Thailand.</li>
 </ul>
+<figure class="dg">
+<div class="sc"><svg class="wide" viewBox="0 0 680 152" role="img" aria-label="Where the time goes in one search. Gemini API free tier: 7.7 seconds, almost all of it the filter-extraction LLM call; the embedding takes 0.17 seconds. Through OpenRouter: 2.2 seconds, of which the LLM call is 1.5 seconds.">
+  <rect x="170" y="4" width="12" height="12" class="fa"/><text x="188" y="14" class="ts">filter extraction (LLM call)</text>
+  <rect x="380" y="4" width="12" height="12" class="bxg"/><text x="398" y="14" class="ts">keyword search</text>
+  <rect x="500" y="4" width="12" height="12" class="fr"/><text x="518" y="14" class="ts">query embedding</text>
+  <text x="10" y="53" class="ts tb">Gemini API, free tier</text>
+  <rect x="170" y="36" width="449" height="24" class="fa"/><rect x="619" y="36" width="10" height="24" class="fr"/>
+  <text x="635" y="53" class="ts tb">7.7 s</text>
+  <text x="10" y="101" class="ts tb">via OpenRouter</text>
+  <rect x="170" y="84" width="92" height="24" class="fa"/><rect x="262" y="84" width="25" height="24" class="bxg"/><rect x="287" y="84" width="14" height="24" class="fr"/>
+  <text x="307" y="101" class="ts tb">2.2 s</text>
+  <line x1="170" y1="124" x2="650" y2="124" class="lm"/>
+  <g class="ts tm" text-anchor="middle">
+    <line x1="170" y1="120" x2="170" y2="128" class="lm"/><text x="170" y="142">0 s</text>
+    <line x1="290" y1="120" x2="290" y2="128" class="lm"/><text x="290" y="142">2 s</text>
+    <line x1="410" y1="120" x2="410" y2="128" class="lm"/><text x="410" y="142">4 s</text>
+    <line x1="530" y1="120" x2="530" y2="128" class="lm"/><text x="530" y="142">6 s</text>
+    <line x1="650" y1="120" x2="650" y2="128" class="lm"/><text x="650" y="142">8 s</text>
+  </g>
+</svg></div>
+<figcaption>Two real searches from the build, timed step by step (<code>shop search</code> prints this). The SQL filter takes 0 ms in both. One LLM call is nearly all the latency, so that's where optimisation starts, not the database. (The 0.4 s keyword step on the second run includes loading the Thai dictionary.)</figcaption>
+</figure>
+<h3>What it costs (measured in the build)</h3>
+<div class="tbl"><table>
+<tr><th>Operation</th><th>Tokens</th><th>Cost</th></tr>
+<tr><td>Embed the whole catalog (486 models, gemini-embedding-001)</td><td>≈30,000</td><td>≈ $0.005</td></tr>
+<tr><td>One query embedding</td><td>10–50</td><td>under $0.00001</td></tr>
+<tr><td>One chat turn (Flash-Lite through OpenRouter, ≈2,000 in + 130 out)</td><td>≈2,200</td><td>≈ $0.001</td></tr>
+<tr><td>The full 21-case eval run</td><td>≈25,000</td><td>about one cent</td></tr>
+</table></div>
+<p>For a prototype, token cost is rarely the problem: 1,000 chat turns cost about a dollar. Latency and rate limits are what hurt (the free tier allowed 100 embedded texts a minute and named a daily limit of 1,000). At Central's scale the same table, multiplied by millions of turns, is where model routing and caching pay off.</p>
 <h3>Caching layers ("backend · API cache")</h3>
 <ul>
   <li><b>API cache</b> for catalog lookups: Redis with a TTL of minutes, invalidated by product-update events.</li>
@@ -656,6 +1124,25 @@ flowchart TD
 
 <div class="scn" id="s2"><div class="scn-head"><h3><span class="num">S2</span>"Show my orders from last week."</h3><label class="done-box"><input type="checkbox" data-k="s2"> practised</label></div>
 <h4>The fundamental</h4><p>No clock (S1); LLMs are bad at date arithmetic; orders are private data behind a tool.</p>
+<figure class="dg">
+<div class="sc"><svg viewBox="0 0 540 178" role="img" aria-label="November 2026 calendar, today Thursday 19. 'Last week' as the previous Monday to Sunday is 9 to 15 November; 'last 7 days' is Friday 13 to Thursday 19. The two rules give different orders.">
+  <g class="ts tm" text-anchor="middle">
+    <text x="70" y="20">Mon</text><text x="130" y="20">Tue</text><text x="190" y="20">Wed</text><text x="250" y="20">Thu</text><text x="310" y="20">Fri</text><text x="370" y="20">Sat</text><text x="430" y="20">Sun</text>
+  </g>
+  <rect x="40" y="30" width="420" height="40" class="bxs"/>
+  <g class="lm"><line x1="100" y1="30" x2="100" y2="70"/><line x1="160" y1="30" x2="160" y2="70"/><line x1="220" y1="30" x2="220" y2="70"/><line x1="280" y1="30" x2="280" y2="70"/><line x1="340" y1="30" x2="340" y2="70"/><line x1="400" y1="30" x2="400" y2="70"/></g>
+  <g text-anchor="middle"><text x="70" y="55">9</text><text x="130" y="55">10</text><text x="190" y="55">11</text><text x="250" y="55">12</text><text x="310" y="55">13</text><text x="370" y="55">14</text><text x="430" y="55">15</text></g>
+  <rect x="40" y="76" width="420" height="40" class="bx"/>
+  <g class="lm"><line x1="100" y1="76" x2="100" y2="116"/><line x1="160" y1="76" x2="160" y2="116"/><line x1="220" y1="76" x2="220" y2="116"/><line x1="280" y1="76" x2="280" y2="116"/><line x1="340" y1="76" x2="340" y2="116"/><line x1="400" y1="76" x2="400" y2="116"/></g>
+  <rect x="221" y="77" width="58" height="38" class="ln"/>
+  <g text-anchor="middle"><text x="70" y="101">16</text><text x="130" y="101">17</text><text x="190" y="101">18</text><text x="250" y="101" class="tb">19</text><text x="310" y="101" class="tm">20</text><text x="370" y="101" class="tm">21</text><text x="430" y="101" class="tm">22</text></g>
+  <line x1="282" y1="73" x2="458" y2="73" class="lw"/><line x1="42" y1="120" x2="278" y2="120" class="lw"/>
+  <text x="250" y="136" text-anchor="middle" class="ts tb">today</text>
+  <rect x="40" y="152" width="14" height="14" class="bxs"/><text x="60" y="163" class="ts">last week = Mon 9 – Sun 15 (the code's rule)</text>
+  <line x1="320" y1="159" x2="342" y2="159" class="lw"/><text x="348" y="163" class="ts">last 7 days = Fri 13 – Thu 19</text>
+</svg></div>
+<figcaption>On Thursday 19 November, "last week" can mean two different ranges, with different orders in them. Choose one rule, put it in tested code, and say the dates in the answer.</figcaption>
+</figure>
 <h4>Solve it</h4><ol>
 <li>Know "now" (S1).</li>
 <li>The model extracts the time expression into a structured field, e.g. <code>{"range": "last_week"}</code> or explicit ISO dates; <b>code</b> resolves it to exact dates with a fixed rule.</li>
@@ -750,7 +1237,19 @@ flowchart TD
 
 <div class="scn" id="s11"><div class="scn-head"><h3><span class="num">S11</span>A customer uploads a shirt photo: "Do you have this?"</h3><label class="done-box"><input type="checkbox" data-k="s11"> practised</label></div>
 <h4>The fundamental</h4><p>§8: a vision model reads the photo as tokens; CLIP-style embeddings put images and text in one space.</p>
-<h4>Solve it: two paths, combined</h4><ol>
+<h4>Solve it: two paths, combined</h4>
+<pre class="mermaid">
+flowchart LR
+  P["Customer photo"] --> A1["Vision model reads attributes:<br/>polo, navy, striped, short sleeve"]
+  A1 --> F["Filters: category + dominant colour"]
+  F --> S["Hybrid search over the catalog"]
+  P --> E1["Image embedding"]
+  E1 --> NN["Nearest catalog images"]
+  F -. "category filter" .-> NN
+  S --> R["Results shown with what was understood"]
+  NN --> R
+</pre>
+<ol>
 <li><b>Attributes (explainable)</b>: send the photo to Gemini with a JSON schema: <code>{category: "polo shirt", colors: ["navy"], pattern: "striped", sleeve: "short", collar: "polo", logo_text: null}</code>. Map to catalog filters and search.</li>
 <li><b>Visual similarity</b>: embed every catalog image once with an image embedding model; embed the uploaded photo; nearest neighbours are "looks like this".</li>
 <li><b>Combine</b>: filter by category from step 1, rank by visual similarity from step 2, show the top results with the attributes you understood ("navy striped polo, short sleeve").</li>
@@ -860,7 +1359,7 @@ flowchart TD
 <pre><code>brew install uv                     # once
 git clone https://github.com/karthikeyan993/mini-shopping-assistant
 cd mini-shopping-assistant
-export GEMINI_API_KEY=...           # your AI Studio key
+export OPENROUTER_API_KEY=... SHOP_PROVIDER=openrouter   # fastest; or GEMINI_API_KEY=... for Gemini directly
 uv sync --extra dev
 uv run shop load                    # catalog + shipped vectors, no embedding calls
 uv run shop search "blue running shoes in stock under 3000 baht"
@@ -1137,6 +1636,8 @@ LLM_BASE_URL=http://localhost:11434/v1 LLM_API_KEY=ollama CHAT_MODEL=qwen3:8b FA
 <p>The fallback can be a different provider: <code>FALLBACK_BASE_URL</code> and <code>FALLBACK_API_KEY</code>. With the main endpoint made unreachable on purpose, the client retried twice, logged <code>gemini-flash-lite-latest unavailable (APIConnectionError); falling back</code>, and the answer came through OpenRouter. That's the S21 story with evidence: one provider's quota or outage doesn't stop the bot, and the same eval tells you the second route is safe.</p>
 <pre><code>export FALLBACK_BASE_URL=https://openrouter.ai/api/v1 FALLBACK_API_KEY=$OPENROUTER_API_KEY \
        FALLBACK_MODEL=google/gemini-3.5-flash-lite</code></pre>
+<p><b>Embeddings through OpenRouter too</b>: it serves the same <code>google/gemini-embedding-001</code>, and its vector for a catalog text matched the stored one exactly (cosine 1.0). So one switch moves everything to one key without re-embedding:</p>
+<pre><code>export OPENROUTER_API_KEY=... SHOP_PROVIDER=openrouter</code></pre>
 
 <h4>C8 · Try these</h4>
 <ol>
@@ -1178,6 +1679,15 @@ Filters: {"category": "polo shirt", "colors": ["navy"], "text": "striped short s
 </ul>
 
 <h4>D2 · A size chart in a PDF (<code>pdftable.py</code>, S12)</h4>
+<pre class="mermaid">
+flowchart LR
+  PDF["size_chart.pdf"] --> TL["text layer: pypdf"] --> RX["regex rows"]
+  PDF --> IMG["page rendered to an image"] --> VM["vision model + JSON schema"] --> ROWS["6 rows"]
+  RX -. "compare: they agree" .- ROWS
+  ROWS --> V{"validate"}
+  V -- ok --> PICK["pick_size in code: 102 cm gives M"]
+  V -- problem --> FLAG["flag for a person"]
+</pre>
 <pre><code>Text layer (pypdf), structure lost:
   Size Chest (cm) Body length (cm) | XS 84-88 66 | S 88-96 68 | M 96-104 70 | ...
 Regex over the text layer found 6 rows
@@ -1198,23 +1708,32 @@ Chest 102 cm → size M (picked by code, not the model)</code></pre>
 <li><b>Split</b>: stratified 80/20, so 259 to train and 65 held out, the same split every run.</li>
 <li><b>Model</b>: character n-grams (1–4) with TF-IDF, then logistic regression with balanced class weights. Character n-grams need no Thai word segmentation and tolerate typos. Training takes about 2 s on a laptop, and a prediction costs nothing.</li>
 </ul>
-<div class="tbl"><table>
-<tr><th>Intent</th><th>Precision</th><th>Recall</th><th>F1</th></tr>
-<tr><td>return_refund</td><td>1.00</td><td>0.86</td><td>0.92</td></tr>
-<tr><td>chitchat</td><td>0.88</td><td>0.88</td><td>0.88</td></tr>
-<tr><td>promotion</td><td>0.86</td><td>0.86</td><td>0.86</td></tr>
-<tr><td>order_status</td><td>0.70</td><td>1.00</td><td>0.82</td></tr>
-<tr><td>product_search</td><td>0.75</td><td>0.75</td><td>0.75</td></tr>
-<tr><td>product_question</td><td>0.54</td><td>1.00</td><td>0.70</td></tr>
-<tr><td>store_stock</td><td>0.80</td><td>0.57</td><td>0.67</td></tr>
-<tr><td>human_agent</td><td>0.75</td><td>0.43</td><td>0.55</td></tr>
-<tr><td>out_of_scope</td><td>0.25</td><td>0.14</td><td>0.18</td></tr>
-<tr><td><b>macro average</b></td><td>0.72</td><td>0.72</td><td><b>0.70</b></td></tr>
-</table></div>
+<figure class="dg">
+<div class="sc"><svg class="wide" viewBox="0 0 660 318" role="img" aria-label="F1 per intent on the same 65 held-out messages. Character TF-IDF scores between 0.18 and 0.92, worst on out of scope at 0.18. Gemini embeddings score between 0.92 and 1.00, with out of scope at 1.00. Macro F1 goes from 0.70 to 0.97.">
+  <rect x="150" y="4" width="12" height="12" class="fm"/><text x="168" y="14" class="ts">TF-IDF on characters</text>
+  <rect x="320" y="4" width="12" height="12" class="fa"/><text x="338" y="14" class="ts">Gemini embeddings</text>
+  <g class="ts" text-anchor="end">
+    <text x="140" y="44">product_search</text><text x="140" y="74">product_question</text><text x="140" y="104">order_status</text><text x="140" y="134">return_refund</text><text x="140" y="164">store_stock</text><text x="140" y="194">promotion</text><text x="140" y="224">human_agent</text><text x="140" y="254">chitchat</text><text x="140" y="284" class="tb">out_of_scope</text>
+  </g>
+  <g class="fm">
+    <rect x="150" y="32" width="300" height="10"/><rect x="150" y="62" width="280" height="10"/><rect x="150" y="92" width="328" height="10"/><rect x="150" y="122" width="368" height="10"/><rect x="150" y="152" width="268" height="10"/><rect x="150" y="182" width="344" height="10"/><rect x="150" y="212" width="220" height="10"/><rect x="150" y="242" width="352" height="10"/><rect x="150" y="272" width="72" height="10"/>
+  </g>
+  <g class="fa">
+    <rect x="150" y="44" width="372" height="10"/><rect x="150" y="74" width="400" height="10"/><rect x="150" y="104" width="372" height="10"/><rect x="150" y="134" width="400" height="10"/><rect x="150" y="164" width="372" height="10"/><rect x="150" y="194" width="400" height="10"/><rect x="150" y="224" width="368" height="10"/><rect x="150" y="254" width="400" height="10"/><rect x="150" y="284" width="400" height="10"/>
+  </g>
+  <g class="ts tm">
+    <text x="454" y="41">0.75</text><text x="434" y="71">0.70</text><text x="482" y="101">0.82</text><text x="522" y="131">0.92</text><text x="422" y="161">0.67</text><text x="498" y="191">0.86</text><text x="374" y="221">0.55</text><text x="506" y="251">0.88</text><text x="226" y="281" class="tw tb">0.18</text>
+    <text x="526" y="53">0.93</text><text x="554" y="83">1.00</text><text x="526" y="113">0.93</text><text x="554" y="143">1.00</text><text x="526" y="173">0.93</text><text x="554" y="203">1.00</text><text x="522" y="233">0.92</text><text x="554" y="263">1.00</text><text x="554" y="293">1.00</text>
+  </g>
+  <text x="150" y="312" class="tb">macro F1: 0.70 → 0.97 · only the features changed</text>
+</svg></div>
+<figcaption>F1 per intent on the same 65 held-out messages. Characters capture spelling; embeddings capture meaning, which is what "out of scope" is about (0.18 → 1.00).</figcaption>
+</figure>
 <ul>
 <li><b>Read the confusion matrix, not just the average.</b> "out_of_scope" fails because it's defined by what a message <i>isn't</i>: "How many calories in an apple?" shares no character patterns with other off-topic messages. "human_agent" leaks into "out_of_scope" and "order_status" ("Where is my order? This is ridiculous!" is both).</li>
 <li><b>Confidence</b>: with 9 classes and little data, top probabilities sit around 0.3–0.45, so many messages come out "unsure" at a 0.45 threshold. In a router, "unsure" goes to the LLM screen. Tune the threshold per class on validation data.</li>
-<li><b>Next rung</b>: embeddings + logistic regression (<code>--features embed</code>) should fix out_of_scope, because embeddings carry meaning rather than spelling. The run was stopped by the free tier's daily embedding limit (the error named 1,000 requests); the code checkpoints after every batch and the comparison is added here once it runs. After that: a fine-tuned small encoder (XLM-R, WangchanBERTa) if the numbers still aren't good enough.</li>
+<li><b>Next rung, measured</b>: Gemini embeddings with the same logistic regression (<code>shop intents train --features embed</code>), same split: macro F1 <b>0.97</b>, out_of_scope 1.00 (chart above). The first attempt hit the free tier's daily embedding limit after 45 texts; it finished through OpenRouter's copy of the same model, and the 324 vectors are cached in <code>evals/intents_vectors.npz</code>, so retraining costs nothing.</li>
+<li><b>Say this caveat out loud</b>: the messages were generated by a model, so they're cleaner than real chats. Expect lower numbers on real logs, and label real messages before trusting either model. Next rung if needed: a fine-tuned small encoder (XLM-R, WangchanBERTa).</li>
 <li><b>Where it plugs in</b>: in front of the agent. A confident in-scope intent skips the LLM screen (one call and about a second saved per turn) and goes straight to its workflow; confident out-of-scope gets the polite refusal for free; everything else goes to the LLM screen.</li>
 </ul>
 
