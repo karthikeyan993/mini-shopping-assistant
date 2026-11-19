@@ -1,0 +1,2773 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Central Tech AI Sprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap">
+<style>
+:root {
+  --paper: #ECEFF2;
+  --sheet: #FAFBFC;
+  --white: #FFFFFF;
+  --ink: #17202B;
+  --ink-2: #4F5B69;
+  --ink-3: #6C7886;
+  --rule: #CBD3DC;
+  --rule-soft: #DCE2E9;
+
+  /* Semantic palette — consistent across prose, badges, and every SVG diagram */
+  --blue: #2A52C4;
+  --blue-bg: #E8EEFC;
+  --blue-bd: #B6C7F5;
+
+  --teal: #0B7A6D;
+  --teal-bg: #E3F5F2;
+  --teal-bd: #9CD9D0;
+
+  --amber: #A85A0C;
+  --amber-bg: #FDF2E2;
+  --amber-bd: #ECC99B;
+
+  --violet: #6A47BC;
+  --violet-bg: #EFEAFB;
+  --violet-bd: #CBBBF0;
+
+  --rose: #A12E6B;
+  --rose-bg: #FBE9F2;
+  --rose-bd: #E8B5CF;
+
+  --warn: #A3301C;
+  --warn-bg: #FCECE9;
+  --warn-bd: #EAB9AF;
+
+  --ok: #197444;
+  --ok-bg: #E5F5EC;
+  --ok-bd: #A5DABB;
+
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 2px rgba(23, 32, 43, 0.05), 0 6px 20px rgba(23, 32, 43, 0.04);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; background: var(--paper); color: var(--ink); }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17.5px;
+  line-height: 1.66;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Top bar for mobile/tablet */
+.topbar {
+  display: none;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(250, 251, 252, 0.94);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule);
+  padding: 10px 16px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--sans);
+}
+.topbar a {
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 14.5px;
+}
+
+/* Main two-column editorial layout */
+.layout {
+  display: grid;
+  grid-template-columns: 278px minmax(0, 1fr);
+  gap: 44px;
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 28px 28px 96px;
+}
+
+/* Sticky Sidebar TOC */
+.toc {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 18px 16px 16px;
+  box-shadow: var(--shadow);
+  font-family: var(--sans);
+}
+.toc-title {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+.toc-sub {
+  margin: 4px 0 12px;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.progress-wrap {
+  margin: 0 0 14px;
+}
+.toc-progress {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--blue);
+  display: flex;
+  justify-content: space-between;
+}
+.progress-bar {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--rule-soft);
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--blue), var(--teal));
+  border-radius: 999px;
+  transition: width 0.25s ease;
+}
+.toc ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.toc li a {
+  display: grid;
+  grid-template-columns: 22px 1fr 16px;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  color: var(--ink-2);
+  font-size: 13px;
+  line-height: 1.3;
+  transition: background 0.15s, color 0.15s;
+}
+.toc li a:hover { background: var(--paper); color: var(--ink); }
+.toc li a.active { background: var(--blue-bg); color: var(--blue); font-weight: 600; }
+.toc li a .n {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  color: var(--ink-2);
+}
+.toc li a.active .n { background: var(--blue); color: #fff; }
+.toc li a .ck {
+  opacity: 0;
+  color: var(--ok);
+  font-weight: 700;
+  font-size: 12px;
+  text-align: right;
+}
+.toc li a.is-done .ck { opacity: 1; }
+.toc li a.is-done .t { color: var(--ink-3); }
+
+.legend-mini {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule-soft);
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+.legend-mini strong { display: block; margin-bottom: 6px; color: var(--ink); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+.legend-dots { display: flex; flex-wrap: wrap; gap: 6px; }
+.pill-dot {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 7px; border-radius: 999px; font-size: 11px; font-weight: 500;
+  border: 1px solid transparent;
+}
+.pill-dot i { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+.dot-blue { background: var(--blue-bg); color: var(--blue); border-color: var(--blue-bd); }
+.dot-blue i { background: var(--blue); }
+.dot-teal { background: var(--teal-bg); color: var(--teal); border-color: var(--teal-bd); }
+.dot-teal i { background: var(--teal); }
+.dot-amber { background: var(--amber-bg); color: var(--amber); border-color: var(--amber-bd); }
+.dot-amber i { background: var(--amber); }
+.dot-violet { background: var(--violet-bg); color: var(--violet); border-color: var(--violet-bd); }
+.dot-violet i { background: var(--violet); }
+.dot-warn { background: var(--warn-bg); color: var(--warn); border-color: var(--warn-bd); }
+.dot-warn i { background: var(--warn); }
+
+/* Main column */
+main { min-width: 0; }
+.prose > p, .prose > ul, .prose > ol, .prose > h3, .prose > h4 { max-width: 44rem; }
+
+/* Hero */
+.hero {
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  padding: 32px 34px 28px;
+  box-shadow: var(--shadow);
+  margin-bottom: 36px;
+}
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--blue);
+  background: var(--blue-bg);
+  border: 1px solid var(--blue-bd);
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+h1 {
+  margin: 0 0 12px;
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4.4vw, 3rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.lead {
+  font-size: 1.18rem;
+  line-height: 1.56;
+  color: var(--ink-2);
+  margin: 0 0 20px;
+  max-width: 46rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin: 20px 0 22px;
+}
+.stat-card {
+  background: var(--white);
+  border: 1px solid var(--rule-soft);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: var(--sans);
+}
+.stat-card .v {
+  font-family: var(--mono);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.stat-card .l {
+  font-size: 12px;
+  color: var(--ink-2);
+  margin-top: 3px;
+}
+
+/* Modules */
+.module {
+  margin: 0 0 56px;
+  padding-top: 8px;
+}
+h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 16px;
+  padding-bottom: 12px;
+  border-bottom: 1.5px solid var(--rule);
+  font-family: var(--serif);
+  font-size: clamp(1.5rem, 2.8vw, 1.95rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+h2 .num {
+  flex: none;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: var(--blue);
+  color: #fff;
+}
+h3 {
+  font-family: var(--sans);
+  font-size: 1.08rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 28px 0 8px;
+  color: var(--ink);
+}
+h4 {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 18px 0 6px;
+  color: var(--ink);
+}
+p { margin: 0 0 14px; }
+ul, ol { margin: 0 0 16px; padding-left: 22px; }
+li { margin-bottom: 6px; }
+strong { color: var(--ink); }
+
+code {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  background: #E4E9EF;
+  color: #1A2738;
+  padding: 2px 5px;
+  border-radius: 5px;
+}
+
+/* Diagrams */
+.diagram {
+  margin: 22px 0 26px;
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 18px 18px 14px;
+  box-shadow: var(--shadow);
+  max-width: 56rem;
+}
+.diagram-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-family: var(--sans);
+}
+.diagram-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--blue);
+  background: var(--blue-bg);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+.diagram-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.diagram svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.diagram figcaption {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--rule-soft);
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+/* Callouts */
+.note, .trap, .tip {
+  max-width: 52rem;
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  margin: 18px 0;
+  font-size: 15.5px;
+  line-height: 1.58;
+}
+.note {
+  background: var(--blue-bg);
+  border: 1px solid var(--blue-bd);
+  border-left: 4px solid var(--blue);
+}
+.trap {
+  background: var(--warn-bg);
+  border: 1px solid var(--warn-bd);
+  border-left: 4px solid var(--warn);
+}
+.tip {
+  background: var(--teal-bg);
+  border: 1px solid var(--teal-bd);
+  border-left: 4px solid var(--teal);
+}
+.note p:last-child, .trap p:last-child, .tip p:last-child { margin-bottom: 0; }
+.callout-label {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+.note .callout-label { color: var(--blue); }
+.trap .callout-label { color: var(--warn); }
+.tip .callout-label { color: var(--teal); }
+
+/* Predict / Spoiler details */
+details.check, details.spoiler {
+  max-width: 52rem;
+  margin: 14px 0;
+  border-radius: var(--radius-sm);
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  font-family: var(--sans);
+}
+details.spoiler { border-style: dashed; }
+details.check summary, details.spoiler summary {
+  cursor: pointer;
+  padding: 11px 15px;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+details.check summary::before {
+  content: "▸";
+  color: var(--blue);
+  font-size: 13px;
+  transition: transform 0.15s;
+}
+details.check[open] summary::before { transform: rotate(90deg); }
+details.spoiler summary::before {
+  content: "▸";
+  color: var(--ink-2);
+  font-size: 13px;
+  transition: transform 0.15s;
+}
+details.spoiler[open] summary::before { transform: rotate(90deg); }
+details.check .ans, details.spoiler .ans {
+  padding: 0 15px 14px 31px;
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink);
+  border-top: 1px solid var(--rule-soft);
+  padding-top: 12px;
+}
+
+/* Code blocks with copy */
+.codeblock {
+  max-width: 54rem;
+  margin: 14px 0 18px;
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(23,32,43,0.03);
+}
+.codebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 12px;
+  background: #E6EBF1;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.copy-btn {
+  appearance: none;
+  border: 1px solid var(--rule);
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.copy-btn:hover { border-color: var(--blue); color: var(--blue); }
+.codeblock pre {
+  margin: 0;
+  padding: 13px 15px;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--sheet);
+}
+.codeblock pre code { background: none; padding: 0; font-size: inherit; }
+
+/* Tables */
+.tbl {
+  max-width: 56rem;
+  overflow-x: auto;
+  margin: 16px 0 22px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  box-shadow: 0 1px 2px rgba(23,32,43,0.03);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  line-height: 1.48;
+}
+th {
+  text-align: left;
+  background: #E8EDF2;
+  color: var(--ink);
+  font-weight: 700;
+  padding: 10px 13px;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+td {
+  padding: 9px 13px;
+  border-bottom: 1px solid var(--rule-soft);
+  vertical-align: top;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #F7F9FB; }
+
+/* Cards / Grids */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  max-width: 56rem;
+  margin: 16px 0 22px;
+}
+.card {
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  box-shadow: 0 1px 2px rgba(23,32,43,0.03);
+}
+.card h4 { margin-top: 0; font-size: 14.5px; }
+.card p { font-size: 15px; line-height: 1.55; margin-bottom: 8px; }
+.card p:last-child { margin-bottom: 0; }
+.badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+.b-blue { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-bd); }
+.b-teal { background: var(--teal-bg); color: var(--teal); border: 1px solid var(--teal-bd); }
+.b-amber { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-bd); }
+.b-violet { background: var(--violet-bg); color: var(--violet); border: 1px solid var(--violet-bd); }
+.b-warn { background: var(--warn-bg); color: var(--warn); border: 1px solid var(--warn-bd); }
+.b-ok { background: var(--ok-bg); color: var(--ok); border: 1px solid var(--ok-bd); }
+
+/* Day cards */
+.day-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 56rem;
+  margin: 18px 0 22px;
+}
+.day-card {
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+}
+.day-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-family: var(--sans);
+}
+.day-head h3 { margin: 0; font-size: 16px; }
+.check-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  font-family: var(--sans);
+  font-size: 14px;
+}
+.check-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 5px 0;
+  margin: 0;
+  border-bottom: 1px dashed var(--rule-soft);
+}
+.check-list li:last-child { border-bottom: none; }
+.check-list input[type="checkbox"] {
+  margin-top: 3px;
+  accent-color: var(--blue);
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+.check-list label { cursor: pointer; flex: 1; }
+.check-list input:checked + span { color: var(--ink-3); text-decoration: line-through; }
+
+/* Interactive widgets */
+.widget {
+  max-width: 56rem;
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin: 20px 0 24px;
+  box-shadow: var(--shadow);
+  font-family: var(--sans);
+}
+.widget h4 { margin: 0 0 6px; font-size: 15px; }
+.widget .sub { font-size: 13px; color: var(--ink-2); margin: 0 0 14px; }
+.btn {
+  appearance: none;
+  border: 1px solid var(--rule);
+  background: var(--sheet);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn:hover { border-color: var(--blue); color: var(--blue); }
+.btn.primary, .btn.active {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+}
+.rrf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.rrf-item {
+  background: var(--sheet);
+  border: 1px solid var(--rule-soft);
+  border-radius: 10px;
+  padding: 12px;
+}
+.rrf-item .name { font-weight: 700; font-size: 13.5px; margin-bottom: 8px; }
+.rrf-ctrl { display: flex; align-items: center; justify-content: space-between; font-size: 12px; margin: 6px 0; gap: 6px; }
+.rrf-ctrl > span:first-child { flex: none; min-width: 66px; color: var(--ink-2); }
+.rrf-ctrl input[type="range"] { flex: 1; min-width: 0; width: 100%; accent-color: var(--blue); }
+.rrf-ctrl .val { flex: none; font-family: var(--mono); font-weight: 600; min-width: 28px; text-align: right; }
+.rrf-out {
+  background: var(--sheet);
+  border: 1px solid var(--rule-soft);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+.rrf-bar-row { display: grid; grid-template-columns: 160px 1fr 120px; align-items: center; gap: 10px; margin: 6px 0; }
+.rrf-track { height: 14px; background: var(--rule-soft); border-radius: 999px; overflow: hidden; }
+.rrf-fill { height: 100%; background: linear-gradient(90deg, var(--blue), var(--teal)); border-radius: 999px; transition: width 0.2s; }
+
+/* Break-it Labs */
+.lab-card {
+  max-width: 56rem;
+  background: var(--white);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin: 14px 0;
+  box-shadow: 0 1px 2px rgba(23,32,43,0.03);
+}
+.lab-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-family: var(--sans);
+}
+.lab-top h4 { margin: 0; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+.lab-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  background: var(--warn-bg);
+  color: var(--warn);
+  border: 1px solid var(--warn-bd);
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+.lab-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+  font-family: var(--sans);
+  font-size: 13.5px;
+}
+.lab-box {
+  background: var(--sheet);
+  border: 1px solid var(--rule-soft);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.lab-box strong { display: block; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-2); margin-bottom: 4px; }
+
+/* Flashcard Drill */
+.drill-filters { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; }
+.drill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+.drill-card {
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 14px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.drill-card.hidden { display: none; }
+.drill-q { font-weight: 700; font-size: 14.5px; color: var(--ink); line-height: 1.38; }
+.drill-a { display: none; font-size: 13.5px; line-height: 1.52; color: var(--ink); border-top: 1px solid var(--rule-soft); padding-top: 9px; }
+.drill-card.open .drill-a { display: block; }
+.drill-a div { margin-bottom: 5px; }
+.drill-a b { color: var(--blue); }
+
+/* Mark module done */
+.done {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 18px;
+  padding: 9px 14px;
+  background: var(--sheet);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+  user-select: none;
+}
+.done input { accent-color: var(--ok); width: 16px; height: 16px; cursor: pointer; }
+.done:has(input:checked) { background: var(--ok-bg); border-color: var(--ok-bd); color: var(--ok); }
+
+/* Responsive */
+@media (max-width: 960px) {
+  .topbar { display: flex; }
+  .layout { grid-template-columns: 1fr; padding: 16px 16px 72px; gap: 0; }
+  .toc {
+    display: none;
+    position: fixed;
+    top: 52px;
+    left: 12px;
+    right: 12px;
+    z-index: 50;
+    max-height: calc(100vh - 72px);
+  }
+  .toc.open { display: block; }
+  .hero { padding: 22px 18px; }
+  .rrf-bar-row { grid-template-columns: 115px 1fr 90px; }
+}
+@media print {
+  .topbar, .toc, .copy-btn, .done { display: none !important; }
+  .layout { display: block; padding: 0; }
+  .diagram, .card, .day-card, .lab-card { break-inside: avoid; box-shadow: none; }
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="#top">Central Tech AI Sprint</a>
+  <button type="button" class="btn" id="toc-toggle" aria-expanded="false" aria-controls="toc">Contents</button>
+</div>
+
+<div class="layout">
+<nav class="toc" id="toc" aria-label="Modules">
+  <a class="toc-title" href="#top">Central Tech AI Sprint</a>
+  <p class="toc-sub">Visual Playbook · Fri 20 → Tue 24 Nov 2026</p>
+  <div class="progress-wrap">
+    <p class="toc-progress" id="toc-progress"><span>0 of 10 modules done</span><span id="toc-pct">0%</span></p>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+  <ol>
+    <li><a href="#m0" data-mod="m0"><span class="n">0</span><span class="t">4-Day Sprint Plan</span><span class="ck">✓</span></a></li>
+    <li><a href="#m1" data-mod="m1"><span class="n">1</span><span class="t">AI Fundamentals</span><span class="ck">✓</span></a></li>
+    <li><a href="#m2" data-mod="m2"><span class="n">2</span><span class="t">Hybrid Search &amp; 2M Scale</span><span class="ck">✓</span></a></li>
+    <li><a href="#m3" data-mod="m3"><span class="n">3</span><span class="t">Agent Loop &amp; Backend Safety</span><span class="ck">✓</span></a></li>
+    <li><a href="#m4" data-mod="m4"><span class="n">4</span><span class="t">Guardrails, Cache &amp; Evals</span><span class="ck">✓</span></a></li>
+    <li><a href="#m5" data-mod="m5"><span class="n">5</span><span class="t">Vision, PDFs &amp; Fine-Tuning</span><span class="ck">✓</span></a></li>
+    <li><a href="#m6" data-mod="m6"><span class="n">6</span><span class="t">What to Break (10 Labs)</span><span class="ck">✓</span></a></li>
+    <li><a href="#m7" data-mod="m7"><span class="n">7</span><span class="t">Build 1 Feature: Policy RAG</span><span class="ck">✓</span></a></li>
+    <li><a href="#m8" data-mod="m8"><span class="n">8</span><span class="t">How to Use AI Like a Pro</span><span class="ck">✓</span></a></li>
+    <li><a href="#m9" data-mod="m9"><span class="n">9</span><span class="t">Interview Drill &amp; Advice</span><span class="ck">✓</span></a></li>
+  </ol>
+  <div class="legend-mini">
+    <strong>Diagram colour grammar</strong>
+    <div class="legend-dots">
+      <span class="pill-dot dot-blue"><i></i>LLM / Query</span>
+      <span class="pill-dot dot-teal"><i></i>Code / SQL</span>
+      <span class="pill-dot dot-amber"><i></i>Vectors / Data</span>
+      <span class="pill-dot dot-violet"><i></i>Tools / ML</span>
+      <span class="pill-dot dot-warn"><i></i>Trap / Guard</span>
+    </div>
+  </div>
+</nav>
+
+<main>
+<header class="hero prose" id="top">
+  <span class="kicker">Central Tech (Thailand) · AI Engineer Interview Playbook</span>
+  <h1>Master the Chatbot, End to End</h1>
+  <p class="lead">
+    A visual, self-contained study and lab manual built around <code>mini-shopping-assistant</code>.
+    Every diagram maps directly to real code in this repo and to the practical problems Central Tech asks for
+    Supersports, Central, and Tops chatbots.
+  </p>
+
+  <div class="stats-grid">
+    <div class="stat-card"><div class="v">1,984 LOC</div><div class="l">18 tiny modules (26–196 lines)</div></div>
+    <div class="stat-card"><div class="v">486 → 2,048</div><div class="l">Model vectors → SKU rows</div></div>
+    <div class="stat-card"><div class="v">39 / 21</div><div class="l">Offline tests / Live evals</div></div>
+    <div class="stat-card"><div class="v">0.70 → 0.97</div><div class="l">TF-IDF → Embed intent F1</div></div>
+  </div>
+
+  <div class="tip">
+    <span class="callout-label">Core Strategy · Why NOT rebuild from scratch in 4 days</span>
+    <p>
+      <strong>Split your energy 75% / 25%:</strong> spend <strong>75%</strong> reading, running, and deliberately
+      <em>breaking</em> this repo so you can explain every trade-off from memory; spend <strong>25%</strong> building
+      <strong>1 small AI-native feature</strong> on top (Policy/FAQ RAG for the "keyword everywhere" question).
+      Rebuilding boilerplate from scratch burns 4 days without teaching you production failure modes.
+    </p>
+  </div>
+</header>
+
+<!-- ====================================================================== -->
+<!-- MODULE 0: 4-DAY SPRINT PLAN -->
+<!-- ====================================================================== -->
+<section class="module prose" id="m0">
+  <h2><span class="num">0</span>The 4-Day Sprint Plan (Fri 20 → Mon 23 Nov)</h2>
+  <p>
+    Your interview is expected on <strong>Tuesday 24 Nov 2026</strong>. You already have a clean, working lab on disk.
+    Match the repo work to your natural daily rhythm (<strong>morning study</strong> → <strong>19:00 IST hands-on Mac lab</strong> → <strong>20:30 IST explain out loud</strong>).
+  </p>
+
+  <figure class="diagram">
+    <div class="diagram-head">
+      <span class="diagram-title">4-Day Learning &amp; Interview Execution Map</span>
+      <span class="diagram-tag">Diagram 01 · Timeline</span>
+    </div>
+    <svg viewBox="0 0 840 300" role="img" aria-label="4-day interview sprint timeline from Friday Nov 20 to Tuesday Nov 24">
+      <defs>
+        <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="#2A52C4"/>
+        </marker>
+        <marker id="arr-t" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="#0B7A6D"/>
+        </marker>
+        <marker id="arr-a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="#A85A0C"/>
+        </marker>
+        <marker id="arr-v" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="#6A47BC"/>
+        </marker>
+        <marker id="arr-w" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="#A3301C"/>
+        </marker>
+        <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="#4F5B69"/>
+        </marker>
+      </defs>
+
+      <!-- Top daily rhythm strip -->
+      <rect x="14" y="10" width="812" height="44" rx="10" fill="#F4F6F9" stroke="#CBD3DC" stroke-width="1"/>
+      <text x="30" y="36" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#17202B">DAILY RHYTHM:</text>
+      <rect x="146" y="20" width="180" height="24" rx="6" fill="#E8EEFC" stroke="#B6C7F5"/>
+      <text x="236" y="36" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="600" fill="#2A52C4">Morning · Visual concepts</text>
+      <line x1="330" y1="32" x2="352" y2="32" stroke="#4F5B69" stroke-width="1.5" marker-end="url(#arr-g)"/>
+      <rect x="358" y="20" width="210" height="24" rx="6" fill="#E3F5F2" stroke="#9CD9D0"/>
+      <text x="463" y="36" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="600" fill="#0B7A6D">19:00 IST · Run &amp; break repo</text>
+      <line x1="572" y1="32" x2="594" y2="32" stroke="#4F5B69" stroke-width="1.5" marker-end="url(#arr-g)"/>
+      <rect x="600" y="20" width="212" height="24" rx="6" fill="#EFEAFB" stroke="#CBBBF0"/>
+      <text x="706" y="36" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="600" fill="#6A47BC">20:30 IST · Speak 60s answers</text>
+
+      <!-- Day 1 -->
+      <rect x="14" y="74" width="150" height="196" rx="12" fill="#E8EEFC" stroke="#2A52C4" stroke-width="1.5"/>
+      <text x="26" y="96" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#2A52C4">DAY 1 · FRI 20</text>
+      <text x="26" y="116" font-family="Inter,sans-serif" font-size="13.5" font-weight="700" fill="#17202B">Search &amp; DB</text>
+      <text x="26" y="138" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• AI fundamentals</text>
+      <text x="26" y="156" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• query.py, search.py</text>
+      <text x="26" y="174" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• db.py, thai, index</text>
+      <text x="26" y="192" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• SQL + pgvector 2M</text>
+      <rect x="24" y="214" width="130" height="44" rx="7" fill="#FFFFFF" stroke="#B6C7F5"/>
+      <text x="89" y="232" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="600" fill="#2A52C4">Break Labs #1–#5</text>
+      <text x="89" y="248" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">Filters, Thai, RRF</text>
+
+      <line x1="164" y1="172" x2="180" y2="172" stroke="#4F5B69" stroke-width="1.8" marker-end="url(#arr-g)"/>
+
+      <!-- Day 2 -->
+      <rect x="184" y="74" width="150" height="196" rx="12" fill="#E3F5F2" stroke="#0B7A6D" stroke-width="1.5"/>
+      <text x="196" y="96" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#0B7A6D">DAY 2 · SAT 21</text>
+      <text x="196" y="116" font-family="Inter,sans-serif" font-size="13.5" font-weight="700" fill="#17202B">Agent &amp; Guards</text>
+      <text x="196" y="138" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• agent.py, tools.py</text>
+      <text x="196" y="156" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• timeutil.py (TZ)</text>
+      <text x="196" y="174" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• guard, cache, llm</text>
+      <text x="196" y="192" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• evals.py (21 cases)</text>
+      <rect x="194" y="214" width="130" height="44" rx="7" fill="#FFFFFF" stroke="#9CD9D0"/>
+      <text x="259" y="232" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="600" fill="#0B7A6D">Break Labs #6–#9</text>
+      <text x="259" y="248" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">Clock, IDOR, PII</text>
+
+      <line x1="334" y1="172" x2="350" y2="172" stroke="#4F5B69" stroke-width="1.8" marker-end="url(#arr-g)"/>
+
+      <!-- Day 3 -->
+      <rect x="354" y="74" width="150" height="196" rx="12" fill="#FDF2E2" stroke="#A85A0C" stroke-width="1.5"/>
+      <text x="366" y="96" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#A85A0C">DAY 3 · SUN 22</text>
+      <text x="366" y="116" font-family="Inter,sans-serif" font-size="13.5" font-weight="700" fill="#17202B">Vision + Build 1</text>
+      <text x="366" y="138" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• vision, pdftable</text>
+      <text x="366" y="156" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• intents.py (ML)</text>
+      <text x="366" y="174" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• Build Policy RAG</text>
+      <text x="366" y="192" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• Eval before/after</text>
+      <rect x="364" y="214" width="130" height="44" rx="7" fill="#FFFFFF" stroke="#ECC99B"/>
+      <text x="429" y="232" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="600" fill="#A85A0C">Lab #10 + Ship 1</text>
+      <text x="429" y="248" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">AI-native story!</text>
+
+      <line x1="504" y1="172" x2="520" y2="172" stroke="#4F5B69" stroke-width="1.8" marker-end="url(#arr-g)"/>
+
+      <!-- Day 4 -->
+      <rect x="524" y="74" width="150" height="196" rx="12" fill="#EFEAFB" stroke="#6A47BC" stroke-width="1.5"/>
+      <text x="536" y="96" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#6A47BC">DAY 4 · MON 23</text>
+      <text x="536" y="116" font-family="Inter,sans-serif" font-size="13.5" font-weight="700" fill="#17202B">Tuning &amp; Mocks</text>
+      <text x="536" y="138" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• Fine-tune ladder</text>
+      <text x="536" y="156" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• System design</text>
+      <text x="536" y="174" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• Backend / Go tips</text>
+      <text x="536" y="192" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• 12× 60s drills</text>
+      <rect x="534" y="214" width="130" height="44" rx="7" fill="#FFFFFF" stroke="#CBBBF0"/>
+      <text x="599" y="232" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="600" fill="#6A47BC">Zero new code</text>
+      <text x="599" y="248" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">Sleep early!</text>
+
+      <line x1="674" y1="172" x2="690" y2="172" stroke="#197444" stroke-width="2" marker-end="url(#arr-t)"/>
+
+      <!-- Interview Day -->
+      <rect x="694" y="74" width="132" height="196" rx="12" fill="#E5F5EC" stroke="#197444" stroke-width="2"/>
+      <text x="706" y="96" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#197444">TUE 24 NOV</text>
+      <text x="706" y="118" font-family="Inter,sans-serif" font-size="14" font-weight="700" fill="#17202B">Interview</text>
+      <text x="706" y="144" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">1. What it is</text>
+      <text x="706" y="164" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">2. Why this way</text>
+      <text x="706" y="184" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">3. Alternative</text>
+      <text x="706" y="204" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">4. What breaks</text>
+      <rect x="704" y="220" width="112" height="38" rx="7" fill="#197444"/>
+      <text x="760" y="243" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF">Calm &amp; concrete</text>
+    </svg>
+    <figcaption>
+      <strong>Rule of thumb:</strong> Every evening ends with speaking your answer out loud in 60–90 seconds. If you stumble explaining a decision aloud, revisit that module's diagram immediately.
+    </figcaption>
+  </figure>
+
+  <div class="day-list">
+    <div class="day-card">
+      <div class="day-head">
+        <h3>Day 1 · Fri 20 Nov — AI Fundamentals, Hybrid Search &amp; Database Scale</h3>
+        <span class="badge b-blue">Modules 1 &amp; 2 + Labs #1–#5</span>
+      </div>
+      <ul class="check-list">
+        <li><input type="checkbox" id="d1a" data-task="d1a"><label for="d1a"><span>Run <code>uv run shop load</code>, <code>uv run shop search "blue running shoes in stock under 3000 baht"</code>, and Thai search <code>"รองเท้าวิ่ง ไนกี้ สีดำ ใส่วิ่งไกล"</code></span></label></li>
+        <li><input type="checkbox" id="d1b" data-task="d1b"><label for="d1b"><span>Read <code>query.py</code> (97 lines), <code>db.py</code> (83), <code>thai.py</code> (44), <code>index.py</code> (128), <code>search.py</code> (183)</span></label></li>
+        <li><input type="checkbox" id="d1c" data-task="d1c"><label for="d1c"><span>Run <code>shop explain-sql</code> on indexed vs unindexed filters; complete Break Labs #1–#5</span></label></li>
+        <li><input type="checkbox" id="d1d" data-task="d1d"><label for="d1d"><span>20:30 IST out-loud drill: explain hybrid search, Thai segmentation, RRF, and pgvector HNSW at 2M rows</span></label></li>
+      </ul>
+    </div>
+
+    <div class="day-card">
+      <div class="day-head">
+        <h3>Day 2 · Sat 21 Nov — Agent Loop, Backend Safety, Guardrails &amp; Evals</h3>
+        <span class="badge b-teal">Modules 3 &amp; 4 + Labs #6–#9</span>
+      </div>
+      <ul class="check-list">
+        <li><input type="checkbox" id="d2a" data-task="d2a"><label for="d2a"><span>Run multi-turn <code>shop ask</code> (follow-ups + <code>--user u1</code> orders from last week) and <code>uv run shop eval</code> (watch all 21 cases)</span></label></li>
+        <li><input type="checkbox" id="d2b" data-task="d2b"><label for="d2b"><span>Read <code>agent.py</code> (147), <code>tools.py</code> (182), <code>timeutil.py</code> (65), <code>guard.py</code> (130), <code>cache.py</code> (26), <code>llm.py</code> (65), <code>evals.py</code> (133)</span></label></li>
+        <li><input type="checkbox" id="d2c" data-task="d2c"><label for="d2c"><span>Complete Break Labs #6–#9 (dates, IDOR, PII checksums, ungrounded prices) and verify <code>uv run pytest -q</code> stays green</span></label></li>
+        <li><input type="checkbox" id="d2d" data-task="d2d"><label for="d2d"><span>20:30 IST out-loud drill: trace one full turn from user message → PII → tools → grounding → trace log</span></label></li>
+      </ul>
+    </div>
+
+    <div class="day-card">
+      <div class="day-head">
+        <h3>Day 3 · Sun 22 Nov — Vision, PDFs, Classifier + Build 1 AI-Native Feature</h3>
+        <span class="badge b-amber">Modules 5, 7 &amp; 8 + Lab #10</span>
+      </div>
+      <ul class="check-list">
+        <li><input type="checkbox" id="d3a" data-task="d3a"><label for="d3a"><span>Run <code>shop photo samples/shirt_photo.jpg</code>, <code>shop size-chart samples/size_chart.pdf --chest 102</code>, and <code>shop intents train</code> (<code>tfidf</code> vs <code>embed</code>)</span></label></li>
+        <li><input type="checkbox" id="d3b" data-task="d3b"><label for="d3b"><span>Read <code>vision.py</code> (71), <code>pdftable.py</code> (88), <code>intents.py</code> (127); do Break Lab #10 (2-colour shirt filter trap)</span></label></li>
+        <li><input type="checkbox" id="d3c" data-task="d3c"><label for="d3c"><span>Build the small <strong>Policy/FAQ RAG</strong> extension (Module 7) using the disciplined AI-native loop, measuring <code>pytest</code> + <code>shop eval</code> before &amp; after</span></label></li>
+      </ul>
+    </div>
+
+    <div class="day-card">
+      <div class="day-head">
+        <h3>Day 4 · Mon 23 Nov — Fine-Tuning Theory, System Design &amp; Mock Explanations</h3>
+        <span class="badge b-violet">Module 9 · Zero New Code</span>
+      </div>
+      <ul class="check-list">
+        <li><input type="checkbox" id="d4a" data-task="d4a"><label for="d4a"><span>Review the Adaptation Ladder (Prompt → RAG → Classifier → LoRA) and draw the 5-box Central Tech chatbot architecture on blank paper</span></label></li>
+        <li><input type="checkbox" id="d4b" data-task="d4b"><label for="d4b"><span>Finish all 12 flashcards in Module 9 out loud using <strong>What → Why → Alternative → What Breaks</strong></span></label></li>
+        <li><input type="checkbox" id="d4c" data-task="d4c"><label for="d4c"><span>Stop studying by 21:30 IST. Rested recall beats midnight cramming.</span></label></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="codeblock">
+    <div class="codebar"><span>Quick setup verification (Mac)</span><button class="copy-btn" type="button">Copy</button></div>
+    <pre><code>uv sync --extra dev
+uv run pytest -q
+uv run shop load
+uv run shop eval</code></pre>
+  </div>
+
+  <label class="done"><input type="checkbox" data-done="m0"> Mark Module 0 done</label>
+</section>
+
+<!-- ====================================================================== -->
+<!-- MODULE 1: AI FUNDAMENTALS -->
+<!-- ====================================================================== -->
+<section class="module prose" id="m1">
+  <h2><span class="num">1</span>AI Fundamentals (Visual Mental Models)</h2>
+  <p>
+    Every chatbot design decision flows from three simple truths about LLMs:
+    <strong>(1)</strong> an LLM is a <em>stateless next-token predictor</em>,
+    <strong>(2)</strong> embeddings turn <em>meaning into geometry</em>, and
+    <strong>(3)</strong> structured outputs + code validation bridge <em>probabilistic AI</em> to <em>deterministic databases</em>.
+  </p>
+
+  <h3>1.1 How an LLM actually produces a reply (and why it has no clock or memory)</h3>
+  <figure class="diagram">
+    <div class="diagram-head">
+      <span class="diagram-title">The Stateless Autoregressive Token Loop</span>
+      <span class="diagram-tag">Diagram 02 · LLM Mechanics</span>
+    </div>
+    <svg viewBox="0 0 840 270" role="img" aria-label="How an LLM tokenizes input, runs transformer forward pass, samples next token, and loops">
+      <!-- Context window container -->
+      <rect x="14" y="14" width="248" height="178" rx="12" fill="#E8EEFC" stroke="#2A52C4" stroke-width="1.5"/>
+      <text x="28" y="36" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#2A52C4">CONTEXT WINDOW (STATELESS)</text>
+      <rect x="28" y="48" width="220" height="32" rx="6" fill="#FFFFFF" stroke="#B6C7F5"/>
+      <text x="38" y="68" font-family="Inter,sans-serif" font-size="11.5" font-weight="600" fill="#17202B">System prompt + Clock + State</text>
+      <rect x="28" y="88" width="220" height="30" rx="6" fill="#FFFFFF" stroke="#B6C7F5"/>
+      <text x="38" y="107" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">Last 4 turns (PII masked)</text>
+      <rect x="28" y="126" width="220" height="30" rx="6" fill="#FFFFFF" stroke="#B6C7F5"/>
+      <text x="38" y="145" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">Tool schemas + tool results</text>
+      <text x="28" y="178" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">Sent fresh on EVERY single API call</text>
+
+      <!-- Arrow 1 -->
+      <line x1="262" y1="103" x2="294" y2="103" stroke="#2A52C4" stroke-width="2" marker-end="url(#arr-b)"/>
+
+      <!-- Tokenizer -->
+      <rect x="300" y="54" width="130" height="98" rx="11" fill="#FDF2E2" stroke="#A85A0C" stroke-width="1.5"/>
+      <text x="365" y="77" text-anchor="middle" font-family="Inter,sans-serif" font-size="12.5" font-weight="700" fill="#17202B">Tokenizer</text>
+      <text x="365" y="97" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" fill="#A85A0C">[421, 98, 7012]</text>
+      <text x="365" y="117" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">Subword chunks</text>
+      <text x="365" y="135" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#A3301C">Thai ≈ 2–3× tokens!</text>
+
+      <!-- Arrow 2 -->
+      <line x1="430" y1="103" x2="462" y2="103" stroke="#A85A0C" stroke-width="2" marker-end="url(#arr-a)"/>
+
+      <!-- Transformer -->
+      <rect x="468" y="42" width="158" height="122" rx="11" fill="#EFEAFB" stroke="#6A47BC" stroke-width="1.5"/>
+      <text x="547" y="66" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#17202B">Transformer</text>
+      <text x="547" y="85" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">Frozen weights (params)</text>
+      <text x="547" y="104" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">Self-attention over all</text>
+      <text x="547" y="120" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">tokens in context</text>
+      <rect x="484" y="132" width="126" height="22" rx="5" fill="#FFFFFF" stroke="#CBBBF0"/>
+      <text x="547" y="147" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#6A47BC">P(next token | ctx)</text>
+
+      <!-- Arrow 3 -->
+      <line x1="626" y1="103" x2="658" y2="103" stroke="#6A47BC" stroke-width="2" marker-end="url(#arr-v)"/>
+
+      <!-- Sampler -->
+      <rect x="664" y="48" width="162" height="110" rx="11" fill="#E3F5F2" stroke="#0B7A6D" stroke-width="1.5"/>
+      <text x="745" y="71" text-anchor="middle" font-family="Inter,sans-serif" font-size="12.5" font-weight="700" fill="#17202B">Sample 1 Token</text>
+      <text x="745" y="92" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" fill="#0B7A6D">temp=0 → extraction</text>
+      <text x="745" y="110" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" fill="#0B7A6D">temp=0.2 → chat</text>
+      <text x="745" y="131" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">Either text OR a</text>
+      <text x="745" y="146" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">structured tool_call</text>
+
+      <!-- Loopback arrow -->
+      <path d="M 745 158 L 745 204 L 547 204 L 547 166" fill="none" stroke="#0B7A6D" stroke-width="1.8" stroke-dasharray="5,4" marker-end="url(#arr-t)"/>
+      <text x="540" y="224" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#0B7A6D">Append token &amp; repeat until STOP (output tokens cost more &amp; dominate latency)</text>
+
+      <!-- Bottom truth bar -->
+      <rect x="14" y="240" width="812" height="24" rx="6" fill="#FCECE9" stroke="#EAB9AF"/>
+      <text x="420" y="256" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="600" fill="#A3301C">
+        Blind spots by design: NO live clock · NO memory between API calls · NO live DB/stock · Bad at arithmetic &amp; dates
+      </text>
+    </svg>
+    <figcaption>
+      Because generation runs one token at a time, <strong>time-to-first-token (TTFT)</strong> depends on prompt size (prefill), while <strong>total reply time</strong> scales with output tokens. That is why <code>agent.py</code> trims history to <code>HISTORY_TURNS = 4</code> and tools return compact JSON cards instead of huge raw rows.
+    </figcaption>
+  </figure>
+
+  <h3>1.2 Embeddings: Turning meaning into geometry</h3>
+  <p>
+    An embedding model maps a sentence into a fixed-length vector of numbers — here <code>768</code> floats from <code>gemini-embedding-001</code> (truncated from 3,072 via Matryoshka representation = <strong>4× smaller memory &amp; faster math</strong>). Similar meanings land close together in angle, even across Thai and English.
+  </p>
+
+  <figure class="diagram">
+    <div class="diagram-head">
+      <span class="diagram-title">Shared Vector Space: Why Model Choice Matters for Thai Retail</span>
+      <span class="diagram-tag">Diagram 03 · Embeddings</span>
+    </div>
+    <svg viewBox="0 0 840 270" role="img" aria-label="2D projection of embedding vectors showing Thai and English running shoes close together while yoga mat is far">
+      <!-- Left: 2D Vector Space -->
+      <rect x="14" y="14" width="446" height="242" rx="12" fill="#FAFBFC" stroke="#CBD3DC" stroke-width="1.5"/>
+      <text x="30" y="36" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#A85A0C">UNIT SPHERE (L2-NORMALISED · 768 DIMS)</text>
+
+      <!-- Axes -->
+      <line x1="64" y1="224" x2="430" y2="224" stroke="#CBD3DC" stroke-width="1.2"/>
+      <line x1="64" y1="224" x2="64" y2="56" stroke="#CBD3DC" stroke-width="1.2"/>
+
+      <!-- Vector 1: English blue running shoe -->
+      <line x1="64" y1="224" x2="215" y2="78" stroke="#2A52C4" stroke-width="2.2" marker-end="url(#arr-b)"/>
+      <circle cx="215" cy="78" r="5" fill="#2A52C4"/>
+      <rect x="224" y="56" width="186" height="32" rx="6" fill="#E8EEFC" stroke="#B6C7F5"/>
+      <text x="234" y="76" font-family="Inter,sans-serif" font-size="11.5" font-weight="600" fill="#2A52C4">"blue running shoe"</text>
+
+      <!-- Vector 2: Thai blue running shoe -->
+      <line x1="64" y1="224" x2="248" y2="106" stroke="#0B7A6D" stroke-width="2.2" marker-end="url(#arr-t)"/>
+      <circle cx="248" cy="106" r="5" fill="#0B7A6D"/>
+      <rect x="256" y="96" width="186" height="32" rx="6" fill="#E3F5F2" stroke="#9CD9D0"/>
+      <text x="266" y="116" font-family="Inter,sans-serif" font-size="11.5" font-weight="600" fill="#0B7A6D">"รองเท้าวิ่งสีน้ำเงิน"</text>
+
+      <!-- Angle arc -->
+      <path d="M 140 150 A 105 105 0 0 1 155 166" fill="none" stroke="#197444" stroke-width="2"/>
+      <text x="166" y="152" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#197444">cos = 0.86</text>
+
+      <!-- Vector 3: Yoga mat (far) -->
+      <line x1="64" y1="224" x2="352" y2="198" stroke="#A85A0C" stroke-width="2" marker-end="url(#arr-a)"/>
+      <circle cx="352" cy="198" r="5" fill="#A85A0C"/>
+      <rect x="278" y="160" width="166" height="30" rx="6" fill="#FDF2E2" stroke="#ECC99B"/>
+      <text x="288" y="179" font-family="Inter,sans-serif" font-size="11.5" fill="#A85A0C">"non-slip yoga mat"</text>
+
+      <text x="30" y="244" font-family="JetBrains Mono,monospace" font-size="10" fill="#4F5B69">‖v‖ = 1 ⇒ dot(a,b) = cosine(a,b) · m @ q in search.py</text>
+
+      <!-- Right: Measured comparison & rules -->
+      <rect x="480" y="14" width="346" height="114" rx="12" fill="#FFFFFF" stroke="#CBD3DC" stroke-width="1.5"/>
+      <text x="496" y="37" font-family="Inter,sans-serif" font-size="12.5" font-weight="700" fill="#17202B">Measured TH ↔ EN similarity (same phrase)</text>
+
+      <text x="496" y="63" font-family="JetBrains Mono,monospace" font-size="11" fill="#0B7A6D">gemini-embedding-001</text>
+      <rect x="496" y="70" width="250" height="14" rx="7" fill="#E4E9EF"/>
+      <rect x="496" y="70" width="215" height="14" rx="7" fill="#0B7A6D"/>
+      <text x="756" y="81" font-family="JetBrains Mono,monospace" font-size="11.5" font-weight="700" fill="#0B7A6D">0.86</text>
+
+      <text x="496" y="102" font-family="JetBrains Mono,monospace" font-size="11" fill="#A3301C">text-embedding-3-small</text>
+      <rect x="496" y="109" width="250" height="14" rx="7" fill="#E4E9EF"/>
+      <rect x="496" y="109" width="90" height="14" rx="7" fill="#A3301C"/>
+      <text x="756" y="120" font-family="JetBrains Mono,monospace" font-size="11.5" font-weight="700" fill="#A3301C">0.36</text>
+
+      <!-- Critical rule box -->
+      <rect x="480" y="142" width="346" height="114" rx="12" fill="#FCECE9" stroke="#EAB9AF" stroke-width="1.5"/>
+      <text x="496" y="165" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#A3301C">GOLDEN RULE · NEVER MIX SPACES</text>
+      <text x="496" y="187" font-family="Inter,sans-serif" font-size="12" fill="#17202B">1. Index vectors &amp; query vectors MUST come</text>
+      <text x="496" y="204" font-family="Inter,sans-serif" font-size="12" fill="#17202B">   from the exact same embedding model.</text>
+      <text x="496" y="224" font-family="Inter,sans-serif" font-size="12" fill="#17202B">2. Embeddings capture vibe, NOT math: never</text>
+      <text x="496" y="241" font-family="Inter,sans-serif" font-size="12" fill="#17202B">   embed "under 3,000 baht" or "in stock"!</text>
+    </svg>
+    <figcaption>
+      Notice in <code>src/shop/llm.py:37</code>: <code>v / np.linalg.norm(v, axis=1, keepdims=True)</code>. Shortened Gemini embeddings (768 of 3,072 dims) are not automatically unit length, so normalising them ensures <code>m @ q</code> equals true cosine similarity. And because OpenRouter serves the exact same <code>google/gemini-embedding-001</code> weights (cosine 1.00), switching chat providers keeps <code>vectors/model_vectors.npz</code> valid.
+    </figcaption>
+  </figure>
+
+  <h3>1.3 Bridging AI to Code: Structured Outputs + Pydantic Validation</h3>
+  <figure class="diagram">
+    <div class="diagram-head">
+      <span class="diagram-title">How Probabilistic Text Becomes Safe, Typed SQL Parameters (<code>query.py</code>)</span>
+      <span class="diagram-tag">Diagram 04 · Structured Output</span>
+    </div>
+    <svg viewBox="0 0 840 160" role="img" aria-label="User text to JSON schema structured output to Pydantic allowlist validation to parameterized SQL">
+      <!-- Box 1 -->
+      <rect x="14" y="34" width="176" height="92" rx="10" fill="#E8EEFC" stroke="#2A52C4" stroke-width="1.5"/>
+      <text x="102" y="56" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#2A52C4">1. MESSY MESSAGE</text>
+      <text x="102" y="79" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">"รองเท้าวิ่ง สีดำ</text>
+      <text x="102" y="96" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">ไม่เกิน 4000 บาท</text>
+      <text x="102" y="113" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#4F5B69">ใส่วิ่งไกล"</text>
+
+      <line x1="190" y1="80" x2="218" y2="80" stroke="#2A52C4" stroke-width="1.8" marker-end="url(#arr-b)"/>
+
+      <!-- Box 2 -->
+      <rect x="224" y="24" width="204" height="112" rx="10" fill="#EFEAFB" stroke="#6A47BC" stroke-width="1.5"/>
+      <text x="326" y="45" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#6A47BC">2. JSON SCHEMA (temp=0)</text>
+      <text x="238" y="66" font-family="JetBrains Mono,monospace" font-size="10.5" fill="#17202B">category: "running shoes"</text>
+      <text x="238" y="83" font-family="JetBrains Mono,monospace" font-size="10.5" fill="#17202B">colors: ["black"]</text>
+      <text x="238" y="100" font-family="JetBrains Mono,monospace" font-size="10.5" fill="#17202B">max_price: 4000</text>
+      <text x="238" y="117" font-family="JetBrains Mono,monospace" font-size="10.5" fill="#6A47BC">text: "long distance run"</text>
+
+      <line x1="428" y1="80" x2="456" y2="80" stroke="#6A47BC" stroke-width="1.8" marker-end="url(#arr-v)"/>
+
+      <!-- Box 3 -->
+      <rect x="462" y="34" width="174" height="92" rx="10" fill="#E3F5F2" stroke="#0B7A6D" stroke-width="1.5"/>
+      <text x="549" y="56" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#0B7A6D">3. PYDANTIC GUARD</text>
+      <text x="549" y="78" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">Drop any value not in</text>
+      <text x="549" y="95" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">catalog enums; normalise</text>
+      <text x="549" y="112" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#0B7A6D">brand casing safely</text>
+
+      <line x1="636" y1="80" x2="664" y2="80" stroke="#0B7A6D" stroke-width="1.8" marker-end="url(#arr-t)"/>
+
+      <!-- Box 4 -->
+      <rect x="670" y="34" width="156" height="92" rx="10" fill="#FDF2E2" stroke="#A85A0C" stroke-width="1.5"/>
+      <text x="748" y="56" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#A85A0C">4. TWO TRACKS</text>
+      <text x="748" y="79" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="600" fill="#17202B">Exact → SQL WHERE ?</text>
+      <text x="748" y="98" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="600" fill="#17202B">Fuzzy → BM25 + Vec</text>
+      <text x="748" y="116" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">Zero SQL injection</text>
+    </svg>
+    <figcaption>
+      Never interpolate LLM output into SQL strings. <code>search.build_where()</code> always emits <code>?</code> placeholders so even a hostile prompt cannot inject SQL.
+    </figcaption>
+  </figure>
+
+  <details class="check">
+    <summary>Predict before peeking: Why does <code>agent.py</code> send the assistant's tool-call message back unchanged (<code>msg.model_dump(exclude_none=True)</code>) instead of rebuilding a dict with just <code>role</code> and <code>tool_calls</code>?</summary>
+    <div class="ans">
+      On Gemini's OpenAI-compatible endpoint, tool-call responses carry an internal <strong>thought signature</strong>. Stripping it causes Gemini to reject or degrade the follow-up turn. Forwarding the assistant message object intact preserves that signature. Mentioning real provider quirks like this in an interview proves you actually built and debugged with Gemini!
+    </div>
+  </details>
+
+  <label class="done"><input type="checkbox" data-done="m1"> Mark Module 1 done</label>
+</section>
+
+<!-- ====================================================================== -->
+<!-- MODULE 2: HYBRID SEARCH, THAI NLP & 2M SCALE -->
+<!-- ====================================================================== -->
+<section class="module prose" id="m2">
+  <h2><span class="num">2</span>Hybrid Search, Thai NLP &amp; Scaling to 2M Rows</h2>
+  <p>
+    Retail search is never "just vector search". A shopper asking for
+    <em>"blue running shoes in stock under 3,000 baht for flat feet"</em> mixes
+    <strong>hard constraints</strong> (<code>category</code>, <code>color</code>, <code>price</code>, <code>in_stock</code>)
+    with <strong>soft intent</strong> (<em>"for flat feet"</em>) and sometimes exact model codes (<code>Pegasus 41</code>, <code>Yonex</code>).
+    Pure vectors break on exact filters and SKU names; pure keywords break on synonyms and phrasing.
+    <strong>Hybrid search</strong> lets each tool do what it is best at.
+  </p>
+
+  <h3>2.1 End-to-end hybrid search pipeline (<code>query.py</code> → <code>db.py</code> → <code>search.py</code>)</h3>
+  <figure class="diagram">
+    <div class="diagram-head">
+      <span class="diagram-title">How One Search Query Becomes Ranked, Diverse Results</span>
+      <span class="diagram-tag">Diagram 05 · Hybrid Search</span>
+    </div>
+    <svg viewBox="0 0 840 355" role="img" aria-label="Hybrid search pipeline from query parsing to SQL filters, parallel BM25 and Vector ranking, RRF fusion, model collapse, and category diversity">
+      <!-- Step 1: Parse -->
+      <rect x="14" y="18" width="170" height="82" rx="10" fill="#E8EEFC" stroke="#2A52C4" stroke-width="1.5"/>
+      <text x="99" y="40" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#2A52C4">1. PARSE (query.py)</text>
+      <text x="99" y="61" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">FAST_MODEL extracts</text>
+      <text x="99" y="77" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="600" fill="#17202B">Filters + fuzzy text</text>
+      <text x="99" y="92" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#4F5B69">~0.9s (main latency)</text>
+
+      <line x1="184" y1="59" x2="214" y2="59" stroke="#2A52C4" stroke-width="1.8" marker-end="url(#arr-b)"/>
+
+      <!-- Step 2: SQL Filter + Relax -->
+      <rect x="220" y="12" width="224" height="94" rx="10" fill="#E3F5F2" stroke="#0B7A6D" stroke-width="1.5"/>
+      <text x="332" y="33" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#0B7A6D">2. EXACT SQL WHERE (db.py)</text>
+      <text x="332" y="53" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#17202B">category=? AND in_stock=1</text>
+      <text x="332" y="68" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#17202B">AND color IN (?) AND price&lt;=?</text>
+      <text x="332" y="88" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#0B7A6D">0 rows? Relax: +20% → color → size</text>
+
+      <!-- Split arrows down to two parallel lanes -->
+      <path d="M 332 106 L 332 128 L 195 128 L 195 144" fill="none" stroke="#0B7A6D" stroke-width="1.8" marker-end="url(#arr-t)"/>
+      <path d="M 332 106 L 332 128 L 460 128 L 460 144" fill="none" stroke="#A85A0C" stroke-width="1.8" marker-end="url(#arr-a)"/>
+
+      <!-- Lane A: BM25 -->
+      <rect x="52" y="150" width="286" height="84" rx="10" fill="#E3F5F2" stroke="#0B7A6D" stroke-width="1.5"/>
+      <text x="195" y="172" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#0B7A6D">3A. KEYWORD LANE (FTS5 BM25)</text>
+      <text x="195" y="192" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">thai.segment() + quoted OR query</text>
+      <text x="195" y="210" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">Great for exact brands, SKUs, Thai words</text>
+      <text x="195" y="225" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#0B7A6D">→ keyword_rank: [p12, p4, p89, ...]</text>
+
+      <!-- Lane B: Vectors -->
+      <rect x="366" y="150" width="290" height="84" rx="10" fill="#FDF2E2" stroke="#A85A0C" stroke-width="1.5"/>
+      <text x="511" y="172" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#A85A0C">3B. VECTOR LANE (COSINE)</text>
+      <text x="511" y="192" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">embed(text) → dot product m @ q</text>
+      <text x="511" y="210" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">Great for meaning, synonyms, EN↔TH</text>
+      <text x="511" y="225" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#A85A0C">→ vector_rank: [p4, p31, p12, ...]</text>
+
+      <!-- Merge into RRF -->
+      <path d="M 195 234 L 195 256 L 340 256 L 340 270" fill="none" stroke="#0B7A6D" stroke-width="1.8" marker-end="url(#arr-t)"/>
+      <path d="M 511 234 L 511 256 L 368 256 L 368 270" fill="none" stroke="#A85A0C" stroke-width="1.8" marker-end="url(#arr-a)"/>
+
+      <!-- Step 4: RRF -->
+      <rect x="242" y="276" width="224" height="66" rx="10" fill="#EFEAFB" stroke="#6A47BC" stroke-width="1.5"/>
+      <text x="354" y="297" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#6A47BC">4. RRF FUSION (k = 60)</text>
+      <text x="354" y="317" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" font-weight="600" fill="#17202B">score = Σ 1 / (60 + rank)</text>
+      <text x="354" y="333" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">Scale-free: ignores raw BM25/cos units</text>
+
+      <line x1="466" y1="309" x2="500" y2="309" stroke="#6A47BC" stroke-width="1.8" marker-end="url(#arr-v)"/>
+
+      <!-- Step 5: Collapse + Diversify -->
+      <rect x="506" y="264" width="320" height="82" rx="10" fill="#E5F5EC" stroke="#197444" stroke-width="1.5"/>
+      <text x="666" y="285" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#197444">5. POST-PROCESS → TOP K</text>
+      <text x="520" y="305" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• <tspan font-weight="700">collapse():</tspan> 1 best row per model_id</text>
+      <text x="520" y="322" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• <tspan font-weight="700">diversify():</tspan> max 2 per category if open query</text>
+      <text x="520" y="338" font-family="Inter,sans-serif" font-size="10.5" fill="#197444">(Stops 5 colours of 1 shoe or 5 water bottles!)</text>
+
+      <!-- Callout badge top-right -->
+      <rect x="466" y="18" width="360" height="82" rx="10" fill="#FAFBFC" stroke="#CBD3DC" stroke-dasharray="5,4"/>
+      <text x="480" y="40" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#4F5B69">WHY RELAX FILTERS IN THAT ORDER?</text>
+      <text x="480" y="59" font-family="Inter,sans-serif" font-size="11" fill="#17202B">1. <tspan font-weight="600">max_price × 1.2</tspan> (budget is often flexible by 20%)</text>
+      <text x="480" y="76" font-family="Inter,sans-serif" font-size="11" fill="#17202B">2. <tspan font-weight="600">colors → size → brand</tspan> (never drop category/stock!)</text>
+      <text x="480" y="92" font-family="Inter,sans-serif" font-size="10.5" fill="#0B7A6D">And always tell the user what was relaxed.</text>
+    </svg>
+    <figcaption>
+      Why RRF instead of <code>0.5 * bm25 + 0.5 * cosine</code>? BM25 scores are unbounded negative floats in SQLite FTS5 while cosine lives in <code>[-1, 1]</code> (typically <code>0.55–0.85</code>). Raw linear blending breaks whenever score distributions shift. RRF uses only <strong>ranks</strong>, needs zero tuning, and rewards items ranked well by <em>both</em> engines.
+    </figcaption>
+  </figure>
+
+  <div class="widget" id="rrf-widget">
+    <h4>Interactive Mini-Lab · Reciprocal Rank Fusion (<code>RRF_K = 60</code>)</h4>
+    <p class="sub">Slide each product's Keyword rank and Vector rank (1 = top, 50 = unranked/far) to see how RRF rewards consensus over single-lane spikes.</p>
+    <div class="rrf-grid">
+      <div class="rrf-item">
+        <div class="name">Shoe A (Consensus match)</div>
+        <div class="rrf-ctrl"><span>BM25 rank</span><input type="range" id="a-kw" min="1" max="50" value="2"><span class="val" id="a-kw-v">#2</span></div>
+        <div class="rrf-ctrl"><span>Vector rank</span><input type="range" id="a-vec" min="1" max="50" value="3"><span class="val" id="a-vec-v">#3</span></div>
+      </div>
+      <div class="rrf-item">
+        <div class="name">Shoe B (Exact keyword only)</div>
+        <div class="rrf-ctrl"><span>BM25 rank</span><input type="range" id="b-kw" min="1" max="50" value="1"><span class="val" id="b-kw-v">#1</span></div>
+        <div class="rrf-ctrl"><span>Vector rank</span><input type="range" id="b-vec" min="1" max="50" value="40"><span class="val" id="b-vec-v">#40</span></div>
+      </div>
+      <div class="rrf-item">
+        <div class="name">Shoe C (Semantic only)</div>
+        <div class="rrf-ctrl"><span>BM25 rank</span><input type="range" id="c-kw" min="1" max="50" value="45"><span class="val" id="c-kw-v">#45</span></div>
+        <div class="rrf-ctrl"><span>Vector rank</span><input type="range" id="c-vec" min="1" max="50" value="1"><span class="val" id="c-vec-v">#1</span></div>
+      </div>
+    </div>
+    <div class="rrf-out" id="rrf-out"></div>
+  </div>
+
+  <h3>2.2 The Thai tokenization trap (<code>src/shop/thai.py</code>)</h3>
+  <p>
+    Thai has <strong>no spaces between words</strong>. Standard tokenizers (including SQLite FTS5's <code>unicode61</code>) see a whole Thai sentence as one giant word — so a shopper searching <code>รองเท้าวิ่ง ไนกี้ สีดำ</code> gets zero keyword matches unless you segment both index-time text and query-time text the exact same way.
+  </p>
+
+  <figure class="diagram">
+    <div class="diagram-head">
+      <span class="diagram-title">Why Custom-Dictionary Thai Segmentation Is Non-Negotiable</span>
+      <span class="diagram-tag">Diagram 06 · Thai NLP</span>
+    </div>
+    <svg viewBox="0 0 840 218" role="img" aria-label="Comparing naive tokenization, default PyThaiNLP, and custom-dictionary PyThaiNLP on Thai shoe query">
+      <!-- Input strip -->
+      <rect x="14" y="10" width="812" height="36" rx="8" fill="#E8EEFC" stroke="#B6C7F5"/>
+      <text x="420" y="33" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#17202B">
+        Shopper writes:  "รองเท้าวิ่งไนกี้สีดำ ราคาไม่เกิน ๓๐๐๐ บาท"
+      </text>
+
+      <!-- Row 1: Naive -->
+      <rect x="14" y="60" width="812" height="44" rx="8" fill="#FCECE9" stroke="#EAB9AF"/>
+      <text x="28" y="86" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#A3301C">✗ NAIVE FTS5</text>
+      <rect x="155" y="70" width="235" height="24" rx="5" fill="#FFFFFF" stroke="#EAB9AF"/>
+      <text x="272" y="86" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#A3301C">รองเท้าวิ่งไนกี้สีดำ (1 giant token!)</text>
+      <text x="410" y="86" font-family="Inter,sans-serif" font-size="11.5" fill="#4F5B69">→ Query "ไนกี้" or "สีดำ" matches NOTHING. Thai digits "๓๐๐๐" ≠ "3000".</text>
+
+      <!-- Row 2: Stock PyThaiNLP -->
+      <rect x="14" y="114" width="812" height="44" rx="8" fill="#FDF2E2" stroke="#ECC99B"/>
+      <text x="28" y="140" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#A85A0C">△ DEFAULT DICT</text>
+      <rect x="155" y="124" width="76" height="24" rx="5" fill="#FFFFFF" stroke="#ECC99B"/>
+      <text x="193" y="140" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">รองเท้าวิ่ง</text>
+      <rect x="237" y="124" width="36" height="24" rx="5" fill="#FCECE9" stroke="#A3301C"/>
+      <text x="255" y="140" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#A3301C">ไน</text>
+      <rect x="279" y="124" width="36" height="24" rx="5" fill="#FCECE9" stroke="#A3301C"/>
+      <text x="297" y="140" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#A3301C">กี้</text>
+      <rect x="321" y="124" width="48" height="24" rx="5" fill="#FFFFFF" stroke="#ECC99B"/>
+      <text x="345" y="140" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">สีดำ</text>
+      <text x="385" y="140" font-family="Inter,sans-serif" font-size="11.5" fill="#4F5B69">→ Brand transliterations get chopped up! ("ไน" + "กี้" loses Nike).</text>
+
+      <!-- Row 3: Custom trie in thai.py -->
+      <rect x="14" y="168" width="812" height="44" rx="8" fill="#E5F5EC" stroke="#A5DABB"/>
+      <text x="28" y="194" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#197444">✓ thai.py TRIE</text>
+      <rect x="155" y="178" width="76" height="24" rx="5" fill="#FFFFFF" stroke="#197444"/>
+      <text x="193" y="194" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">รองเท้าวิ่ง</text>
+      <rect x="237" y="178" width="52" height="24" rx="5" fill="#E3F5F2" stroke="#0B7A6D" stroke-width="1.5"/>
+      <text x="263" y="194" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#0B7A6D">ไนกี้</text>
+      <rect x="295" y="178" width="48" height="24" rx="5" fill="#FFFFFF" stroke="#197444"/>
+      <text x="319" y="194" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">สีดำ</text>
+      <rect x="349" y="178" width="46" height="24" rx="5" fill="#FFFFFF" stroke="#197444"/>
+      <text x="372" y="194" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" fill="#197444">3000</text>
+      <text x="410" y="194" font-family="Inter,sans-serif" font-size="11" fill="#17202B">NFC + Thai digits → Arabic + catalog brands in <tspan font-family="JetBrains Mono,monospace">dict_trie</tspan>.</text>
+    </svg>
+    <figcaption>
+      In production at Central Tech, the keyword lane moves to OpenSearch / Elasticsearch with a Thai analyzer + custom synonym/brand dictionary (or Vertex AI Search), while keeping the exact same index-time + query-time parity.
+    </figcaption>
+  </figure>
+
+  <h3>2.3 Scaling to 2 million products &amp; filter combinations (<code>index.py</code> + PostgreSQL <code>pgvector</code>)</h3>
+  <p>
+    Central Tech explicitly asks about <strong>2 million records and filter combinations</strong>. Four concrete engineering ideas scale cleanly from this 2,048-row SQLite repo to 2M SKUs:
+  </p>
+
+  <figure class="diagram">
+    <div class="diagram-head">
+      <span class="diagram-title">The Pre-Filter vs Post-Filter HNSW Trap (and 4 Patterns for 2M SKUs)</span>
+      <span class="diagram-tag">Diagram 07 · 2M Scale</span>
+    </div>
+    <svg viewBox="0 0 840 330" role="img" aria-label="Comparing naive HNSW post-filtering failure with pgvector 0.8 iterative scan and parent-level incremental embedding">
+      <!-- Top Left: Naive Post-Filter Trap -->
+      <rect x="14" y="14" width="398" height="148" rx="11" fill="#FCECE9" stroke="#EAB9AF" stroke-width="1.5"/>
+      <text x="30" y="36" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#A3301C">✗ TRAP: NAIVE HNSW POST-FILTERING</text>
+      <rect x="30" y="48" width="128" height="52" rx="8" fill="#FFFFFF" stroke="#EAB9AF"/>
+      <text x="94" y="69" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#17202B">HNSW Graph</text>
+      <text x="94" y="86" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">Grabs top 50 nearest</text>
+      <line x1="158" y1="74" x2="188" y2="74" stroke="#A3301C" stroke-width="1.8" marker-end="url(#arr-w)"/>
+      <rect x="194" y="48" width="112" height="52" rx="8" fill="#FFFFFF" stroke="#EAB9AF"/>
+      <text x="250" y="69" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#17202B">SQL Filter</text>
+      <text x="250" y="86" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#4F5B69">1% match rate</text>
+      <line x1="306" y1="74" x2="334" y2="74" stroke="#A3301C" stroke-width="1.8" marker-end="url(#arr-w)"/>
+      <rect x="340" y="54" width="58" height="40" rx="8" fill="#A3301C"/>
+      <text x="369" y="78" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700" fill="#FFFFFF">0 hits</text>
+      <text x="30" y="122" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">50 × 1% = 0.5 rows survive! Even though 20,000 matching</text>
+      <text x="30" y="139" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">in-stock blue shoes under ฿3,000 exist in the 2M table.</text>
+
+      <!-- Top Right: pgvector 0.8+ Fix -->
+      <rect x="428" y="14" width="398" height="148" rx="11" fill="#E5F5EC" stroke="#A5DABB" stroke-width="1.5"/>
+      <text x="444" y="36" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#197444">✓ FIX: PGVECTOR 0.8+ ITERATIVE SCAN + B-TREE</text>
+      <rect x="444" y="48" width="194" height="52" rx="8" fill="#FFFFFF" stroke="#A5DABB"/>
+      <text x="541" y="68" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#0B7A6D">hnsw.iterative_scan</text>
+      <text x="541" y="85" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" fill="#17202B">= relaxed_order</text>
+      <line x1="638" y1="74" x2="668" y2="74" stroke="#197444" stroke-width="1.8" marker-end="url(#arr-t)"/>
+      <rect x="674" y="48" width="136" height="52" rx="8" fill="#197444"/>
+      <text x="742" y="70" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF">Full 50 hits!</text>
+      <text x="742" y="86" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#E5F5EC">Keeps walking graph</text>
+      <text x="444" y="122" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• Rare filters (&lt;1%): B-tree index narrows first, then exact sort.</text>
+      <text x="444" y="139" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• Medium filters: HNSW keeps scanning until LIMIT 50 fills.</text>
+
+      <!-- Bottom 4 Scale Pillars -->
+      <rect x="14" y="180" width="194" height="136" rx="10" fill="#FDF2E2" stroke="#ECC99B"/>
+      <text x="28" y="202" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#A85A0C">1. PARENT VECTORS</text>
+      <text x="28" y="224" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">Embed 1 vector per</text>
+      <text x="28" y="241" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#17202B">model_id, NOT per SKU.</text>
+      <text x="28" y="262" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">486 vs 2,048 rows (4.2×).</text>
+      <text x="28" y="279" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">At 2M SKUs → ~400k</text>
+      <text x="28" y="296" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">vectors (1.2 GB float32).</text>
+
+      <rect x="220" y="180" width="194" height="136" rx="10" fill="#E3F5F2" stroke="#9CD9D0"/>
+      <text x="234" y="202" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#0B7A6D">2. CONTENT HASH</text>
+      <text x="234" y="224" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">Store <tspan font-family="JetBrains Mono,monospace">sha256[:16]</tspan> of</text>
+      <text x="234" y="241" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">stable text (no price/stock!).</text>
+      <text x="234" y="262" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">Price/stock updates never</text>
+      <text x="234" y="279" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">re-embed! Crash loses only</text>
+      <text x="234" y="296" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">the batches in flight.</text>
+
+      <rect x="426" y="180" width="194" height="136" rx="10" fill="#E8EEFC" stroke="#B6C7F5"/>
+      <text x="440" y="202" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#2A52C4">3. RATE LIMITER</text>
+      <text x="440" y="224" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">Sliding-window limiter</text>
+      <text x="440" y="241" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">+ ThreadPoolExecutor.</text>
+      <text x="440" y="262" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">Stay under API quota</text>
+      <text x="440" y="279" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">proactively instead of</text>
+      <text x="440" y="296" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">hammering into 429s.</text>
+
+      <rect x="632" y="180" width="194" height="136" rx="10" fill="#EFEAFB" stroke="#CBBBF0"/>
+      <text x="646" y="202" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#6A47BC">4. INDEX + FLAG</text>
+      <text x="646" y="224" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">Composite B-tree:</text>
+      <text x="646" y="241" font-family="JetBrains Mono,monospace" font-size="10" font-weight="700" fill="#6A47BC">(category,in_stock,price)</text>
+      <text x="646" y="262" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">Equality cols FIRST, range</text>
+      <text x="646" y="279" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">col LAST. Event updates</text>
+      <text x="646" y="296" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69"><tspan font-family="JetBrains Mono,monospace">in_stock</tspan> flag in O(1).</text>
+    </svg>
+    <figcaption>
+      <strong>Database interview gold:</strong> Notice the column order in <code>db.py:23</code>: <code>CREATE INDEX idx_cat_stock_price ON products(category, in_stock, price)</code>. Why <code>price</code> last? Because a B-tree can keep using columns after equality checks (<code>=</code>), but stops at the first range check (<code>&lt;=</code>)! And notice <code>sizes</code> uses <code>LIKE '%,42,%'</code> in SQLite — in PostgreSQL at 2M rows, you would use a <code>text[]</code> array with a <strong>GIN index</strong> or a normalized <code>stock(product_id, size, store, qty)</code> join!
+    </figcaption>
+  </figure>
+
+  <details class="check">
+    <summary>Predict before peeking: Why does <code>db.py</code> store a precomputed <code>products.in_stock</code> flag AND still query the live <code>stock</code> table inside <code>tools.check_stock()</code>?</summary>
+    <div class="ans">
+      <strong>Fast filtering vs exact truth.</strong> During catalog search over 2M products, joining a huge store×size <code>stock</code> table (2M × 6 sizes × 20 stores = 240M rows!) on every search is too slow — a precomputed boolean <code>in_stock</code> column updated asynchronously by stock-change events makes filtering instant. Then, when a customer asks <em>"is size 42 in stock at CentralWorld right now?"</em>, <code>check_stock</code> reads live quantities directly from <code>stock</code> without touching any cache.
+    </div>
+  </details>
+
+  <label class="done"><input type="checkbox" data-done="m2"> Mark Module 2 done</label>
+</section>
+
+<!-- ====================================================================== -->
+<!-- MODULE 3: AGENT FUNDAMENTALS & BACKEND SAFETY -->
+<!-- ====================================================================== -->
+<section class="module prose" id="m3">
+  <h2><span class="num">3</span>Agent Fundamentals &amp; Backend Safety</h2>
+  <p>
+    Strip away the buzzwords: <strong>an agent is just an LLM inside a <code>for</code> loop with tools</strong>.
+    The model never executes SQL or HTTP directly — it only outputs structured JSON <em>proposing</em> a tool call.
+    Your Python (or Go) harness validates arguments, enforces permissions, runs the tool, feeds results back, and stops on an answer or a step cap.
+  </p>
+
+  <h3>3.1 The 60-line agent loop (<code>src/shop/agent.py</code>)</h3>
+  <figure class="diagram">
+    <div class="diagram-head">
+      <span class="diagram-title">Complete Turn Lifecycle: Input Guards → Tool Loop → Output Grounding</span>
+      <span class="diagram-tag">Diagram 08 · Agent Loop</span>
+    </div>
+    <svg viewBox="0 0 840 380" role="img" aria-label="Full agent turn state machine from user message through PII masking, screening, LLM loop, tool validation and execution, price grounding, and unmasking">
+      <!-- Top Row: Input Pipeline -->
+      <rect x="14" y="18" width="128" height="58" rx="9" fill="#E8EEFC" stroke="#2A52C4" stroke-width="1.5"/>
+      <text x="78" y="42" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#17202B">User Message</text>
+      <text x="78" y="60" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#4F5B69">session.user_id</text>
+
+      <line x1="142" y1="47" x2="170" y2="47" stroke="#2A52C4" stroke-width="1.8" marker-end="url(#arr-b)"/>
+
+      <rect x="176" y="18" width="150" height="58" rx="9" fill="#FCECE9" stroke="#A3301C" stroke-width="1.5"/>
+      <text x="251" y="40" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#A3301C">1. PII MASK</text>
+      <text x="251" y="59" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">081-234 → &lt;PHONE_1&gt;</text>
+
+      <line x1="326" y1="47" x2="354" y2="47" stroke="#A3301C" stroke-width="1.8" marker-end="url(#arr-w)"/>
+
+      <rect x="360" y="18" width="176" height="58" rx="9" fill="#FCECE9" stroke="#A3301C" stroke-width="1.5"/>
+      <text x="448" y="40" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#A3301C">2. SCREEN INPUT</text>
+      <text x="448" y="59" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">Regex → FAST_MODEL</text>
+
+      <!-- Block branch -->
+      <line x1="536" y1="47" x2="588" y2="47" stroke="#A3301C" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr-w)"/>
+      <text x="562" y="39" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#A3301C">block</text>
+      <rect x="594" y="23" width="232" height="48" rx="9" fill="#FCECE9" stroke="#EAB9AF"/>
+      <text x="710" y="45" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#A3301C">Refuse immediately</text>
+      <text x="710" y="61" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">0 agent steps · polite redirect</text>
+
+      <!-- Allow arrow down to Loop box -->
+      <line x1="448" y1="76" x2="448" y2="112" stroke="#0B7A6D" stroke-width="1.8" marker-end="url(#arr-t)"/>
+      <text x="470" y="99" font-family="JetBrains Mono,monospace" font-size="10" font-weight="700" fill="#0B7A6D">allow</text>
+
+      <!-- Main Loop dashed container -->
+      <rect x="14" y="116" width="540" height="250" rx="14" fill="#F6F8FB" stroke="#2A52C4" stroke-width="1.5" stroke-dasharray="6,4"/>
+      <text x="30" y="138" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#2A52C4">AGENT LOOP · for _step in range(MAX_STEPS = 5)</text>
+
+      <!-- Build prompt + LLM -->
+      <rect x="30" y="152" width="234" height="72" rx="10" fill="#E8EEFC" stroke="#2A52C4" stroke-width="1.5"/>
+      <text x="147" y="174" text-anchor="middle" font-family="Inter,sans-serif" font-size="12.5" font-weight="700" fill="#17202B">3. Call CHAT_MODEL</text>
+      <text x="147" y="192" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">System + Bangkok clock + State</text>
+      <text x="147" y="208" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">+ Last 4 turns + 5 tool specs</text>
+
+      <!-- Arrow to Decision -->
+      <line x1="264" y1="188" x2="310" y2="188" stroke="#2A52C4" stroke-width="1.8" marker-end="url(#arr-b)"/>
+
+      <!-- Decision box -->
+      <polygon points="392,150 470,188 392,226 314,188" fill="#FFFFFF" stroke="#6A47BC" stroke-width="1.8"/>
+      <text x="392" y="185" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#6A47BC">tool_calls</text>
+      <text x="392" y="200" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#6A47BC">present?</text>
+
+      <!-- YES branch down to Execute Tool -->
+      <line x1="392" y1="226" x2="392" y2="256" stroke="#6A47BC" stroke-width="1.8" marker-end="url(#arr-v)"/>
+      <text x="415" y="245" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#6A47BC">YES</text>
+
+      <rect x="242" y="262" width="296" height="90" rx="10" fill="#EFEAFB" stroke="#6A47BC" stroke-width="1.5"/>
+      <text x="390" y="283" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#6A47BC">4. tools.run(ctx, name, args)</text>
+      <text x="256" y="302" font-family="Inter,sans-serif" font-size="11" fill="#17202B">• Keep assistant msg intact (thought sig)</text>
+      <text x="256" y="318" font-family="Inter,sans-serif" font-size="11" fill="#17202B">• Pydantic validate + inject <tspan font-family="JetBrains Mono,monospace">ctx.user_id</tspan></text>
+      <text x="256" y="334" font-family="Inter,sans-serif" font-size="11" fill="#17202B">• Stop duplicate call (&gt;2×) · harvest <tspan font-family="JetBrains Mono,monospace">allowed</tspan> nums</text>
+
+      <!-- Loop back to LLM -->
+      <path d="M 242 307 L 147 307 L 147 228" fill="none" stroke="#6A47BC" stroke-width="1.8" marker-end="url(#arr-v)"/>
+      <text x="137" y="274" text-anchor="end" font-family="Inter,sans-serif" font-size="10.5" font-weight="600" fill="#6A47BC">Append tool</text>
+      <text x="137" y="288" text-anchor="end" font-family="Inter,sans-serif" font-size="10.5" font-weight="600" fill="#6A47BC">JSON result</text>
+
+      <!-- NO branch right to Output Guard -->
+      <line x1="470" y1="188" x2="588" y2="188" stroke="#0B7A6D" stroke-width="1.8" marker-end="url(#arr-t)"/>
+      <text x="515" y="179" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" font-weight="700" fill="#0B7A6D">NO (text)</text>
+
+      <!-- Step 5: Price Grounding -->
+      <rect x="594" y="138" width="232" height="102" rx="10" fill="#E3F5F2" stroke="#0B7A6D" stroke-width="1.5"/>
+      <text x="710" y="159" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#0B7A6D">5. PRICE GROUNDING</text>
+      <text x="608" y="179" font-family="Inter,sans-serif" font-size="11" fill="#17202B">Check every ฿ / baht price</text>
+      <text x="608" y="195" font-family="Inter,sans-serif" font-size="11" fill="#17202B">against <tspan font-family="JetBrains Mono,monospace">allowed</tspan> tool numbers.</text>
+      <text x="608" y="213" font-family="Inter,sans-serif" font-size="10.5" fill="#A3301C">Bad? Rewrite once → else strip.</text>
+      <text x="608" y="229" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">Hit MAX_STEPS? Hand to human.</text>
+
+      <!-- Arrow down to Finish -->
+      <line x1="710" y1="240" x2="710" y2="268" stroke="#197444" stroke-width="1.8" marker-end="url(#arr-t)"/>
+
+      <!-- Step 6: Unmask & Log -->
+      <rect x="594" y="274" width="232" height="92" rx="10" fill="#E5F5EC" stroke="#197444" stroke-width="1.8"/>
+      <text x="710" y="295" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#197444">6. FINISH &amp; OBSERVE</text>
+      <text x="608" y="315" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• Log <tspan font-weight="700">masked</tspan> text to <tspan font-family="JetBrains Mono,monospace">turns.jsonl</tspan></text>
+      <text x="608" y="333" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• <tspan font-family="JetBrains Mono,monospace">pii.unmask(answer)</tspan> for user</text>
+      <text x="608" y="351" font-family="Inter,sans-serif" font-size="11.5" fill="#197444">• Return answer + trace + tokens</text>
+    </svg>
+    <figcaption>
+      Notice why frameworks like LangGraph are <em>optional</em> for a single-agent loop: you get full visibility in ~60 lines of Python. Reach for <strong>LangGraph</strong> only when you genuinely need multi-step human-in-the-loop pause/resume checkpoints, durable state across crashes, or complex multi-agent branching graphs.
+    </figcaption>
+  </figure>
+
+  <h3>3.2 When to use Code vs Workflow vs Agent</h3>
+  <figure class="diagram">
+    <div class="diagram-head">
+      <span class="diagram-title">Pick the Simplest Control Level That Solves the Problem</span>
+      <span class="diagram-tag">Diagram 09 · Autonomy Spectrum</span>
+    </div>
+    <svg viewBox="0 0 840 164" role="img" aria-label="Spectrum from deterministic code to fixed LLM workflow to dynamic agent loop">
+      <!-- Bar 1 -->
+      <rect x="14" y="16" width="256" height="132" rx="11" fill="#E3F5F2" stroke="#0B7A6D" stroke-width="1.5"/>
+      <text x="30" y="39" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#0B7A6D">LEVEL 1 · PURE CODE</text>
+      <text x="30" y="61" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#17202B">Fast, free, 100% predictable</text>
+      <text x="30" y="83" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• Date math (<tspan font-family="JetBrains Mono,monospace">timeutil.py</tspan>)</text>
+      <text x="30" y="101" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• Size pick (<tspan font-family="JetBrains Mono,monospace">pdftable.pick_size</tspan>)</text>
+      <text x="30" y="119" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• PII checksums (<tspan font-family="JetBrains Mono,monospace">guard.py</tspan>)</text>
+      <text x="30" y="137" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• SQL filters &amp; RRF ranking</text>
+
+      <line x1="270" y1="82" x2="288" y2="82" stroke="#4F5B69" stroke-width="1.8" marker-end="url(#arr-g)"/>
+
+      <!-- Bar 2 -->
+      <rect x="292" y="16" width="256" height="132" rx="11" fill="#FDF2E2" stroke="#A85A0C" stroke-width="1.5"/>
+      <text x="308" y="39" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#A85A0C">LEVEL 2 · FIXED WORKFLOW</text>
+      <text x="308" y="61" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#17202B">Code controls order; LLM parses</text>
+      <text x="308" y="83" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• Photo → JSON attrs → search</text>
+      <text x="308" y="101" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• PDF images → rows → validate</text>
+      <text x="308" y="119" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• Message → filters → hybrid</text>
+      <text x="308" y="137" font-family="Inter,sans-serif" font-size="11" fill="#A85A0C">Bounded cost &amp; latency!</text>
+
+      <line x1="548" y1="82" x2="566" y2="82" stroke="#4F5B69" stroke-width="1.8" marker-end="url(#arr-g)"/>
+
+      <!-- Bar 3 -->
+      <rect x="570" y="16" width="256" height="132" rx="11" fill="#E8EEFC" stroke="#2A52C4" stroke-width="1.5"/>
+      <text x="586" y="39" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#2A52C4">LEVEL 3 · AGENT LOOP</text>
+      <text x="586" y="61" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#17202B">LLM chooses which tools &amp; order</text>
+      <text x="586" y="83" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• Open-ended multi-turn chat</text>
+      <text x="586" y="101" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• "Blue shoes?" → "2nd in size 42?"</text>
+      <text x="586" y="119" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• Search + stock + orders mix</text>
+      <text x="586" y="137" font-family="Inter,sans-serif" font-size="11" fill="#2A52C4">Needs step cap + loop guard!</text>
+    </svg>
+    <figcaption>
+      Senior AI engineers never use an agent loop where a fixed workflow or 10 lines of code will do. Fewer LLM decisions = lower latency, lower cost, and higher reliability.
+    </figcaption>
+  </figure>
+
+  <h3>3.3 Three classic backend traps solved in this repo (Time, Identity, Follow-up State)</h3>
+  <figure class="diagram">
+    <div class="diagram-head">
+      <span class="diagram-title">How Code Solves Dates, Permissions (IDOR), and "The Second One"</span>
+      <span class="diagram-tag">Diagram 10 · Backend Safety</span>
+    </div>
+    <svg viewBox="0 0 840 246" role="img" aria-label="Three vertical cards illustrating Bangkok date resolution, session-injected user_id anti-IDOR design, and compact conversation state">
+      <!-- Card 1: Dates -->
+      <rect x="14" y="14" width="262" height="218" rx="11" fill="#FFFFFF" stroke="#0B7A6D" stroke-width="1.5"/>
+      <rect x="14" y="14" width="262" height="34" rx="11" fill="#E3F5F2"/>
+      <text x="145" y="36" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#0B7A6D">A. TIME &amp; DATES (timeutil.py)</text>
+      <text x="28" y="68" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#17202B">1. Inject Bangkok clock every turn:</text>
+      <text x="28" y="85" font-family="JetBrains Mono,monospace" font-size="10" fill="#4F5B69">UTC+7 + Buddhist Era (+543 BE)</text>
+      <text x="28" y="109" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#17202B">2. LLM picks enum, NOT dates:</text>
+      <text x="28" y="126" font-family="JetBrains Mono,monospace" font-size="10" fill="#0B7A6D">get_orders(period="last_week")</text>
+      <text x="28" y="150" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#17202B">3. Code resolves [Mon, Mon) BKK:</text>
+      <text x="28" y="167" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">Converts to UTC ISO for SQL so</text>
+      <text x="28" y="183" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">late-evening orders never drift days.</text>
+      <text x="28" y="207" font-family="Inter,sans-serif" font-size="11" font-weight="600" fill="#0B7A6D">4. Reply states exact dates used.</text>
+
+      <!-- Card 2: Identity -->
+      <rect x="289" y="14" width="262" height="218" rx="11" fill="#FFFFFF" stroke="#A3301C" stroke-width="1.5"/>
+      <rect x="289" y="14" width="262" height="34" rx="11" fill="#FCECE9"/>
+      <text x="420" y="36" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#A3301C">B. ZERO-TRUST AUTH (tools.py)</text>
+      <text x="303" y="68" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#A3301C">✗ NEVER expose user_id in schema:</text>
+      <text x="303" y="85" font-family="JetBrains Mono,monospace" font-size="10" fill="#A3301C">get_orders(user_id="u2") ← IDOR!</text>
+      <text x="303" y="110" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#197444">✓ Inject from verified session Ctx:</text>
+      <text x="303" y="127" font-family="JetBrains Mono,monospace" font-size="10" fill="#17202B">WHERE order_id=? AND user_id=?</text>
+      <text x="303" y="143" font-family="JetBrains Mono,monospace" font-size="10" fill="#4F5B69">params = (a.order_id, ctx.user_id)</text>
+      <text x="303" y="169" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#17202B">Anti-enumeration error:</text>
+      <text x="303" y="186" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">Identical reply for "doesn't exist"</text>
+      <text x="303" y="202" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">and "belongs to u2" — leaks nothing.</text>
+
+      <!-- Card 3: State -->
+      <rect x="564" y="14" width="262" height="218" rx="11" fill="#FFFFFF" stroke="#2A52C4" stroke-width="1.5"/>
+      <rect x="564" y="14" width="262" height="34" rx="11" fill="#E8EEFC"/>
+      <text x="695" y="36" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#2A52C4">C. COMPACT STATE (agent.py)</text>
+      <text x="578" y="68" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#17202B">Problem: "Is the 2nd one in size 42?"</text>
+      <text x="578" y="86" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">Dumping raw tool JSON into history</text>
+      <text x="578" y="102" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">bloats prompt tokens &amp; costs $$$.</text>
+      <text x="578" y="128" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#2A52C4">Solution: session.state block</text>
+      <rect x="578" y="138" width="234" height="58" rx="6" fill="#F4F6F9" stroke="#CBD3DC"/>
+      <text x="586" y="154" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#17202B">Shown last:</text>
+      <text x="586" y="169" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#17202B"> 1. P012 Nike Glide ฿2,690</text>
+      <text x="586" y="184" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#17202B"> 2. P045 Asics Gel ฿2,890</text>
+      <text x="578" y="213" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">Tiny tokens + accurate ID resolution.</text>
+    </svg>
+    <figcaption>
+      Look how clean the separation is: the LLM handles <strong>language understanding</strong> (<em>"last week"</em> → <code>period="last_week"</code>, <em>"the second one"</em> → <code>P045</code>), while backend code enforces <strong>exact calendar boundaries, UTC conversion, and session ownership</strong>.
+    </figcaption>
+  </figure>
+
+  <label class="done"><input type="checkbox" data-done="m3"> Mark Module 3 done</label>
+</section>
+
+<!-- ====================================================================== -->
+<!-- MODULE 4: GUARDRAILS, RELIABILITY, CACHING & EVALS -->
+<!-- ====================================================================== -->
+<section class="module prose" id="m4">
+  <h2><span class="num">4</span>Guardrails, Reliability, Caching &amp; Evals</h2>
+  <p>
+    A prompt instruction like <em>"never invent a price or give a 90% discount"</em> is a <strong>polite request</strong>,
+    not a guardrail. Under adversarial input, weird edge cases, or long contexts, models ignore prompt rules.
+    Real production guardrails enforce invariants <strong>in code around the model</strong> — across four independent layers.
+  </p>
+
+  <h3>4.1 Defense-in-depth: 4 layers that actually work (<code>guard.py</code>, <code>tools.py</code>, <code>agent.py</code>)</h3>
+  <figure class="diagram">
+    <div class="diagram-head">
+      <span class="diagram-title">4-Layer Guardrail Architecture Around the LLM</span>
+      <span class="diagram-tag">Diagram 11 · Guardrails</span>
+    </div>
+    <svg viewBox="0 0 840 374" role="img" aria-label="Four guardrail layers: PII masking with checksums, two-stage input screening, tool-boundary permissions, and output price grounding">
+      <!-- Layer 1 -->
+      <rect x="14" y="12" width="812" height="78" rx="10" fill="#FCECE9" stroke="#A3301C" stroke-width="1.5"/>
+      <rect x="24" y="24" width="150" height="54" rx="7" fill="#A3301C"/>
+      <text x="99" y="48" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#FFFFFF">LAYER 1 · PII</text>
+      <text x="99" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#FCECE9">Before API &amp; logs</text>
+      <text x="190" y="37" font-family="Inter,sans-serif" font-size="12.5" font-weight="700" fill="#17202B">Mask Email, Thai Phone, Thai National ID (mod-11), Card (Luhn checksum)</text>
+      <text x="190" y="56" font-family="Inter,sans-serif" font-size="11.5" fill="#4F5B69">Replaced with <tspan font-family="JetBrains Mono,monospace">&lt;PHONE_1&gt;</tspan> before LLM/logs; restored ONLY in final reply via <tspan font-family="JetBrains Mono,monospace">pii.unmask()</tspan>.</text>
+      <text x="190" y="73" font-family="Inter,sans-serif" font-size="11.5" fill="#4F5B69">Checksums prevent false redaction of legitimate order numbers and prices.</text>
+
+      <!-- Layer 2 -->
+      <rect x="14" y="102" width="812" height="78" rx="10" fill="#FDF2E2" stroke="#A85A0C" stroke-width="1.5"/>
+      <rect x="24" y="114" width="150" height="54" rx="7" fill="#A85A0C"/>
+      <text x="99" y="138" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#FFFFFF">LAYER 2 · INPUT</text>
+      <text x="99" y="155" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#FDF2E2">Scope + Injection</text>
+      <text x="190" y="127" font-family="Inter,sans-serif" font-size="12.5" font-weight="700" fill="#17202B">Instant free regex (EN + Thai injection patterns) → Cheap <tspan font-family="JetBrains Mono,monospace">FAST_MODEL</tspan> JSON screen</text>
+      <text x="190" y="146" font-family="Inter,sans-serif" font-size="11.5" fill="#4F5B69">Blocks coding, politics, and jailbreaks before expensive agent steps run.</text>
+      <text x="190" y="163" font-family="Inter,sans-serif" font-size="11.5" fill="#4F5B69">Eval caught a real false positive: <tspan font-style="italic">"what's the date today?"</tspan> must stay allowed for delivery planning!</text>
+
+      <!-- Layer 3 -->
+      <rect x="14" y="192" width="812" height="78" rx="10" fill="#EFEAFB" stroke="#6A47BC" stroke-width="1.5"/>
+      <rect x="24" y="204" width="150" height="54" rx="7" fill="#6A47BC"/>
+      <text x="99" y="228" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#FFFFFF">LAYER 3 · TOOLS</text>
+      <text x="99" y="245" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#EFEAFB">Hardest boundary</text>
+      <text x="190" y="217" font-family="Inter,sans-serif" font-size="12.5" font-weight="700" fill="#17202B">Read-only tool whitelist · Pydantic schemas · Session <tspan font-family="JetBrains Mono,monospace">user_id</tspan> · Loop &amp; step caps</text>
+      <text x="190" y="236" font-family="Inter,sans-serif" font-size="11.5" fill="#4F5B69">The model CANNOT cancel orders or mint 90% coupons because no write tool exists.</text>
+      <text x="190" y="253" font-family="Inter,sans-serif" font-size="11.5" fill="#4F5B69">Even indirect prompt injection hidden inside product reviews cannot trigger harmful actions.</text>
+
+      <!-- Layer 4 -->
+      <rect x="14" y="282" width="812" height="78" rx="10" fill="#E3F5F2" stroke="#0B7A6D" stroke-width="1.5"/>
+      <rect x="24" y="294" width="150" height="54" rx="7" fill="#0B7A6D"/>
+      <text x="99" y="318" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#FFFFFF">LAYER 4 · OUTPUT</text>
+      <text x="99" y="335" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#E3F5F2">Price grounding</text>
+      <text x="190" y="307" font-family="Inter,sans-serif" font-size="12.5" font-weight="700" fill="#17202B">Every price (<tspan font-family="JetBrains Mono,monospace">฿ / baht / บาท / THB</tspan>) must appear in <tspan font-family="JetBrains Mono,monospace">allowed</tspan> tool/user numbers</text>
+      <text x="190" y="326" font-family="Inter,sans-serif" font-size="11.5" fill="#4F5B69">Mismatch? Ask the model to rewrite once using only verified tool prices.</text>
+      <text x="190" y="343" font-family="Inter,sans-serif" font-size="11.5" fill="#4F5B69">Still ungrounded? Deterministically replace with <tspan font-style="italic">"(see the product page for the price)"</tspan>.</text>
+    </svg>
+    <figcaption>
+      <strong>Interview killer line:</strong> <em>"The strongest guardrail against an agent doing damage isn't a stricter prompt — it's not giving it a tool that can do damage, and validating every argument and output number in code."</em>
+    </figcaption>
+  </figure>
+
+  <h3>4.2 Reliability, Model Routing, Caching &amp; Latency (<code>llm.py</code>, <code>cache.py</code>, <code>config.py</code>)</h3>
+  <figure class="diagram">
+    <div class="diagram-head">
+      <span class="diagram-title">Production Resilience Stack: Retries, Fallback Gateway &amp; Selective Caching</span>
+      <span class="diagram-tag">Diagram 12 · Backend Ops</span>
+    </div>
+    <svg viewBox="0 0 840 282" role="img" aria-label="Backend resilience flow showing TTL cache split, retry with jitter, and primary-to-fallback model routing">
+      <!-- Left: Cache Decision -->
+      <rect x="14" y="16" width="248" height="248" rx="11" fill="#FFFFFF" stroke="#0B7A6D" stroke-width="1.5"/>
+      <rect x="14" y="16" width="248" height="34" rx="11" fill="#E3F5F2"/>
+      <text x="138" y="38" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#0B7A6D">CACHE RULES (cache.py / Redis)</text>
+
+      <rect x="28" y="64" width="220" height="78" rx="8" fill="#E5F5EC" stroke="#A5DABB"/>
+      <text x="40" y="84" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#197444">✓ CACHE (TTL = 5 min)</text>
+      <text x="40" y="103" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• <tspan font-family="JetBrains Mono,monospace">search_products(query)</tspan></text>
+      <text x="40" y="120" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">Catalog changes slowly; event</text>
+      <text x="40" y="135" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">invalidates on catalog update.</text>
+
+      <rect x="28" y="156" width="220" height="94" rx="8" fill="#FCECE9" stroke="#EAB9AF"/>
+      <text x="40" y="176" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#A3301C">✗ NEVER CACHE HERE</text>
+      <text x="40" y="196" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• <tspan font-family="JetBrains Mono,monospace">check_stock</tspan> (live qty!)</text>
+      <text x="40" y="214" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• <tspan font-family="JetBrains Mono,monospace">get_orders / get_order</tspan></text>
+      <text x="40" y="234" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">Stale stock = angry shopper at</text>
+      <text x="40" y="246" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">CentralWorld; private user data!</text>
+
+      <!-- Middle: Retries & Routing -->
+      <rect x="286" y="16" width="290" height="248" rx="11" fill="#FFFFFF" stroke="#2A52C4" stroke-width="1.5"/>
+      <rect x="286" y="16" width="290" height="34" rx="11" fill="#E8EEFC"/>
+      <text x="431" y="38" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#2A52C4">GATEWAY &amp; FALLBACK (llm.py)</text>
+
+      <rect x="302" y="64" width="258" height="58" rx="8" fill="#E8EEFC" stroke="#B6C7F5"/>
+      <text x="431" y="84" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#2A52C4">Primary: gemini-flash-lite-latest</text>
+      <text x="431" y="102" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">3× retry · backoff 1s, 2s, 4s + jitter</text>
+      <text x="431" y="116" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#4F5B69">ONLY on 429 / Timeout / Conn / 5xx</text>
+
+      <line x1="431" y1="122" x2="431" y2="152" stroke="#A3301C" stroke-width="1.8" stroke-dasharray="4,3" marker-end="url(#arr-w)"/>
+      <text x="442" y="141" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#A3301C">on 429 / outage</text>
+
+      <rect x="302" y="158" width="258" height="58" rx="8" fill="#EFEAFB" stroke="#CBBBF0"/>
+      <text x="431" y="178" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#6A47BC">Fallback: gemini-flash-latest</text>
+      <text x="431" y="196" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">Or another provider (OpenRouter / vLLM)</text>
+      <text x="431" y="210" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#4F5B69">Same OpenAI SDK · env-var switch only</text>
+
+      <text x="302" y="240" font-family="Inter,sans-serif" font-size="11" font-weight="700" fill="#A3301C">Never retry 400 / 401 / 403!</text>
+      <text x="302" y="255" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">Bad payload or key fails forever.</text>
+
+      <!-- Right: Measured Numbers -->
+      <rect x="598" y="16" width="228" height="248" rx="11" fill="#FFFFFF" stroke="#A85A0C" stroke-width="1.5"/>
+      <rect x="598" y="16" width="228" height="34" rx="11" fill="#FDF2E2"/>
+      <text x="712" y="38" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#A85A0C">MEASURED NUMBERS</text>
+
+      <text x="612" y="72" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#17202B">21/21 evals across 3 routes:</text>
+      <text x="612" y="94" font-family="JetBrains Mono,monospace" font-size="11" fill="#197444">Paid Gemini: 0.6 min (3.4s/turn)</text>
+      <text x="612" y="114" font-family="JetBrains Mono,monospace" font-size="11" fill="#2A52C4">OpenRouter:  1.0 min (4.3s/turn)</text>
+      <text x="612" y="134" font-family="JetBrains Mono,monospace" font-size="11" fill="#A85A0C">Free Gemini: 3.2 min (11.6s)</text>
+
+      <line x1="612" y1="150" x2="812" y2="150" stroke="#DCE2E9" stroke-width="1"/>
+
+      <text x="612" y="172" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#17202B">Where search latency goes:</text>
+      <text x="612" y="192" font-family="Inter,sans-serif" font-size="11" fill="#17202B">Total search (paid): <tspan font-weight="700">~1.1 s</tspan></text>
+      <text x="612" y="210" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">• Filter LLM call: ~80–85%</text>
+      <text x="612" y="226" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">• Embed + cosine: ~15%</text>
+      <text x="612" y="242" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">• SQL + BM25: &lt;5 ms!</text>
+    </svg>
+    <figcaption>
+      In a multi-model Central Tech setup (fine-tuned open model on vLLM + Gemini), this exact pattern is implemented via an AI gateway like <strong>LiteLLM</strong>: route simple intents/FAQs to the cheap fine-tuned local model, route complex reasoning/vision to Gemini, and fall back seamlessly on 429 or outage.
+    </figcaption>
+  </figure>
+
+  <h3>4.3 Evals before opinions (<code>evals.py</code> + <code>evals/cases.json</code>)</h3>
+  <div class="tbl">
+    <table>
+      <tr><th>Eval Slice</th><th>Count</th><th>What It Measures</th><th>Why It Matters in Production</th></tr>
+      <tr><td><code>search</code></td><td>9 cases</td><td>Exact filter field accuracy + whether returned products satisfy category, brand, colour, price, stock</td><td>Proves prompt/model tweaks don't silently drop Thai colours or budget limits</td></tr>
+      <tr><td><code>agent</code></td><td>7 cases</td><td>Right tool called, right args (e.g. <code>period="last_week"</code>, follow-up <code>product_id</code>), no IDOR leak, grounded prices, PII masked</td><td>Tests full multi-turn behaviour &amp; catches regressions across tools + prompt</td></tr>
+      <tr><td><code>guard</code></td><td>5 cases</td><td>Blocks prompt injection, coding, politics — AND allows Thai shopping &amp; returns questions</td><td>Tracks BOTH <strong>false negatives</strong> (attacks getting through) AND <strong>false positives</strong> (lost sales!)</td></tr>
+    </table>
+  </div>
+
+  <div class="note">
+    <span class="callout-label">Great Real Story for the Interview</span>
+    <p>
+      On the very first run of <code>shop eval</code> in this repo, the suite caught a real false positive:
+      <strong>"what's the date today?"</strong> was blocked as out of scope by the input screener! Customers ask today's date when planning deliveries.
+      Without an automated eval set, you would have shipped a broken guardrail blindly.
+    </p>
+  </div>
+
+  <label class="done"><input type="checkbox" data-done="m4"> Mark Module 4 done</label>
+</section>
+
+<!-- ====================================================================== -->
+<!-- MODULE 5: MULTIMODAL (VISION & PDFs), CLASSIFIER & FINE-TUNING -->
+<!-- ====================================================================== -->
+<section class="module prose" id="m5">
+  <h2><span class="num">5</span>Vision, PDFs, Classifiers &amp; the Fine-Tuning Ladder</h2>
+  <p>
+    Central Tech's interview covers three practical beyond-text problems:
+    <strong>reading a customer's shirt photo</strong>, <strong>reading a PDF table</strong>, and
+    <strong>when/how to fine-tune or train a small classifier</strong>.
+  </p>
+
+  <h3>5.1 Photo Search (2 paths) &amp; PDF Size Charts (<code>vision.py</code> &amp; <code>pdftable.py</code>)</h3>
+  <figure class="diagram">
+    <div class="diagram-head">
+      <span class="diagram-title">Multimodal Pipelines: Let the Vision Model Read, Let Code Decide</span>
+      <span class="diagram-tag">Diagram 13 · Vision &amp; PDFs</span>
+    </div>
+    <svg viewBox="0 0 840 342" role="img" aria-label="Top lane showing photo-to-attributes-to-hybrid-search and CLIP path; bottom lane showing PDF rendering to PNG plus text layer to structured rows to deterministic size validation and picking">
+      <!-- TOP LANE: PHOTO SEARCH -->
+      <rect x="14" y="14" width="812" height="150" rx="11" fill="#F6F8FB" stroke="#CBD3DC"/>
+      <text x="30" y="35" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#6A47BC">SHIRT PHOTO SEARCH (vision.py) — PATH 1 BUILT · PATH 2 AT SCALE</text>
+
+      <rect x="30" y="48" width="124" height="58" rx="8" fill="#EFEAFB" stroke="#6A47BC" stroke-width="1.5"/>
+      <text x="92" y="72" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#17202B">Customer Photo</text>
+      <text x="92" y="90" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">Striped navy/white</text>
+
+      <line x1="154" y1="77" x2="180" y2="77" stroke="#6A47BC" stroke-width="1.8" marker-end="url(#arr-v)"/>
+
+      <rect x="186" y="44" width="212" height="66" rx="8" fill="#E8EEFC" stroke="#2A52C4" stroke-width="1.5"/>
+      <text x="292" y="64" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#2A52C4">VLM JSON SCHEMA (temp=0)</text>
+      <text x="292" y="82" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">is_product_photo, category,</text>
+      <text x="292" y="98" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">colors[0,1], pattern, sleeve, text</text>
+
+      <line x1="398" y1="77" x2="424" y2="77" stroke="#2A52C4" stroke-width="1.8" marker-end="url(#arr-b)"/>
+
+      <rect x="430" y="44" width="218" height="66" rx="8" fill="#E3F5F2" stroke="#0B7A6D" stroke-width="1.5"/>
+      <text x="539" y="64" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#0B7A6D">SMART SPLIT (to_filters)</text>
+      <text x="539" y="82" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">SQL filter: <tspan font-weight="700">colors[:1] ONLY</tspan> (navy)</text>
+      <text x="539" y="98" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">Rank text: "striped, white, polo"</text>
+
+      <line x1="648" y1="77" x2="674" y2="77" stroke="#0B7A6D" stroke-width="1.8" marker-end="url(#arr-t)"/>
+
+      <rect x="680" y="48" width="132" height="58" rx="8" fill="#E5F5EC" stroke="#197444" stroke-width="1.5"/>
+      <text x="746" y="72" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="700" fill="#197444">Reuse Step A</text>
+      <text x="746" y="90" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#17202B">Hybrid search!</text>
+
+      <text x="30" y="131" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69"><tspan font-weight="700" fill="#6A47BC">Path 2 (when you have catalog photos):</tspan> Embed every catalog photo + customer photo with CLIP / SigLIP /</text>
+      <text x="30" y="148" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">Vertex Multimodal Embeddings → run nearest-neighbour visual similarity combined with SQL stock/price filters.</text>
+
+      <!-- BOTTOM LANE: PDF TABLES -->
+      <rect x="14" y="178" width="812" height="150" rx="11" fill="#F6F8FB" stroke="#CBD3DC"/>
+      <text x="30" y="199" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#A85A0C">PDF SIZE CHART TABLE (pdftable.py) — RENDER PAGE IMAGE → VALIDATE → CODE PICKS</text>
+
+      <rect x="30" y="212" width="152" height="60" rx="8" fill="#FDF2E2" stroke="#A85A0C" stroke-width="1.5"/>
+      <text x="106" y="234" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#17202B">PDF → PNG + Text</text>
+      <text x="106" y="251" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="#A85A0C">pypdfium2 + pypdf</text>
+      <text x="106" y="265" text-anchor="middle" font-family="Inter,sans-serif" font-size="9.5" fill="#4F5B69">(Compat API 400s on PDF!)</text>
+
+      <line x1="182" y1="242" x2="208" y2="242" stroke="#A85A0C" stroke-width="1.8" marker-end="url(#arr-a)"/>
+
+      <rect x="214" y="212" width="176" height="60" rx="8" fill="#E8EEFC" stroke="#2A52C4" stroke-width="1.5"/>
+      <text x="302" y="234" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#2A52C4">Vision Model Reads</text>
+      <text x="302" y="252" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#17202B">Sees visual columns &amp; merged</text>
+      <text x="302" y="266" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#17202B">headers → typed JSON rows</text>
+
+      <line x1="390" y1="242" x2="416" y2="242" stroke="#2A52C4" stroke-width="1.8" marker-end="url(#arr-b)"/>
+
+      <rect x="422" y="212" width="184" height="60" rx="8" fill="#FCECE9" stroke="#A3301C" stroke-width="1.5"/>
+      <text x="514" y="234" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#A3301C">validate(rows)</text>
+      <text x="514" y="252" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#17202B">50 ≤ min &lt; max ≤ 180 cm?</text>
+      <text x="514" y="266" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#17202B">Sizes strictly monotonic?</text>
+
+      <line x1="606" y1="242" x2="632" y2="242" stroke="#0B7A6D" stroke-width="1.8" marker-end="url(#arr-t)"/>
+
+      <rect x="638" y="212" width="174" height="60" rx="8" fill="#E3F5F2" stroke="#0B7A6D" stroke-width="1.5"/>
+      <text x="725" y="234" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#0B7A6D">pick_size(rows, 102)</text>
+      <text x="725" y="252" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#17202B">Pure code! Boundary rule:</text>
+      <text x="725" y="266" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#0B7A6D">choose the larger size.</text>
+
+      <text x="30" y="295" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69"><tspan font-weight="700" fill="#A85A0C">Why not pypdf + regex alone?</tspan> Digital text layers scramble multi-column layouts and break on every</text>
+      <text x="30" y="312" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">new supplier's template — and scanned PDFs have no text layer at all.</text>
+    </svg>
+    <figcaption>
+      Look at the tiny detail in <code>vision.py:60</code>: filtering on <code>colors[:1]</code> (dominant colour only) instead of <code>colors</code> solved a real bug where a navy-and-white striped shirt filtered on <code>navy OR white</code> returned plain white shirts!
+    </figcaption>
+  </figure>
+
+  <h3>5.2 The Adaptation &amp; Fine-Tuning Ladder (Central Tech's "Minor Model Tuning")</h3>
+  <p>
+    Central Tech runs <strong>fine-tuned open models plus Gemini</strong>. If an interviewer says
+    <em>"Can we fine-tune a model on our website?"</em>, they are testing whether you know <strong>when NOT to fine-tune</strong>
+    (fast-changing facts like stock, prices, promos → RAG / SQL tools!) versus <strong>when fine-tuning genuinely wins</strong>
+    (consistent style, Thai retail jargon, strict JSON/tool formatting, distilling Gemini into a fast cheap open model via LoRA).
+  </p>
+
+  <figure class="diagram">
+    <div class="diagram-head">
+      <span class="diagram-title">The Adaptation Ladder + How LoRA Fine-Tuning Works Under the Hood</span>
+      <span class="diagram-tag">Diagram 14 · Tuning Ladder</span>
+    </div>
+    <svg viewBox="0 0 840 316" role="img" aria-label="Staircase from Prompting to RAG to Embedding Classifier to LoRA Fine-Tuning, plus LoRA low-rank matrix diagram">
+      <!-- Left: Staircase Ladder -->
+      <text x="20" y="28" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#2A52C4">CLIMB ONLY AS HIGH AS NEEDED (CHEAPEST → HEAVIEST)</text>
+
+      <!-- Rung 1 -->
+      <rect x="20" y="236" width="465" height="56" rx="9" fill="#E3F5F2" stroke="#0B7A6D" stroke-width="1.5"/>
+      <text x="36" y="259" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#0B7A6D">1. PROMPT + JSON SCHEMA</text>
+      <text x="36" y="278" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">Minutes · Zero training · Start here (e.g. <tspan font-family="JetBrains Mono,monospace">query.py</tspan>, <tspan font-family="JetBrains Mono,monospace">guard.py</tspan>)</text>
+
+      <!-- Rung 2 -->
+      <rect x="52" y="170" width="465" height="56" rx="9" fill="#E8EEFC" stroke="#2A52C4" stroke-width="1.5"/>
+      <text x="68" y="193" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#2A52C4">2. HYBRID RAG + LIVE TOOLS</text>
+      <text x="68" y="212" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">Hours · ALWAYS use this for facts, prices, stock, orders &amp; policies</text>
+
+      <!-- Rung 3 -->
+      <rect x="84" y="104" width="465" height="56" rx="9" fill="#FDF2E2" stroke="#A85A0C" stroke-width="1.5"/>
+      <text x="100" y="127" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#A85A0C">3. SMALL CLASSIFIER (intents.py)</text>
+      <text x="100" y="146" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">TF-IDF (0.70 F1) → Gemini Embed + LogReg (0.97 F1, threshold 0.45)</text>
+
+      <!-- Rung 4 -->
+      <rect x="116" y="38" width="465" height="56" rx="9" fill="#EFEAFB" stroke="#6A47BC" stroke-width="1.8"/>
+      <text x="132" y="61" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#6A47BC">4. LoRA / QLoRA FINE-TUNING</text>
+      <text x="132" y="80" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">Days · Brand tone, Thai slang, tool format, distill Gemini → Qwen/Llama</text>
+
+      <!-- Right: LoRA Mental Model -->
+      <rect x="602" y="16" width="224" height="276" rx="11" fill="#FFFFFF" stroke="#6A47BC" stroke-width="1.5"/>
+      <rect x="602" y="16" width="224" height="34" rx="11" fill="#EFEAFB"/>
+      <text x="714" y="38" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#6A47BC">HOW LoRA WORKS</text>
+
+      <!-- Input x -->
+      <rect x="684" y="62" width="60" height="24" rx="6" fill="#E8EEFC" stroke="#B6C7F5"/>
+      <text x="714" y="78" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#2A52C4">input x</text>
+
+      <!-- Branch to Frozen W and Trainable A,B -->
+      <path d="M 700 86 L 660 108" fill="none" stroke="#4F5B69" stroke-width="1.5" marker-end="url(#arr-g)"/>
+      <path d="M 728 86 L 768 108" fill="none" stroke="#6A47BC" stroke-width="1.5" marker-end="url(#arr-v)"/>
+
+      <!-- Frozen W -->
+      <rect x="616" y="112" width="88" height="82" rx="8" fill="#E4E9EF" stroke="#4F5B69"/>
+      <text x="660" y="140" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700" fill="#17202B">W</text>
+      <text x="660" y="158" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">Frozen</text>
+      <text x="660" y="173" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#4F5B69">(8B params)</text>
+
+      <!-- Adapter A and B -->
+      <rect x="734" y="112" width="70" height="32" rx="6" fill="#EFEAFB" stroke="#6A47BC" stroke-width="1.5"/>
+      <text x="769" y="132" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#6A47BC">A (d × r)</text>
+      <line x1="769" y1="144" x2="769" y2="158" stroke="#6A47BC" stroke-width="1.5" marker-end="url(#arr-v)"/>
+      <rect x="734" y="162" width="70" height="32" rx="6" fill="#EFEAFB" stroke="#6A47BC" stroke-width="1.5"/>
+      <text x="769" y="182" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#6A47BC">B (r × d)</text>
+
+      <!-- Sum circle -->
+      <path d="M 660 194 L 704 214" fill="none" stroke="#4F5B69" stroke-width="1.5"/>
+      <path d="M 769 194 L 724 214" fill="none" stroke="#6A47BC" stroke-width="1.5"/>
+      <circle cx="714" cy="218" r="12" fill="#E5F5EC" stroke="#197444" stroke-width="1.5"/>
+      <text x="714" y="222" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="13" font-weight="700" fill="#197444">+</text>
+
+      <text x="714" y="248" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#17202B">y = Wx + (BA)x</text>
+      <text x="714" y="266" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">Rank r=8–32 → ~1% weights.</text>
+      <text x="714" y="281" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#6A47BC">QLoRA = 4-bit W + LoRA.</text>
+    </svg>
+    <figcaption>
+      <strong>Why TF-IDF got 0.70 F1 while Embeddings got 0.97 F1 in <code>intents.py</code>:</strong> Character n-grams can spot keywords like <em>"order"</em> or <em>"stock"</em> even in Thai without segmentation, but completely collapsed on <code>out_of_scope</code> (F1 <code>0.18</code>) because "not about shopping" has no shared spelling! Embeddings capture <em>meaning</em>, pushing <code>out_of_scope</code> to <code>1.00</code>. Caveat to mention in interviews: those 324 rows were model-generated, so real customer chat will score lower and needs human-labelled evals.
+    </figcaption>
+  </figure>
+
+  <div class="trap">
+    <span class="callout-label">Trap · "Just fine-tune a model on our website!"</span>
+    <p>
+      Never agree blindly! Explain: <strong>fine-tuning teaches behaviour (how to talk, Thai tone, strict JSON/tool habits), NOT volatile facts</strong>.
+      If you bake today's prices and promotions into model weights, they go stale tomorrow and cause hallucinations you can't easily delete.
+      Instead: crawl &amp; index the website into <strong>Hybrid RAG + live SQL tools</strong> for facts, and use <strong>LoRA fine-tuning</strong> on logged/curated conversations only if you need consistent brand tone or cheaper/faster inference on a smaller open model (served via vLLM).
+    </p>
+  </div>
+
+  <label class="done"><input type="checkbox" data-done="m5"> Mark Module 5 done</label>
+</section>
+
+<!-- ====================================================================== -->
+<!-- MODULE 6: WHAT TO BREAK (10 HANDS-ON LABS) -->
+<!-- ====================================================================== -->
+<section class="module prose" id="m6">
+  <h2><span class="num">6</span>The "What to Break" Lab (10 Experiments)</h2>
+  <p>
+    Passive code reading fades in 24 hours. <strong>Deliberately breaking one safeguard at a time</strong> burns the exact
+    failure mode into your memory so you can describe it effortlessly in the interview.
+    After each experiment, restore cleanly with <code>git checkout -- src/</code>.
+  </p>
+
+  <div class="lab-card">
+    <div class="lab-top">
+      <h4><span class="lab-num">LAB 01</span> Break Filter Extraction (Vectors Alone on Price/Stock)</h4>
+      <label class="done" style="margin:0;padding:4px 10px;font-size:12px;"><input type="checkbox" data-task="lab1"> Done</label>
+    </div>
+    <div class="lab-cols">
+      <div class="lab-box"><strong>What to break</strong>In <code>search.py:149</code>, temporarily set <code>where, params = "1=1", []</code> so SQL filters are skipped.</div>
+      <div class="lab-box"><strong>Run &amp; observe</strong><code>uv run shop search "blue running shoes in stock under 3000 baht"</code> → watch sold-out, red, or ฿5,000+ shoes appear!</div>
+      <div class="lab-box"><strong>Interview takeaway</strong>Embeddings capture semantics, never exact inequalities or booleans. Extract filters to SQL; embed only the fuzzy remainder.</div>
+    </div>
+  </div>
+
+  <div class="lab-card">
+    <div class="lab-top">
+      <h4><span class="lab-num">LAB 02</span> Break Thai Word Segmentation</h4>
+      <label class="done" style="margin:0;padding:4px 10px;font-size:12px;"><input type="checkbox" data-task="lab2"> Done</label>
+    </div>
+    <div class="lab-cols">
+      <div class="lab-box"><strong>What to break</strong>In <code>thai.py:41</code>, return <code>normalise(text)</code> immediately without calling <code>_segmenter()</code>, then reload DB (<code>shop load</code>).</div>
+      <div class="lab-box"><strong>Run &amp; observe</strong><code>uv run shop search "รองเท้าวิ่ง ไนกี้ สีดำ ใส่วิ่งไกล"</code> → notice <code>keyword#-</code> disappears on hits!</div>
+      <div class="lab-box"><strong>Interview takeaway</strong>Thai has no spaces; without dictionary-aware segmentation (with brand spellings like ไนกี้), BM25 loses exact brand recall.</div>
+    </div>
+  </div>
+
+  <div class="lab-card">
+    <div class="lab-top">
+      <h4><span class="lab-num">LAB 03</span> Break RRF With Naive Raw Score Addition</h4>
+      <label class="done" style="margin:0;padding:4px 10px;font-size:12px;"><input type="checkbox" data-task="lab3"> Done</label>
+    </div>
+    <div class="lab-cols">
+      <div class="lab-box"><strong>What to break</strong>Print raw SQLite <code>bm25()</code> (negative, e.g. <code>-12.4</code>) vs cosine (<code>0.68</code>) inside <code>search.py</code>.</div>
+      <div class="lab-box"><strong>Run &amp; observe</strong>Notice the wildly incompatible scales and signs; changing <code>RRF_K = 60</code> to <code>RRF_K = 1</code> makes #1 dominate too sharply.</div>
+      <div class="lab-box"><strong>Interview takeaway</strong>RRF (<code>1/(60+rank)</code>) needs no calibration weights and naturally promotes items confirmed by both keyword and vector search.</div>
+    </div>
+  </div>
+
+  <div class="lab-card">
+    <div class="lab-top">
+      <h4><span class="lab-num">LAB 04</span> Break Model Collapse &amp; Category Diversity</h4>
+      <label class="done" style="margin:0;padding:4px 10px;font-size:12px;"><input type="checkbox" data-task="lab4"> Done</label>
+    </div>
+    <div class="lab-cols">
+      <div class="lab-box"><strong>What to break</strong>In <code>search.py:169–171</code>, comment out <code>collapse()</code> and <code>diversify()</code>.</div>
+      <div class="lab-box"><strong>Run &amp; observe</strong>Run <code>shop search "running shoes"</code> and <code>shop search "gift for my dad who hikes"</code> → same shoe in 5 colours or 5 identical items fill the page!</div>
+      <div class="lab-box"><strong>Interview takeaway</strong>Retrieval accuracy ≠ shopper UX. Collapsing variants by <code>model_id</code> and capping items per category dramatically improves open queries.</div>
+    </div>
+  </div>
+
+  <div class="lab-card">
+    <div class="lab-top">
+      <h4><span class="lab-num">LAB 05</span> Inspect Indexed vs Full-Scan SQL Plans</h4>
+      <label class="done" style="margin:0;padding:4px 10px;font-size:12px;"><input type="checkbox" data-task="lab5"> Done</label>
+    </div>
+    <div class="lab-cols">
+      <div class="lab-box"><strong>What to run</strong>Compare <code>shop explain-sql '{"category":"running shoes","in_stock":true,"max_price":3000}'</code> vs <code>'{"size":"42"}'</code>.</div>
+      <div class="lab-box"><strong>Observe</strong>First prints <code>SEARCH products USING INDEX idx_cat_stock_price</code>; second prints <code>SCAN products</code> (full table scan!).</div>
+      <div class="lab-box"><strong>Interview takeaway</strong>At 2M rows, <code>LIKE '%,42,%'</code> dies on a full scan. Move to PostgreSQL <code>text[]</code> + GIN index or normalized stock table!</div>
+    </div>
+  </div>
+
+  <div class="lab-card">
+    <div class="lab-top">
+      <h4><span class="lab-num">LAB 06</span> Break the Clock &amp; Period Resolver</h4>
+      <label class="done" style="margin:0;padding:4px 10px;font-size:12px;"><input type="checkbox" data-task="lab6"> Done</label>
+    </div>
+    <div class="lab-cols">
+      <div class="lab-box"><strong>What to break</strong>Inspect <code>timeutil.py</code> and imagine removing <code>Now: {now}</code> from <code>agent.py:22</code> or letting the LLM pass raw dates for <em>"last week"</em>.</div>
+      <div class="lab-box"><strong>Run &amp; observe</strong>Run <code>uv run shop ask "what's today's date?" "show my orders from last week" --user u1</code> and check the exact tool trace <code>get_orders({"period": "last_week"})</code>.</div>
+      <div class="lab-box"><strong>Interview takeaway</strong>LLMs guess dates from training cutoffs and bungle Monday–Sunday + UTC+7 boundaries. Always inject Bangkok time and compute intervals in code.</div>
+    </div>
+  </div>
+
+  <div class="lab-card">
+    <div class="lab-top">
+      <h4><span class="lab-num">LAB 07</span> Test Cross-User Order Access (IDOR)</h4>
+      <label class="done" style="margin:0;padding:4px 10px;font-size:12px;"><input type="checkbox" data-task="lab7"> Done</label>
+    </div>
+    <div class="lab-cols">
+      <div class="lab-box"><strong>What to test</strong>As <code>--user u1</code>, ask for one of <code>u2</code>'s order IDs (check <code>evals.py:28</code> or run <code>shop eval --only agent-other-users-order</code>).</div>
+      <div class="lab-box"><strong>Observe</strong><code>tools.get_order</code> binds <code>ctx.user_id</code> in SQL and replies identically to a missing order — zero confirmation that <code>u2</code>'s order exists.</div>
+      <div class="lab-box"><strong>Interview takeaway</strong>Never trust the LLM with identity. Authorization lives in the backend session context, never in tool parameters.</div>
+    </div>
+  </div>
+
+  <div class="lab-card">
+    <div class="lab-top">
+      <h4><span class="lab-num">LAB 08</span> Break PII Checksums</h4>
+      <label class="done" style="margin:0;padding:4px 10px;font-size:12px;"><input type="checkbox" data-task="lab8"> Done</label>
+    </div>
+    <div class="lab-cols">
+      <div class="lab-box"><strong>What to break</strong>In <code>guard.py:57–58</code>, remove <code>thai_id_ok</code> and <code>luhn_ok</code> validators and run <code>uv run pytest -q</code>.</div>
+      <div class="lab-box"><strong>Observe</strong>Offline tests in <code>tests/test_guard.py</code> immediately fail as non-ID 13-digit numbers get falsely masked!</div>
+      <div class="lab-box"><strong>Interview takeaway</strong>Naive regex PII masking wrecks order/tracking numbers; checksum validation (mod-11 Thai ID, Luhn card) gives high precision at zero latency.</div>
+    </div>
+  </div>
+
+  <div class="lab-card">
+    <div class="lab-top">
+      <h4><span class="lab-num">LAB 09</span> Trigger the Price Grounding Rewrite</h4>
+      <label class="done" style="margin:0;padding:4px 10px;font-size:12px;"><input type="checkbox" data-task="lab9"> Done</label>
+    </div>
+    <div class="lab-cols">
+      <div class="lab-box"><strong>What to test</strong>Run <code>uv run shop eval --only agent-grounded-boots</code>, or temporarily add a line to <code>SYSTEM</code> asking the bot to show a "10% VIP price" in baht.</div>
+      <div class="lab-box"><strong>Observe</strong>Watch the trace print <code>ungrounded prices [...]; asked the model to fix them</code> — the output layer catches the invented baht figure automatically!</div>
+      <div class="lab-box"><strong>Interview takeaway</strong>Never rely solely on prompt honesty for prices. Deterministic post-checks against tool output catch hallucinations before the customer sees them.</div>
+    </div>
+  </div>
+
+  <div class="lab-card">
+    <div class="lab-top">
+      <h4><span class="lab-num">LAB 10</span> Break Dominant-Colour Photo Filtering</h4>
+      <label class="done" style="margin:0;padding:4px 10px;font-size:12px;"><input type="checkbox" data-task="lab10"> Done</label>
+    </div>
+    <div class="lab-cols">
+      <div class="lab-box"><strong>What to break</strong>In <code>vision.py:64</code>, change <code>"colors": colors[:1]</code> to <code>"colors": colors</code> and run <code>uv run shop photo samples/shirt_photo.jpg</code>.</div>
+      <div class="lab-box"><strong>Observe</strong>If the photo has 2 colours (e.g. navy + white stripes), SQL <code>color IN ('navy','white')</code> lets plain white shirts outrank navy ones!</div>
+      <div class="lab-box"><strong>Interview takeaway</strong>Small data-modelling choices (dominant colour = hard SQL filter; secondary colour = soft ranking text) make huge real-world precision gains.</div>
+    </div>
+  </div>
+
+  <div class="codeblock">
+    <div class="codebar"><span>Always reset cleanly after Break Labs &amp; verify tests pass</span><button class="copy-btn" type="button">Copy</button></div>
+    <pre><code>git diff --stat
+git checkout -- src/
+uv run pytest -q</code></pre>
+  </div>
+
+  <label class="done"><input type="checkbox" data-done="m6"> Mark Module 6 done</label>
+</section>
+
+<!-- ====================================================================== -->
+<!-- MODULE 7: BUILD 1 AI-NATIVE FEATURE — POLICY / FAQ RAG -->
+<!-- ====================================================================== -->
+<section class="module prose" id="m7">
+  <h2><span class="num">7</span>Build 1 AI-Native Feature: Policy / FAQ RAG</h2>
+  <p>
+    Look at <code>docs/context/interview.md</code>: Central Tech specifically asks about
+    <strong>"retrieving the right rules from documents where one keyword appears everywhere"</strong>
+    (e.g., an HR manual where <em>"leave"</em> appears on every page, or store policies where <em>"return"</em>,
+    <em>"discount"</em>, or <em>"warranty"</em> appears in every single section).
+    This is the ONE gap not yet built as a Python module in this repo — making it the <strong>ideal 60–90 minute Day 3 build</strong>!
+  </p>
+
+  <figure class="diagram">
+    <div class="diagram-head">
+      <span class="diagram-title">Why Naive RAG Fails When One Keyword Appears Everywhere (and the 4-Step Fix)</span>
+      <span class="diagram-tag">Diagram 15 · Document RAG</span>
+    </div>
+    <svg viewBox="0 0 840 338" role="img" aria-label="Comparing naive fixed-size chunking RAG failure on repeated keywords against structured section chunking, metadata routing, hybrid search, and reranking">
+      <!-- Top: Naive RAG -->
+      <rect x="14" y="14" width="812" height="114" rx="11" fill="#FCECE9" stroke="#EAB9AF" stroke-width="1.5"/>
+      <text x="30" y="36" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#A3301C">✗ NAIVE RAG: "Can I return running shoes I wore outside once?"</text>
+
+      <rect x="30" y="48" width="176" height="58" rx="8" fill="#FFFFFF" stroke="#EAB9AF"/>
+      <text x="118" y="70" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#17202B">Fixed 500-char chunks</text>
+      <text x="118" y="88" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#A3301C">Splits header from exception!</text>
+
+      <line x1="206" y1="77" x2="236" y2="77" stroke="#A3301C" stroke-width="1.8" marker-end="url(#arr-w)"/>
+
+      <rect x="242" y="48" width="234" height="58" rx="8" fill="#FFFFFF" stroke="#EAB9AF"/>
+      <text x="359" y="70" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#17202B">BM25 / Embeddings Tie</text>
+      <text x="359" y="88" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">"return" is in all 18 chunks → low IDF</text>
+
+      <line x1="476" y1="77" x2="506" y2="77" stroke="#A3301C" stroke-width="1.8" marker-end="url(#arr-w)"/>
+
+      <rect x="512" y="48" width="298" height="58" rx="8" fill="#A3301C"/>
+      <text x="661" y="70" text-anchor="middle" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#FFFFFF">Wrong Rule Retrieved!</text>
+      <text x="661" y="88" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#FCECE9">Quotes "30-day online return" &amp; misses worn-item ban!</text>
+
+      <!-- Bottom: Fixed Production RAG -->
+      <rect x="14" y="144" width="812" height="180" rx="11" fill="#E5F5EC" stroke="#A5DABB" stroke-width="1.5"/>
+      <text x="30" y="166" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#197444">✓ PRODUCTION DOCUMENT RAG (4-STEP FIX)</text>
+
+      <rect x="30" y="180" width="176" height="86" rx="8" fill="#FFFFFF" stroke="#A5DABB"/>
+      <text x="118" y="201" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#0B7A6D">1. SECTION CHUNKS</text>
+      <text x="118" y="220" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">Chunk by policy heading</text>
+      <text x="118" y="236" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">+ prepend breadcrumb:</text>
+      <text x="118" y="253" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#0B7A6D">Returns &gt; Footwear &gt; Worn</text>
+
+      <line x1="206" y1="223" x2="228" y2="223" stroke="#197444" stroke-width="1.8" marker-end="url(#arr-t)"/>
+
+      <rect x="234" y="180" width="176" height="86" rx="8" fill="#FFFFFF" stroke="#A5DABB"/>
+      <text x="322" y="201" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#2A52C4">2. METADATA FILTER</text>
+      <text x="322" y="220" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">Tag each doc:</text>
+      <text x="322" y="236" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9.5" fill="#2A52C4">topic, site, item_type</text>
+      <text x="322" y="253" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">Filters out irrelevant docs!</text>
+
+      <line x1="410" y1="223" x2="432" y2="223" stroke="#197444" stroke-width="1.8" marker-end="url(#arr-t)"/>
+
+      <rect x="438" y="180" width="176" height="86" rx="8" fill="#FFFFFF" stroke="#A5DABB"/>
+      <text x="526" y="201" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#A85A0C">3. HYBRID + RERANK</text>
+      <text x="526" y="220" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">BM25 + Vectors → top 15</text>
+      <text x="526" y="236" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">then Cross-Encoder / LLM</text>
+      <text x="526" y="253" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#A85A0C">reranker picks exact top 3!</text>
+
+      <line x1="614" y1="223" x2="636" y2="223" stroke="#197444" stroke-width="1.8" marker-end="url(#arr-t)"/>
+
+      <rect x="642" y="180" width="168" height="86" rx="8" fill="#197444"/>
+      <text x="726" y="201" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#E5F5EC">4. CITED ANSWER</text>
+      <text x="726" y="220" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#FFFFFF">Quote exact policy ID</text>
+      <text x="726" y="236" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#FFFFFF">+ include exceptions</text>
+      <text x="726" y="253" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#E5F5EC">(e.g. Policy RET-04)</text>
+
+      <text x="30" y="290" font-family="Inter,sans-serif" font-size="11" fill="#17202B"><tspan font-weight="700" fill="#197444">Why a Reranker shines here:</tspan> Bi-encoders embed query &amp; chunk separately; a cross-encoder / reranker</text>
+      <text x="30" y="308" font-family="Inter,sans-serif" font-size="11" fill="#17202B">reads <tspan font-style="italic">(query, chunk)</tspan> jointly and immediately distinguishes "worn outside" from "unworn with tags".</text>
+    </svg>
+    <figcaption>
+      Notice how this directly answers <strong>Scenario S3</strong> ("Leave rules from documentation with 'leave' everywhere") using the exact same architecture as store return/warranty/promotion policies!
+    </figcaption>
+  </figure>
+
+  <details class="spoiler">
+    <summary>Day 3 Prompt Blueprint: Copy this scoped spec into your coding agent to build <code>search_policy</code> cleanly</summary>
+    <div class="ans">
+      <div class="codeblock" style="margin:0;">
+        <div class="codebar"><span>Scoped AI-native prompt for Day 3 (60–90 min build)</span><button class="copy-btn" type="button">Copy</button></div>
+        <pre><code>Add a tiny store-policy RAG module (`src/shop/policies.py`, &lt;120 lines, zero new deps) to solve "one keyword appears everywhere":
+1. Include 10–12 realistic sports-store policy sections where words like "return", "exchange", "discount" appear in almost every section (e.g., unworn 30-day return, worn footwear exception, swimwear/hygiene non-returnable, clearance items, member points refund, defective item warranty, CentralWorld in-store return vs online).
+2. Store each section with structured metadata (policy_id, topic, item_type, channel) + section breadcrumb header.
+3. Implement hybrid retrieval (SQL metadata filter + FTS5 BM25 + Gemini embeddings + RRF) plus an optional lightweight LLM reranker over the top 6 candidates to pick the exact rule.
+4. Wire a read-only `search_policy` tool into `src/shop/tools.py` and add:
+   - Offline deterministic tests in `tests/test_policies.py`
+   - 3 new eval cases in `evals/cases.json` (e.g. "can I return running shoes I wore outside once?", "can I return swimwear?", "can I return a clearance racket?")
+5. Run `uv run pytest -q` and `uv run shop eval`, and report before/after numbers. Explain every file in 4 bullets: what, why, alternative, what can go wrong.</code></pre>
+      </div>
+    </div>
+  </details>
+
+  <label class="done"><input type="checkbox" data-done="m7"> Mark Module 7 done</label>
+</section>
+
+<!-- ====================================================================== -->
+<!-- MODULE 8: HOW TO USE AI LIKE A PRO -->
+<!-- ====================================================================== -->
+<section class="module prose" id="m8">
+  <h2><span class="num">8</span>How to Use AI Effectively (The Interview Meta-Question)</h2>
+  <p>
+    Central Tech explicitly asks: <strong>"How do you use AI to get work done?"</strong>
+    Weak candidates say <em>"I paste errors into ChatGPT or let Cursor write features."</em>
+    Strong AI-native engineers show a <strong>repeatable engineering harness</strong> where AI accelerates typing while
+    <em>you</em> own architecture, constraints, verification, and edge cases.
+  </p>
+
+  <figure class="diagram">
+    <div class="diagram-head">
+      <span class="diagram-title">Vibe Coding vs Disciplined AI-Native Engineering</span>
+      <span class="diagram-tag">Diagram 16 · AI Workflow</span>
+    </div>
+    <svg viewBox="0 0 840 264" role="img" aria-label="Comparison between undisciplined vibe coding and the 5-step disciplined AI-native engineering loop">
+      <!-- Top: Anti-pattern -->
+      <rect x="14" y="14" width="812" height="76" rx="10" fill="#FCECE9" stroke="#EAB9AF" stroke-width="1.5"/>
+      <text x="30" y="36" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#A3301C">✗ VIBE CODING (INTERVIEW RED FLAG)</text>
+      <text x="30" y="58" font-family="Inter,sans-serif" font-size="12" fill="#17202B">
+        Vague giant prompt  →  Accept 800-line diff blindly  →  "Looks like it works once!"  →  Silent security/eval bugs  →  Can't explain in review
+      </text>
+      <text x="30" y="78" font-family="Inter,sans-serif" font-size="11" fill="#A3301C">
+        Result: Fast demo on Day 1, unmaintainable hallucinating chatbot in Week 2.
+      </text>
+
+      <!-- Bottom: Disciplined AI-native loop -->
+      <rect x="14" y="106" width="812" height="146" rx="11" fill="#E8EEFC" stroke="#2A52C4" stroke-width="1.5"/>
+      <text x="30" y="128" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#2A52C4">✓ DISCIPLINED AI-NATIVE LOOP (HOW THIS REPO WAS BUILT)</text>
+
+      <rect x="28" y="142" width="140" height="84" rx="8" fill="#FFFFFF" stroke="#B6C7F5"/>
+      <text x="98" y="162" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#2A52C4">1. SPEC &amp; RULES</text>
+      <text x="98" y="182" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">Write AGENTS.md,</text>
+      <text x="98" y="198" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">tiny scope, zero</text>
+      <text x="98" y="214" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">bloat constraints.</text>
+
+      <line x1="168" y1="184" x2="188" y2="184" stroke="#2A52C4" stroke-width="1.6" marker-end="url(#arr-b)"/>
+
+      <rect x="192" y="142" width="140" height="84" rx="8" fill="#FFFFFF" stroke="#B6C7F5"/>
+      <text x="262" y="162" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#6A47BC">2. SMALL DIFF</text>
+      <text x="262" y="182" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">1 focused module</text>
+      <text x="262" y="198" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">at a time (Steps</text>
+      <text x="262" y="214" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">A → B → C → D).</text>
+
+      <line x1="332" y1="184" x2="352" y2="184" stroke="#2A52C4" stroke-width="1.6" marker-end="url(#arr-b)"/>
+
+      <rect x="356" y="142" width="140" height="84" rx="8" fill="#FFFFFF" stroke="#9CD9D0"/>
+      <text x="426" y="162" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#0B7A6D">3. VERIFY FIRST</text>
+      <text x="426" y="182" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">Offline pytest +</text>
+      <text x="426" y="198" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B"><tspan font-family="JetBrains Mono,monospace">shop eval</tspan> before</text>
+      <text x="426" y="214" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">&amp; after metrics.</text>
+
+      <line x1="496" y1="184" x2="516" y2="184" stroke="#0B7A6D" stroke-width="1.6" marker-end="url(#arr-t)"/>
+
+      <rect x="520" y="142" width="140" height="84" rx="8" fill="#FFFFFF" stroke="#ECC99B"/>
+      <text x="590" y="162" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#A85A0C">4. AUDIT &amp; BREAK</text>
+      <text x="590" y="182" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">Read every line,</text>
+      <text x="590" y="198" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">probe edge cases</text>
+      <text x="590" y="214" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#17202B">&amp; real API quirks.</text>
+
+      <line x1="660" y1="184" x2="680" y2="184" stroke="#A85A0C" stroke-width="1.6" marker-end="url(#arr-a)"/>
+
+      <rect x="684" y="142" width="128" height="84" rx="8" fill="#197444"/>
+      <text x="748" y="162" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#E5F5EC">5. OWN IT</text>
+      <text x="748" y="182" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#FFFFFF">Document trade-</text>
+      <text x="748" y="198" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#FFFFFF">offs. Never ship</text>
+      <text x="748" y="214" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#FFFFFF">code you don't own.</text>
+    </svg>
+    <figcaption>
+      <strong>4 real proof points you can quote from this repo:</strong>
+      (1) <code>shop eval</code> caught <em>"what's today's date?"</em> falsely blocked by the guardrail;
+      (2) testing against Gemini's OpenAI-compatible endpoint uncovered the <strong>400 PDF rejection</strong> → switched to <code>pypdfium2</code> PNG renders;
+      (3) testing multi-turn tools uncovered Gemini's <strong>thought signature</strong> requirement;
+      (4) measuring Thai-English similarity proved <code>gemini-embedding-001</code> (0.86) crushed <code>text-embedding-3-small</code> (0.36).
+    </figcaption>
+  </figure>
+
+  <label class="done"><input type="checkbox" data-done="m8"> Mark Module 8 done</label>
+</section>
+
+<!-- ====================================================================== -->
+<!-- MODULE 9: CENTRAL TECH INTERVIEW DRILL, BACKEND/GO TIPS & ADVICE -->
+<!-- ====================================================================== -->
+<section class="module prose" id="m9">
+  <h2><span class="num">9</span>Interview Cheat Sheet, 60s Drill &amp; Final Advice</h2>
+  <p>
+    Practice every answer aloud in <strong>60–90 seconds</strong> using the 4-beat cadence:
+    <strong>What → Why → Alternative → What can go wrong</strong>.
+    Click any question below to check your spoken answer.
+  </p>
+
+  <h3>9.1 Interactive 60-Second Interview Drill (Top 12 Central Tech Questions)</h3>
+  <div class="widget" id="drill-widget">
+    <h4>Filter by topic &amp; test yourself out loud first</h4>
+    <p class="sub">Speak your answer before clicking "Show 4-part answer". Aim for calm, concrete engineering — cite real files and numbers.</p>
+    <div class="drill-filters">
+      <button type="button" class="btn active" data-filter="all">All (12)</button>
+      <button type="button" class="btn" data-filter="search">Search &amp; DB</button>
+      <button type="button" class="btn" data-filter="agent">Agent &amp; Guards</button>
+      <button type="button" class="btn" data-filter="ml">Vision &amp; Tuning</button>
+      <button type="button" class="btn" data-filter="ops">Ops &amp; AI Workflow</button>
+      <button type="button" class="btn" id="toggle-all-drills" style="margin-left:auto;">Expand All</button>
+    </div>
+
+    <div class="drill-grid" id="drill-grid">
+      <div class="drill-card" data-cat="agent">
+        <span class="badge b-teal">Agent &amp; Time</span>
+        <div class="drill-q">1. "What's today's date?" &amp; "Show my orders from last week"</div>
+        <button type="button" class="btn drill-toggle">Show 4-part answer</button>
+        <div class="drill-a">
+          <div><b>What:</b> Inject Bangkok time + Buddhist Era (+543) in the system prompt; for ranges, LLM passes a named enum (<code>period="last_week"</code>) and code computes exact bounds.</div>
+          <div><b>Why:</b> LLMs have no clock and fail date/timezone arithmetic. Converting Bangkok midnight to UTC ISO before SQL prevents late-evening order drift.</div>
+          <div><b>Alternative:</b> Letting the LLM emit <code>start_date/end_date</code> directly — works sometimes, silently breaks on week boundaries &amp; leap/month edges.</div>
+          <div><b>Breaks if:</b> "Last week" means Mon–Sun vs trailing 7 days — always state the resolved dates in the reply so the shopper can correct you.</div>
+        </div>
+      </div>
+
+      <div class="drill-card" data-cat="search">
+        <span class="badge b-blue">Search &amp; DB</span>
+        <div class="drill-q">2. "Blue running shoes in stock under 3,000 baht" (2M rows &amp; filters)</div>
+        <button type="button" class="btn drill-toggle">Show 4-part answer</button>
+        <div class="drill-a">
+          <div><b>What:</b> Extract structured filters with <code>json_schema</code> + Pydantic → exact SQL <code>WHERE</code> on B-tree indexes → hybrid BM25 + vector ranking on fuzzy text → RRF → collapse by <code>model_id</code>.</div>
+          <div><b>Why:</b> Vectors can't enforce <code>&lt;= 3000</code> or <code>in_stock</code>. Embedding 1 vector per model (486 vs 2,048 SKUs) cuts index size 4×.</div>
+          <div><b>Alternative:</b> Pure vector search with post-filtering — returns 0 hits when filters match &lt;1% of 2M rows.</div>
+          <div><b>Breaks if:</b> HNSW stops early on rare filters → use <code>pgvector 0.8+</code> <code>hnsw.iterative_scan = relaxed_order</code>, composite index <code>(category, in_stock, price)</code>, and GIN/join for sizes.</div>
+        </div>
+      </div>
+
+      <div class="drill-card" data-cat="search">
+        <span class="badge b-blue">Thai NLP</span>
+        <div class="drill-q">3. Mixed Thai/English search ("ไนกี้ pegasus สีดำ")</div>
+        <button type="button" class="btn drill-toggle">Show 4-part answer</button>
+        <div class="drill-a">
+          <div><b>What:</b> NFC normalise + Thai digits → Arabic + PyThaiNLP <code>newmm</code> with a custom trie containing catalog brand/colour spellings, paired with multilingual Gemini embeddings.</div>
+          <div><b>Why:</b> Thai has no spaces; stock dictionaries split brand transliterations like <code>ไนกี้ → ไน + กี้</code>. Gemini embeddings scored 0.86 TH↔EN vs OpenAI small's 0.36.</div>
+          <div><b>Alternative:</b> Pure dense embeddings without BM25 — misses exact SKU/model codes like "Pegasus 41".</div>
+          <div><b>Breaks if:</b> Index-time and query-time analyzers diverge, or new brand spellings aren't added to the custom dictionary.</div>
+        </div>
+      </div>
+
+      <div class="drill-card" data-cat="search">
+        <span class="badge b-amber">Document RAG</span>
+        <div class="drill-q">4. Retrieving rules from docs where one keyword ("leave" / "return") appears everywhere</div>
+        <button type="button" class="btn drill-toggle">Show 4-part answer</button>
+        <div class="drill-a">
+          <div><b>What:</b> Structure-aware chunking by section heading + breadcrumb prefix (<code>Returns &gt; Footwear &gt; Worn</code>), metadata filtering (topic/site/item), hybrid retrieval, then a cross-encoder/LLM reranker.</div>
+          <div><b>Why:</b> When a word appears in every chunk, BM25 IDF drops to near-zero and naive chunks separate rules from their exceptions. Rerankers score (query, chunk) jointly.</div>
+          <div><b>Alternative:</b> Fixed 500-character chunks + cosine top-3 — routinely grabs the general 30-day rule and misses the "worn shoes" exception.</div>
+          <div><b>Breaks if:</b> Contradictory old/new policy versions stay in the index → track effective dates/version metadata and cite exact policy IDs.</div>
+        </div>
+      </div>
+
+      <div class="drill-card" data-cat="agent">
+        <span class="badge b-warn">Guardrails</span>
+        <div class="drill-q">5. "How do you set guardrails that actually work?"</div>
+        <button type="button" class="btn drill-toggle">Show 4-part answer</button>
+        <div class="drill-a">
+          <div><b>What:</b> 4 code layers: (1) PII masking, (2) cheap regex + fast-LLM scope/injection screen, (3) read-only tool whitelist + Pydantic + session auth + step/loop caps, (4) output price grounding.</div>
+          <div><b>Why:</b> System prompts are suggestions; code enforces invariants. The safest way to stop a bot from giving 90% discounts or cancelling orders is not having those tools.</div>
+          <div><b>Alternative:</b> Relying on prompt rules or only a heavy LLM judge — slow, bypassable, and misses arithmetic/price hallucinations.</div>
+          <div><b>Breaks if:</b> Over-aggressive scope blocks hurt revenue (false positives like blocking "what's today's date?") → measure both recall &amp; false positives in <code>shop eval</code>.</div>
+        </div>
+      </div>
+
+      <div class="drill-card" data-cat="agent">
+        <span class="badge b-warn">Privacy / PII</span>
+        <div class="drill-q">6. Users paste phone numbers, Thai IDs &amp; cards — and chat goes to Gemini</div>
+        <button type="button" class="btn drill-toggle">Show 4-part answer</button>
+        <div class="drill-a">
+          <div><b>What:</b> Mask PII into placeholders (<code>&lt;PHONE_1&gt;</code>, <code>&lt;THAI_ID_1&gt;</code>) before the message leaves our server or hits logs; unmask only when returning the final text to that user.</div>
+          <div><b>Why:</b> Keeps raw customer PII out of external LLM providers and analytics logs (PDPA compliance in Thailand), while checksum validation (mod-11 Thai ID, Luhn card) prevents false masks on order IDs.</div>
+          <div><b>Alternative:</b> Sending raw text to Vertex AI zero-data-retention only — better than consumer APIs, still leaves PII in internal logs/evals.</div>
+          <div><b>Breaks if:</b> Free-text street addresses aren't caught by regex → add a lightweight NER/Presidio detector if address masking is required.</div>
+        </div>
+      </div>
+
+      <div class="drill-card" data-cat="agent">
+        <span class="badge b-teal">Security / Agent</span>
+        <div class="drill-q">7. Indirect prompt injection, runaway tool loops, or reading another user's orders</div>
+        <button type="button" class="btn drill-toggle">Show 4-part answer</button>
+        <div class="drill-a">
+          <div><b>What:</b> Inject <code>ctx.user_id</code> strictly from login session (never a tool arg), identical error for missing vs other-user order, cap <code>MAX_STEPS=5</code>, stop identical tool calls &gt;2×, treat tool output as untrusted data.</div>
+          <div><b>Why:</b> A poisoned product review or hostile prompt can hijack LLM arguments; server-side auth &amp; hard loop limits bound blast radius and cost.</div>
+          <div><b>Alternative:</b> Passing <code>user_id</code> in tool JSON or trusting unlimited ReAct loops — classic IDOR breach &amp; runaway token bills.</div>
+          <div><b>Breaks if:</b> You later add mutating tools (cancel/refund) → require explicit deterministic confirmation + out-of-band auth, never single-turn LLM execution.</div>
+        </div>
+      </div>
+
+      <div class="drill-card" data-cat="ml">
+        <span class="badge b-violet">Vision</span>
+        <div class="drill-q">8. Customer uploads a shirt photo: "Do you have this?"</div>
+        <button type="button" class="btn drill-toggle">Show 4-part answer</button>
+        <div class="drill-a">
+          <div><b>What:</b> Path 1: VLM reads photo into strict JSON attributes (<code>is_product_photo</code>, category, dominant colour, pattern, sleeve) → reuses hybrid search. Path 2 (with catalog images): multimodal CLIP/SigLIP image embeddings + SQL filters.</div>
+          <div><b>Why:</b> Path 1 works immediately even without clean studio photos and respects live stock/price filters. Filtering on dominant colour only (<code>colors[:1]</code>) stops striped shirts matching plain white shirts.</div>
+          <div><b>Alternative:</b> Pure image similarity without filters — returns sold-out or wrong-price lookalikes.</div>
+          <div><b>Breaks if:</b> Blurry/dark/non-product uploads or subtle prints → gate on <code>is_product_photo</code>, ask a clarifying follow-up, and combine Path 1 + Path 2 at scale.</div>
+        </div>
+      </div>
+
+      <div class="drill-card" data-cat="ml">
+        <span class="badge b-violet">PDF Tables</span>
+        <div class="drill-q">9. Reading a size chart / spec table in a PDF</div>
+        <button type="button" class="btn drill-toggle">Show 4-part answer</button>
+        <div class="drill-a">
+          <div><b>What:</b> Render PDF pages to PNG (<code>pypdfium2</code>) + attach text layer → vision model outputs typed JSON rows → deterministic sanity checks (<code>50 ≤ min &lt; max ≤ 180</code>, monotonic) → code picks the size.</div>
+          <div><b>Why:</b> <code>pypdf</code> text layers lose column alignment and regex breaks on the next supplier's layout; Gemini's OpenAI-compat endpoint 400s on raw PDF parts; LLMs misread boundary numbers.</div>
+          <div><b>Alternative:</b> Dedicated layout OCR (Document AI / Docling) — great for massive batch ingestion; VLM + validation is super flexible for varied supplier charts.</div>
+          <div><b>Breaks if:</b> Vision model misreads a digit (e.g. 108 → 18) or swaps inches/cm → unit conversion checks &amp; human spot-audit on ingest.</div>
+        </div>
+      </div>
+
+      <div class="drill-card" data-cat="ml">
+        <span class="badge b-violet">Fine-Tuning &amp; ML</span>
+        <div class="drill-q">10. "Fine-tune a model on our website" &amp; intent classification</div>
+        <button type="button" class="btn drill-toggle">Show 4-part answer</button>
+        <div class="drill-a">
+          <div><b>What:</b> Climb the ladder: Prompting → Hybrid RAG/Tools (for facts!) → Embeddings + Logistic Regression classifier (0.97 F1 vs 0.70 TF-IDF, 0.45 confidence threshold) → LoRA/QLoRA fine-tuning on curated chats.</div>
+          <div><b>Why:</b> Never fine-tune to memorize volatile prices/stock. Fine-tune (LoRA) for consistent brand tone, Thai retail slang, strict tool formatting, or distilling Gemini into a fast cheap open model on vLLM.</div>
+          <div><b>Alternative:</b> Full fine-tuning or baking catalog facts into weights — expensive, stale within hours, and hard to unlearn.</div>
+          <div><b>Breaks if:</b> Training on uncleaned synthetic/noisy chats causes catastrophic forgetting or wrong confidence thresholds → always evaluate against a human-labelled held-out set.</div>
+        </div>
+      </div>
+
+      <div class="drill-card" data-cat="ops">
+        <span class="badge b-amber">Routing &amp; Latency</span>
+        <div class="drill-q">11. Answers take 8s, cost too much, or Gemini hits rate limits</div>
+        <button type="button" class="btn drill-toggle">Show 4-part answer</button>
+        <div class="drill-a">
+          <div><b>What:</b> Profile first (here filter extraction was 85% of search latency!), use small/fast models for routing &amp; extraction, cache slow-changing searches in Redis (never live stock/orders), stream tokens, retry transient errors with jitter, and fail over via an OpenAI-compatible gateway (LiteLLM) to backup models/providers.</div>
+          <div><b>Why:</b> Keeps p95 fast, cuts spend 5–10× by routing simple intents to fine-tuned open models, and prevents single-provider outages.</div>
+          <div><b>Alternative:</b> One giant frontier model for every step with no cache or fallback — slow, expensive, fragile.</div>
+          <div><b>Breaks if:</b> Caching stock or mixing embedding models across providers → stale inventory &amp; broken cosine similarity.</div>
+        </div>
+      </div>
+
+      <div class="drill-card" data-cat="ops">
+        <span class="badge b-ok">AI-Native Workflow</span>
+        <div class="drill-q">12. "How do you use AI to get work done &amp; know the bot is ready to ship?"</div>
+        <button type="button" class="btn drill-toggle">Show 4-part answer</button>
+        <div class="drill-a">
+          <div><b>What:</b> Spec constraints first (<code>AGENTS.md</code>), build in small verifiable increments, gate every prompt/model/search change with offline <code>pytest</code> + live <code>shop eval</code> (before/after numbers), log masked traces (<code>turns.jsonl</code>) to turn real user failures into new eval cases.</div>
+          <div><b>Why:</b> AI writes boilerplate fast, but only tests, evals, and reading every diff catch real bugs (like the date guardrail false positive and Gemini PDF/thought-signature quirks).</div>
+          <div><b>Alternative:</b> Manual "vibe-check" chatting after big AI edits — misses regressions in other intents silently.</div>
+          <div><b>Breaks if:</b> Eval cases become stale or overfit to synthetic data → sample real production traces weekly (with PII masked) and cluster failure modes.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>9.2 Backend, Database &amp; Go Quick-Check (Central Tech Bonus Edge)</h3>
+  <p>
+    Central Tech tests <strong>backend &amp; database concepts</strong> alongside AI (and their backend may use <strong>Go</strong>).
+    Keep these crisp engineering points ready:
+  </p>
+  <div class="card-grid">
+    <div class="card">
+      <span class="badge b-teal">Database Indexes</span>
+      <h4>Composite B-Tree Order</h4>
+      <p>Put <strong>equality</strong> columns first, <strong>range</strong> column last: <code>(category, in_stock, price)</code>. Always verify with <code>EXPLAIN ANALYZE</code> — watch out for leading-wildcard <code>LIKE '%x%'</code> full table scans.</p>
+    </div>
+    <div class="card">
+      <span class="badge b-blue">Concurrency &amp; Go</span>
+      <h4>Python I/O vs Go Services</h4>
+      <p>In Python, <code>ThreadPoolExecutor</code> bounds network I/O cleanly (<code>index.py</code>). In Go, the same pattern is a bounded worker pool of goroutines + <code>context.WithTimeout</code> + <code>errgroup</code> for parallel BM25 + vector calls + circuit breakers.</p>
+    </div>
+    <div class="card">
+      <span class="badge b-amber">Caching &amp; Sync</span>
+      <h4>Event-Driven Freshness</h4>
+      <p>Search results live in <strong>Redis</strong> with short TTL + invalidation on catalog updates. Live inventory &amp; order status bypass cache (or use event-driven stock flags updated from POS/OMS queues like Kafka/PubSub).</p>
+    </div>
+    <div class="card">
+      <span class="badge b-violet">Observability</span>
+      <h4>What to Log Every Turn</h4>
+      <p>Log masked input/output, tool calls + latencies, token counts, model/fallback used, guardrail triggers, and thumbs-up/down feedback — so you can find top failure clusters and turn them into eval cases.</p>
+    </div>
+  </div>
+
+  <h3>9.3 Smart Questions to Ask Central Tech (End of Interview)</h3>
+  <ul>
+    <li><em>"How do you currently split traffic between your fine-tuned open models and Gemini — by intent/complexity, latency budget, or specific channels like LINE vs web?"</em></li>
+    <li><em>"What is your biggest quality bottleneck right now in the shopping bots — Thai retrieval/synonym recall, real-time store stock sync across branches, or evaluating multi-turn conversations?"</em></li>
+    <li><em>"How does your eval loop work before shipping a prompt, retriever, or LoRA adapter update?"</em></li>
+  </ul>
+
+  <h3>9.4 Interview-Day Advice (Calm, Honest, Structured)</h3>
+  <div class="tip">
+    <span class="callout-label">4 Rules for Tuesday 24 Nov</span>
+    <p>
+      <strong>1. Draw first on system design:</strong> Start with 5 clean boxes — <em>Channel (LINE/Web) → Guard/PII → Orchestrator/Router (Fine-tuned + Gemini) → Hybrid Search + Live Tools (DB/Stock/Orders) → Output Grounding + Trace Logs</em> — then zoom into whichever box they probe.<br>
+      <strong>2. Never bluff when you don't know:</strong> Say cleanly, <em>"I haven't operated X at that exact scale yet, here's how I'd reason from first principles and what I'd benchmark first."</em> Interviewers respect honest engineering far more than hand-waving.<br>
+      <strong>3. Tie theory to concrete numbers you measured:</strong> Mention <code>0.86 vs 0.36</code> Thai-EN embeddings, <code>486 vs 2,048</code> model vectors, <code>0.70 vs 0.97</code> intent F1, and the <code>"what's today's date?"</code> eval catch — real measurements signal real builders.<br>
+      <strong>4. Rest Monday night:</strong> No new code after 21:30 IST Monday. Clear thinking under follow-up questions beats one extra hour of reading.
+    </p>
+  </div>
+
+  <label class="done"><input type="checkbox" data-done="m9"> Mark Module 9 done</label>
+</section>
+
+</main>
+</div>
+
+<script>
+(function () {
+  const STORE_KEY = "ct-ai-sprint-v1";
+  let state = {};
+  try { state = JSON.parse(localStorage.getItem(STORE_KEY) || "{}"); } catch (_) { state = {}; }
+  const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (_) {} };
+
+  // 1. Module completion checkboxes + sidebar progress bar
+  const modChecks = Array.from(document.querySelectorAll('input[data-done]'));
+  const progressText = document.querySelector('#toc-progress span:first-child');
+  const progressPct = document.getElementById('toc-pct');
+  const progressFill = document.getElementById('progress-fill');
+
+  function updateProgress() {
+    let doneCount = 0;
+    modChecks.forEach(cb => {
+      const id = cb.dataset.done;
+      const link = document.querySelector(`.toc a[data-mod="${id}"]`);
+      if (cb.checked) doneCount++;
+      if (link) link.classList.toggle('is-done', cb.checked);
+    });
+    const pct = Math.round((doneCount / modChecks.length) * 100);
+    if (progressText) progressText.textContent = `${doneCount} of ${modChecks.length} modules done`;
+    if (progressPct) progressPct.textContent = `${pct}%`;
+    if (progressFill) progressFill.style.width = `${pct}%`;
+  }
+
+  modChecks.forEach(cb => {
+    const key = "mod:" + cb.dataset.done;
+    cb.checked = Boolean(state[key]);
+    cb.addEventListener('change', () => {
+      state[key] = cb.checked;
+      save();
+      updateProgress();
+    });
+  });
+  updateProgress();
+
+  // 2. Sprint checklist & Break-Lab checkboxes
+  document.querySelectorAll('input[data-task]').forEach(cb => {
+    const key = "task:" + cb.dataset.task;
+    cb.checked = Boolean(state[key]);
+    cb.addEventListener('change', () => {
+      state[key] = cb.checked;
+      save();
+    });
+  });
+
+  // 3. Mobile TOC toggle
+  const toc = document.getElementById('toc');
+  const tocBtn = document.getElementById('toc-toggle');
+  if (tocBtn && toc) {
+    tocBtn.addEventListener('click', () => {
+      const open = toc.classList.toggle('open');
+      tocBtn.setAttribute('aria-expanded', String(open));
+    });
+    toc.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      toc.classList.remove('open');
+      tocBtn.setAttribute('aria-expanded', 'false');
+    }));
+  }
+
+  // 4. Scrollspy for active sidebar module
+  const sections = Array.from(document.querySelectorAll('section.module[id]'));
+  const tocLinks = new Map(Array.from(document.querySelectorAll('.toc a[data-mod]')).map(a => [a.dataset.mod, a]));
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          tocLinks.forEach(a => a.classList.remove('active'));
+          const hit = tocLinks.get(e.target.id);
+          if (hit) hit.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-18% 0px -70% 0px' });
+    sections.forEach(s => io.observe(s));
+  }
+
+  // 5. Copy-to-clipboard buttons
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const code = btn.closest('.codeblock')?.querySelector('pre')?.innerText || '';
+      try {
+        await navigator.clipboard.writeText(code);
+        const orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = orig; }, 1400);
+      } catch (_) {
+        btn.textContent = 'Select & copy';
+      }
+    });
+  });
+
+  // 6. Interactive RRF Playground
+  const rrfIds = ['a', 'b', 'c'];
+  const rrfNames = { a: 'Shoe A (Consensus)', b: 'Shoe B (BM25 spike)', c: 'Shoe C (Vec spike)' };
+  const rrfOut = document.getElementById('rrf-out');
+  function renderRRF() {
+    if (!rrfOut) return;
+    const K = 60;
+    const rows = rrfIds.map(id => {
+      const kw = Number(document.getElementById(`${id}-kw`).value);
+      const vec = Number(document.getElementById(`${id}-vec`).value);
+      document.getElementById(`${id}-kw-v`).textContent = `#${kw}`;
+      document.getElementById(`${id}-vec-v`).textContent = `#${vec}`;
+      const score = (1 / (K + kw)) + (1 / (K + vec));
+      return { id, name: rrfNames[id], kw, vec, score };
+    }).sort((x, y) => y.score - x.score);
+    const maxScore = 2 / (K + 1);
+    rrfOut.innerHTML = rows.map((r, idx) => {
+      const pct = Math.min(100, Math.round((r.score / maxScore) * 100));
+      return `<div class="rrf-bar-row">
+        <span><strong>#${idx + 1}</strong> ${r.name}</span>
+        <div class="rrf-track"><div class="rrf-fill" style="width:${pct}%"></div></div>
+        <span>${r.score.toFixed(4)} <span style="color:#6C7886">(k#${r.kw},v#${r.vec})</span></span>
+      </div>`;
+    }).join('');
+  }
+  rrfIds.forEach(id => {
+    ['kw', 'vec'].forEach(lane => {
+      const el = document.getElementById(`${id}-${lane}`);
+      if (el) el.addEventListener('input', renderRRF);
+    });
+  });
+  renderRRF();
+
+  // 7. Interactive 60-Second Interview Drill
+  const drillCards = Array.from(document.querySelectorAll('.drill-card'));
+  drillCards.forEach(card => {
+    const btn = card.querySelector('.drill-toggle');
+    btn?.addEventListener('click', () => {
+      const open = card.classList.toggle('open');
+      btn.textContent = open ? 'Hide answer' : 'Show 4-part answer';
+    });
+  });
+
+  document.querySelectorAll('.drill-filters .btn[data-filter]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.drill-filters .btn[data-filter]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      drillCards.forEach(c => {
+        c.classList.toggle('hidden', f !== 'all' && c.dataset.cat !== f);
+      });
+    });
+  });
+
+  const toggleAllBtn = document.getElementById('toggle-all-drills');
+  if (toggleAllBtn) {
+    let allOpen = false;
+    toggleAllBtn.addEventListener('click', () => {
+      allOpen = !allOpen;
+      drillCards.forEach(c => {
+        c.classList.toggle('open', allOpen);
+        const b = c.querySelector('.drill-toggle');
+        if (b) b.textContent = allOpen ? 'Hide answer' : 'Show 4-part answer';
+      });
+      toggleAllBtn.textContent = allOpen ? 'Collapse All' : 'Expand All';
+    });
+  }
+})();
+</script>
+</body>
+</html>
