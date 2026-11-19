@@ -872,8 +872,8 @@ tr:hover td { background: #F7F9FB; }
 
   <div class="stats-grid">
     <div class="stat-card"><div class="v">1,984 LOC</div><div class="l">18 tiny modules (26–196 lines)</div></div>
-    <div class="stat-card"><div class="v">486 → 2,048</div><div class="l">Model vectors → SKU rows</div></div>
-    <div class="stat-card"><div class="v">39 / 21</div><div class="l">Offline tests / Live evals</div></div>
+    <div class="stat-card"><div class="v">552 → 2,327</div><div class="l">Model vectors → SKU rows</div></div>
+    <div class="stat-card"><div class="v">49 / 36</div><div class="l">Offline tests / Live evals</div></div>
     <div class="stat-card"><div class="v">0.70 → 0.97</div><div class="l">TF-IDF → Embed intent F1</div></div>
   </div>
 
@@ -958,7 +958,7 @@ tr:hover td { background: #F7F9FB; }
       <text x="196" y="138" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• agent.py, tools.py</text>
       <text x="196" y="156" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• timeutil.py (TZ)</text>
       <text x="196" y="174" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• guard, cache, llm</text>
-      <text x="196" y="192" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• evals.py (21 cases)</text>
+      <text x="196" y="192" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">• evals.py (36 cases)</text>
       <rect x="194" y="214" width="130" height="44" rx="7" fill="#FFFFFF" stroke="#9CD9D0"/>
       <text x="259" y="232" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="600" fill="#0B7A6D">Break Labs #6–#9</text>
       <text x="259" y="248" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#4F5B69">Clock, IDOR, PII</text>
@@ -1029,8 +1029,8 @@ tr:hover td { background: #F7F9FB; }
         <span class="badge b-teal">Modules 3 &amp; 4 + Labs #6–#9</span>
       </div>
       <ul class="check-list">
-        <li><input type="checkbox" id="d2a" data-task="d2a"><label for="d2a"><span>Run multi-turn <code>shop ask</code> (follow-ups + <code>--user u1</code> orders from last week) and <code>uv run shop eval</code> (watch all 21 cases)</span></label></li>
-        <li><input type="checkbox" id="d2b" data-task="d2b"><label for="d2b"><span>Read <code>agent.py</code> (147), <code>tools.py</code> (182), <code>timeutil.py</code> (65), <code>guard.py</code> (130), <code>cache.py</code> (26), <code>llm.py</code> (65), <code>evals.py</code> (133)</span></label></li>
+        <li><input type="checkbox" id="d2a" data-task="d2a"><label for="d2a"><span>Run multi-turn <code>shop ask</code> (follow-ups + <code>--user u1</code> orders from last week) and <code>uv run shop eval</code> (watch all 36 cases)</span></label></li>
+        <li><input type="checkbox" id="d2b" data-task="d2b"><label for="d2b"><span>Read <code>agent.py</code> (147), <code>tools.py</code> (182), <code>timeutil.py</code> (65), <code>guard.py</code> (130), <code>cache.py</code> (26), <code>llm.py</code> (65), <code>evals.py</code> (145)</span></label></li>
         <li><input type="checkbox" id="d2c" data-task="d2c"><label for="d2c"><span>Complete Break Labs #6–#9 (dates, IDOR, PII checksums, ungrounded prices) and verify <code>uv run pytest -q</code> stays green</span></label></li>
         <li><input type="checkbox" id="d2d" data-task="d2d"><label for="d2d"><span>20:30 IST out-loud drill: trace one full turn from user message → PII → tools → grounding → trace log</span></label></li>
       </ul>
@@ -1443,7 +1443,7 @@ uv run shop eval</code></pre>
 
   <h3>2.3 Scaling to 2 million products &amp; filter combinations (<code>index.py</code> + PostgreSQL <code>pgvector</code>)</h3>
   <p>
-    Central Tech explicitly asks about <strong>2 million records and filter combinations</strong>. Four concrete engineering ideas scale cleanly from this 2,048-row SQLite repo to 2M SKUs:
+    Central Tech explicitly asks about <strong>2 million records and filter combinations</strong>. Four concrete engineering ideas scale cleanly from this 2,327-row SQLite repo to 2M SKUs:
   </p>
 
   <figure class="diagram">
@@ -1486,7 +1486,7 @@ uv run shop eval</code></pre>
       <text x="28" y="202" font-family="JetBrains Mono,monospace" font-size="10.5" font-weight="700" fill="#A85A0C">1. PARENT VECTORS</text>
       <text x="28" y="224" font-family="Inter,sans-serif" font-size="11.5" fill="#17202B">Embed 1 vector per</text>
       <text x="28" y="241" font-family="Inter,sans-serif" font-size="11.5" font-weight="700" fill="#17202B">model_id, NOT per SKU.</text>
-      <text x="28" y="262" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">486 vs 2,048 rows (4.2×).</text>
+      <text x="28" y="262" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">552 vs 2,327 rows (4.2×).</text>
       <text x="28" y="279" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">At 2M SKUs → ~400k</text>
       <text x="28" y="296" font-family="Inter,sans-serif" font-size="11" fill="#4F5B69">vectors (1.2 GB float32).</text>
 
@@ -1862,12 +1862,16 @@ uv run shop eval</code></pre>
   </figure>
 
   <h3>4.3 Evals before opinions (<code>evals.py</code> + <code>evals/cases.json</code>)</h3>
+  <p><code>uv run shop load</code> builds <code>data/shop.db</code> from <code>src/shop/catalog.py</code>.
+    Try the navy trail shoe <code>SS-TRS01-008-NAVY</code>. Its product card says “in stock,” but size 42 is sold
+    out at CentralWorld. Only Central Ladprao has a pair in that size. The Central listing for the same shoe has
+    its own price and inventory. <code>evals/cases.json</code> contains the shopper questions and expected answers.</p>
   <div class="tbl">
     <table>
       <tr><th>Eval Slice</th><th>Count</th><th>What It Measures</th><th>Why It Matters in Production</th></tr>
-      <tr><td><code>search</code></td><td>9 cases</td><td>Exact filter field accuracy + whether returned products satisfy category, brand, colour, price, stock</td><td>Proves prompt/model tweaks don't silently drop Thai colours or budget limits</td></tr>
-      <tr><td><code>agent</code></td><td>7 cases</td><td>Right tool called, right args (e.g. <code>period="last_week"</code>, follow-up <code>product_id</code>), no IDOR leak, grounded prices, PII masked</td><td>Tests full multi-turn behaviour &amp; catches regressions across tools + prompt</td></tr>
-      <tr><td><code>guard</code></td><td>5 cases</td><td>Blocks prompt injection, coding, politics — AND allows Thai shopping &amp; returns questions</td><td>Tracks BOTH <strong>false negatives</strong> (attacks getting through) AND <strong>false positives</strong> (lost sales!)</td></tr>
+      <tr><td><code>search</code></td><td>14 cases</td><td>Exact filter field accuracy + whether returned products satisfy category, brand, colour, price, stock</td><td>Proves prompt/model tweaks don't silently drop Thai colours or budget limits</td></tr>
+      <tr><td><code>agent</code></td><td>15 cases</td><td>Right tool called, right args (e.g. <code>period="last_week"</code>, follow-up <code>product_id</code>), no IDOR leak, grounded prices, PII masked</td><td>Tests full multi-turn behaviour &amp; catches regressions across tools + prompt</td></tr>
+      <tr><td><code>guard</code></td><td>7 cases</td><td>Blocks prompt injection, coding, politics — AND allows Thai shopping &amp; returns questions</td><td>Tracks BOTH <strong>false negatives</strong> (attacks getting through) AND <strong>false positives</strong> (lost sales!)</td></tr>
     </table>
   </div>
 
@@ -2427,7 +2431,7 @@ uv run pytest -q</code></pre>
         <button type="button" class="btn drill-toggle">Show 4-part answer</button>
         <div class="drill-a">
           <div><b>What:</b> Extract structured filters with <code>json_schema</code> + Pydantic → exact SQL <code>WHERE</code> on B-tree indexes → hybrid BM25 + vector ranking on fuzzy text → RRF → collapse by <code>model_id</code>.</div>
-          <div><b>Why:</b> Vectors can't enforce <code>&lt;= 3000</code> or <code>in_stock</code>. Embedding 1 vector per model (486 vs 2,048 SKUs) cuts index size 4×.</div>
+          <div><b>Why:</b> Vectors can't enforce <code>&lt;= 3000</code> or <code>in_stock</code>. Embedding 1 vector per model (552 vs 2,327 SKUs) cuts index size 4×.</div>
           <div><b>Alternative:</b> Pure vector search with post-filtering — returns 0 hits when filters match &lt;1% of 2M rows.</div>
           <div><b>Breaks if:</b> HNSW stops early on rare filters → use <code>pgvector 0.8+</code> <code>hnsw.iterative_scan = relaxed_order</code>, composite index <code>(category, in_stock, price)</code>, and GIN/join for sizes.</div>
         </div>
@@ -2596,7 +2600,7 @@ uv run pytest -q</code></pre>
     <p>
       <strong>1. Draw first on system design:</strong> Start with 5 clean boxes — <em>Channel (LINE/Web) → Guard/PII → Orchestrator/Router (Fine-tuned + Gemini) → Hybrid Search + Live Tools (DB/Stock/Orders) → Output Grounding + Trace Logs</em> — then zoom into whichever box they probe.<br>
       <strong>2. Never bluff when you don't know:</strong> Say cleanly, <em>"I haven't operated X at that exact scale yet, here's how I'd reason from first principles and what I'd benchmark first."</em> Interviewers respect honest engineering far more than hand-waving.<br>
-      <strong>3. Tie theory to concrete numbers you measured:</strong> Mention <code>0.86 vs 0.36</code> Thai-EN embeddings, <code>486 vs 2,048</code> model vectors, <code>0.70 vs 0.97</code> intent F1, and the <code>"what's today's date?"</code> eval catch — real measurements signal real builders.<br>
+      <strong>3. Tie theory to concrete numbers you measured:</strong> Mention <code>0.86 vs 0.36</code> Thai-EN embeddings, <code>552 vs 2,327</code> model vectors, <code>0.70 vs 0.97</code> intent F1, and the <code>"what's today's date?"</code> eval catch — real measurements signal real builders.<br>
       <strong>4. Rest Monday night:</strong> No new code after 21:30 IST Monday. Clear thinking under follow-up questions beats one extra hour of reading.
     </p>
   </div>

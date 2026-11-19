@@ -164,7 +164,7 @@ def main():
     e.set_defaults(fn=cmd_explain_sql)
     q = sub.add_parser("ask", help="send messages to the assistant as consecutive turns")
     q.add_argument("messages", nargs="+")
-    q.add_argument("--user", default="u1", help="the logged-in customer (u1, u2, u3)")
+    q.add_argument("--user", default="u1", help="demo account ID (u1 has orders, u4 has no orders)")
     q.set_defaults(fn=cmd_ask)
     c = sub.add_parser("chat", help="interactive chat with the assistant")
     c.add_argument("--user", default="u1")

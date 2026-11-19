@@ -5,7 +5,8 @@ from types import SimpleNamespace as NS
 
 import pytest
 
-from shop import agent, db, guard, timeutil, tools
+from shop import agent, catalog, db, evals, guard, timeutil, tools
+from shop.query import Filters
 
 ALLOW = lambda masked: guard.Verdict(True)
 
@@ -59,6 +60,90 @@ def test_orders_only_for_the_session_user(conn):
 def test_user_id_is_not_a_tool_argument():
     for spec in tools.specs():
         assert "user_id" not in spec["function"]["parameters"]["properties"]
+
+
+@pytest.mark.parametrize("oid,user,status,basket", [
+    ("ORD-10060", "u1", "delivered", [("swim goggles", "one size", 3), ("swimsuit", "M", 1)]),
+    ("ORD-10061", "u2", "cancelled", [("hiking backpack", "20L", 1), ("hiking socks", "L", 2)]),
+])
+def test_demo_baskets(conn, oid, user, status, basket):
+    order = tools.get_order(tools.Ctx(conn, user, NOW), tools.OrderArgs(order_id=oid))
+    lines = conn.execute("SELECT category, size, qty FROM order_items JOIN products USING (product_id)"
+                         " WHERE order_id = ?", (oid,))
+    assert sorted(map(tuple, lines)) == sorted(basket)
+    assert order["status"] == status
+    assert order["total_thb"] == sum(i["qty"] * i["price_thb"] for i in order["items"])
+
+
+def test_generated_baskets_match_their_seller_sport_and_total(conn):
+    baskets = conn.execute("""
+        SELECT o.total, sum(i.qty * i.price) AS line_total, count(DISTINCT p.banner) AS sellers,
+               count(DISTINCT p.sport) AS sports, max(i.qty) AS largest_qty
+        FROM orders o JOIN order_items i USING (order_id) JOIN products p USING (product_id)
+        GROUP BY o.order_id
+    """).fetchall()
+    assert len(baskets) == 180
+    assert all(b["total"] == b["line_total"] and b["sellers"] == b["sports"] == 1 for b in baskets)
+    assert sum(b["largest_qty"] > 1 for b in baskets) > 2
+    assert conn.execute("SELECT count(*) FROM orders WHERE user_id='u4'").fetchone()[0] == 0
+
+
+def test_orders_for_a_partial_catalog_skip_incomplete_demo_baskets():
+    goggles = [p for p in catalog.products() if p["category"] == "swim goggles"]
+    orders, lines = catalog.orders(goggles, NOW)
+    order_ids = {o[0] for o in orders}
+    assert "ORD-10060" not in order_ids
+    assert {line[0] for line in lines} == order_ids
+
+
+@pytest.mark.parametrize("size,expected", [("42", True), ("44", False)])
+def test_search_eval_grades_stock_in_the_requested_size(conn, monkeypatch, size, expected):
+    hit = NS(product_id="SS-TRS01-008-NAVY")
+    monkeypatch.setattr(evals, "search", lambda *args: NS(hits=[hit], filters=Filters(size=size)))
+    case = {"message": "Available in my size?", "filters": {"size": size},
+            "results": {"in_stock": True, "stock_size": size}}
+    ok, _, _ = evals.run_search(conn, case)
+    assert ok == expected
+
+
+def test_trail_shoe_offers_keep_separate_prices_and_pickup_stock(conn):
+    ctx = tools.Ctx(conn, "u1", NOW)
+    ss, ce = "SS-TRS01-008-NAVY", "CE-TRS01-008-NAVY"
+    cards = [tools.get_product(ctx, tools.ProductArgs(product_id=pid)) for pid in (ss, ce)]
+    assert cards[0]["name"] == cards[1]["name"]
+    assert [(c["site"], c["price_thb"], c["in_stock"]) for c in cards] == [
+        ("Supersports", 6190, True), ("Central", 5490, True)]
+    for pid, store, size, expected in [
+        (ss, "CentralWorld", "42", 0), (ss, "CentralWorld", "41", 4),
+        (ss, "Central Ladprao", "42", 1), (ss, "Online", "42", 0),
+        (ce, "Online", "42", 3), (ce, "Central Ladprao", "42", 0),
+    ]:
+        result = tools.check_stock(ctx, tools.StockArgs(product_id=pid, size=size, store=store))
+        assert result["stock"] == [{"store": store, "size": size, "qty": expected}]
+
+
+def test_pickup_eval_requires_one_call_with_product_size_and_store(monkeypatch):
+    def fake_turn(session, message, conn, cache):
+        session.state["last_results"] = [("first", "Running shoe", 990)]
+        calls = [{"tool": "check_stock", "args": {"product_id": "first"}},
+                 {"tool": "check_stock", "args": {"product_id": "other", "size": "42", "store": "CentralWorld"}}]
+        return NS(trace=calls, tools_used=["check_stock"], answer="", usage={"prompt": 0, "completion": 0}, seconds=0)
+
+    monkeypatch.setattr(evals, "turn", fake_turn)
+    case = {"user": "u1", "turns": ["shoes", "size 42 at CentralWorld?"], "first_result_in_args": True,
+            "args": {"check_stock": {"size": "42", "store": "CentralWorld"}}}
+    ok, notes, _ = evals.run_agent(None, case, {})
+    assert not ok and any("check_stock not called" in n for n in notes)
+
+
+@pytest.mark.parametrize("quantity,expected", [(3, True), (13, False)])
+def test_eval_reads_bold_quantity(monkeypatch, quantity, expected):
+    reply = NS(trace=[], tools_used=[], answer=f"You bought **{quantity}** pairs of goggles.",
+               usage={"prompt": 0, "completion": 0}, seconds=0)
+    monkeypatch.setattr(evals, "turn", lambda *args, **kwargs: reply)
+    case = {"user": "u1", "turns": ["How many pairs?"], "answer_pattern": r"\b(3|three)\s+pairs?\b"}
+    ok, _, _ = evals.run_agent(None, case, {})
+    assert ok == expected
 
 
 def test_invalid_arguments_come_back_as_an_error_the_model_can_read(conn):

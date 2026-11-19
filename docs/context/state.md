@@ -2,7 +2,8 @@
 
 ## Built
 Steps A–D are done: hybrid search (A), the agent loop with tools (B), guardrails, PII masking, cache and evals (C),
-photo search, PDF tables and the intent classifier (D). 39 offline tests pass; `shop eval` passes 21/21.
+photo search, PDF tables and the intent classifier (D). All 49 offline tests passed. The live suite grew from
+21/21 to 36/36 on Gemini. The expanded run checked 34/34 filter fields and 60/60 returned products.
 
 ## Provider and models
 - The Gemini API, paid tier (prepaid credits from 19 Nov), through its OpenAI-compatible endpoint with the `openai`
@@ -13,7 +14,10 @@ photo search, PDF tables and the intent classifier (D). 39 offline tests pass; `
   (identical vectors), so the shipped vectors stay valid. All settings: `src/shop/config.py`.
 
 ## Shipped data
-- `vectors/model_vectors.npz`: 486 product-model vectors. `evals/intents_vectors.npz`: classifier vectors.
+- `shop load` builds the Git-ignored `data/shop.db` from `src/shop/catalog.py`. The expanded seed has 2,327 listings
+  across 24 categories, 49,770 size/store inventory records and 180 orders. The original had 2,048 listings,
+  44,760 inventory records and 60 orders. Supersports and Central have separate offers for the same navy trail shoe.
+- `vectors/model_vectors.npz`: 552 product-model vectors. `evals/intents_vectors.npz`: classifier vectors.
 - Both are Gemini embeddings. Changing the embedding model means re-embedding both (`shop load --fresh`,
   `shop intents train --features embed`).
 

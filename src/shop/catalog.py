@@ -7,6 +7,13 @@ from datetime import datetime, timedelta, timezone
 
 SEED = 7
 
+# The same navy trail shoe is listed twice. Each listing has its own price and inventory.
+# Omitted size/store combinations on these two listings have zero pairs.
+TRAIL_OFFERS = {
+    "SS-TRS01-008-NAVY": {"price": 6190, "stock": {("41", "CentralWorld"): 4, ("42", "Central Ladprao"): 1}},
+    "CE-TRS01-008-NAVY": {"price": 5490, "stock": {("42", "Online"): 3}},
+}
+
 STORES = ["CentralWorld", "Central Ladprao", "Central Rama 9", "Central Westgate", "Central Chiang Mai", "Online"]
 
 COLORS = ["black", "white", "grey", "navy", "blue", "red", "green", "pink", "orange", "yellow", "purple", "beige"]
@@ -74,9 +81,20 @@ CATEGORIES = [
      ["Forerunner", "Pace GPS"], [("GPS and heart rate", "มี GPS และวัดชีพจร"), ("10-day battery", "แบตอยู่ 10 วัน")]),
     ("cap", "running", "หมวก", ["Nike", "Adidas", "Under Armour"], (390, 990), ["one size"],
      ["Run Cap", "Aero Cap"], [("sweat band", "มีแถบซับเหงื่อ"), ("lightweight", "น้ำหนักเบา")]),
+    ("swim cap", "swimming", "หมวกว่ายน้ำ", ["Speedo", "Arena"], (290, 790), ["junior", "adult"],
+     ["Ripple", "Pool Fit", "Streamline"], [("silicone stretch fit", "ซิลิโคนยืดหยุ่น"),
+      ("room for long hair", "มีพื้นที่สำหรับผมยาว"), ("textured inner grip", "ผิวด้านในช่วยให้กระชับ")]),
+    ("goalkeeper gloves", "football", "ถุงมือผู้รักษาประตู", ["Adidas", "Puma", "Nike"], (690, 2990),
+     ["7", "8", "9", "10"], ["Box Keeper", "Goal Line", "Match Grip"],
+     [("latex grip palm", "ฝ่ามือลาเท็กซ์ยึดเกาะดี"), ("adjustable wrist strap", "สายรัดข้อมือปรับได้"),
+      ("padded fingers", "บุนวมนิ้วมือ")]),
+    ("shin guards", "football", "สนับแข้ง", ["Nike", "Puma", "Adidas"], (290, 1190), ["S", "M", "L"],
+     ["Pitch Shield", "Match Shell", "Flex Guard"], [("slip-in shell", "แผ่นป้องกันแบบสอด"),
+      ("foam backing", "บุโฟมด้านหลัง"), ("ventilated shell", "มีช่องระบายอากาศ")]),
 ]
 
-GENDERS = {"sports bra": ["women"], "leggings": ["women"], "swimsuit": ["men", "women"]}
+GENDERS = {"sports bra": ["women"], "leggings": ["women"], "swimsuit": ["men", "women"],
+           "swim cap": ["unisex"], "goalkeeper gloves": ["unisex"], "shin guards": ["unisex"]}
 
 
 def _price(rng: random.Random, lo: int, hi: int) -> int:
@@ -84,7 +102,7 @@ def _price(rng: random.Random, lo: int, hi: int) -> int:
 
 
 def products(seed: int = SEED) -> list[dict]:
-    """About 2,000 product rows. One row = one model in one colour on one banner (Supersports or Central)."""
+    """One row per model, colour and banner (Supersports or Central)."""
     rng = random.Random(seed)
     rows: list[dict] = []
     for ci, (cat, sport, cat_th, brands, (lo, hi), sizes, lines, feats) in enumerate(CATEGORIES):
@@ -111,6 +129,9 @@ def products(seed: int = SEED) -> list[dict]:
                         "brand": brand, "category": cat, "category_th": cat_th, "sport": sport, "gender": gender,
                         "color": color, "price": price, "sizes": sizes, "description": desc, "description_th": desc_th,
                     })
+    for row in rows:
+        if row["product_id"] in TRAIL_OFFERS:
+            row["price"] = TRAIL_OFFERS[row["product_id"]]["price"]
     return rows
 
 
@@ -120,29 +141,58 @@ def stock(rows: list[dict], seed: int = SEED) -> list[tuple]:
     out = []
     for p in rows:
         sold_out = rng.random() < 0.25
+        offer = TRAIL_OFFERS.get(p["product_id"])
         for size in p["sizes"]:
             for store in STORES:
                 qty = 0 if sold_out or rng.random() < 0.55 else rng.randint(1, 12)
+                if offer:
+                    qty = offer["stock"].get((size, store), 0)
                 out.append((p["product_id"], size, store, qty))
     return out
 
 
 def orders(rows: list[dict], now: datetime | None = None, seed: int = SEED) -> tuple[list[tuple], list[tuple]]:
-    """Orders for three demo users over the last 45 days, relative to `now` (UTC), so "last week" always has data."""
+    """Recent orders, with baskets grouped by seller and sport. Account u4 has no purchases."""
     rng = random.Random(seed + 2)
     now = now or datetime.now(timezone.utc)
     order_rows, items = [], []
-    for n in range(60):
-        user = rng.choice(["u1", "u2", "u3"])
+    by_seller_sport = {}
+    for p in rows:
+        by_seller_sport.setdefault((p["banner"], p["sport"]), []).append(p)
+    pools = list(by_seller_sport.values())
+    for n in range(180):
+        if n in (60, 61):  # the two fixed baskets below
+            continue
+        user = rng.choice(["u1", "u2", "u3", "u5", "u6", "u7", "u8"])
         created = now - timedelta(days=rng.uniform(0, 45), minutes=rng.randint(0, 600))
         age_days = (now - created).days
         status = ("cancelled" if rng.random() < 0.08 else "delivered" if age_days > 6
                   else "shipped" if age_days > 2 else "processing")
         oid = f"ORD-{10000 + n}"
         total = 0
-        for p in rng.sample(rows, k=rng.randint(1, 3)):
-            qty = 1
+        pool = rng.choice(pools)
+        for p in rng.sample(pool, k=rng.randint(1, min(3, len(pool)))):
+            qty = rng.choice((1, 1, 1, 1, 2, 3))
             items.append((oid, p["product_id"], rng.choice(p["sizes"]), qty, p["price"]))
             total += p["price"] * qty
+        order_rows.append((oid, user, created.isoformat(timespec="seconds"), status, total))
+
+    # Fixed baskets give quantity and status questions a repeatable answer on every reload.
+    baskets = [
+        ("ORD-10060", "u1", 8, "delivered", [("swim goggles", "one size", 3), ("swimsuit", "M", 1)]),
+        ("ORD-10061", "u2", 2, "cancelled", [("hiking backpack", "20L", 1), ("hiking socks", "L", 2)]),
+    ]
+    for oid, user, days_ago, status, basket in baskets:
+        basket_lines = []
+        for category, size, qty in basket:
+            p = next((p for p in rows if p["category"] == category and size in p["sizes"]), None)
+            if p is None:  # a caller can generate orders from a subset of the catalog
+                break
+            basket_lines.append((oid, p["product_id"], size, qty, p["price"]))
+        if len(basket_lines) != len(basket):
+            continue
+        items.extend(basket_lines)
+        total = sum(qty * price for _, _, _, qty, price in basket_lines)
+        created = now - timedelta(days=days_ago)
         order_rows.append((oid, user, created.isoformat(timespec="seconds"), status, total))
     return order_rows, items

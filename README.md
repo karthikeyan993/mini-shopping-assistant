@@ -56,7 +56,7 @@ uv run shop ask "show my orders from last week" --user u1
 ```
 
 ```bash
-uv run shop eval            # 21 cases, about 40 s on the paid tier (3 min on the free tier)
+uv run shop eval            # 36 cases across search, agent and guard
 ```
 
 ```bash
@@ -71,7 +71,7 @@ uv run shop size-chart samples/size_chart.pdf --chest 102
 uv run shop intents train "can I talk to a real person"
 ```
 
-Re-embed with your own key: `uv run shop load --fresh` (486 texts, seconds on the paid tier). On the free tier
+Re-embed with your own key: `uv run shop load --fresh` (552 texts, seconds on the paid tier). On the free tier
 (100 texts a minute and a daily cap) set `EMBED_PER_MINUTE=90` and use `--limit 45` to embed one batch.
 
 Point the chat at another provider without code changes. Embeddings keep their own settings (`EMBED_BASE_URL`,
@@ -95,6 +95,36 @@ export LLM_BASE_URL=http://localhost:11434/v1 LLM_API_KEY=ollama CHAT_MODEL=qwen
 
 Fireworks works the same way (`https://api.fireworks.ai/inference/v1`), for chat and, after re-embedding, for
 embeddings.
+
+## Where the data lives
+
+The study pages keep their text and examples in `GEMINI.html` and `docs/guide.html`. The runnable assistant reads
+`data/shop.db`. Run `uv run shop load` to rebuild that local SQLite file from `src/shop/catalog.py`. The default
+seed produces 2,327 product listings, 49,770 size/store stock records and 180 orders. Git ignores `data/`.
+The generator, the embeddings and the test cases are versioned. To see the 279 added listings in your own copy,
+run `uv run shop load`, then inspect the three new categories. Their names follow [Supersports' public catalog](https://www.supersports.co.th/en).
+
+```sql
+-- Run in sqlite3 data/shop.db
+SELECT category, COUNT(*) AS listings FROM products
+WHERE category IN ('swim cap', 'goalkeeper gloves', 'shin guards')
+GROUP BY category;
+-- goalkeeper gloves 94, shin guards 89, swim cap 96
+```
+
+Try a shopper who sees “in stock” before travelling to the store.
+
+```bash
+uv run shop ask "Can I pick up SS-TRS01-008-NAVY in size 42 at CentralWorld?" "Which branch has my size?"
+```
+
+The Supersports listing costs ฿6,190. CentralWorld has four pairs in size 41 and zero in 42. Central Ladprao
+has the last 42. The Central listing for the same navy shoe costs ฿5,490 and has three pairs in 42 online.
+Across the catalog, 169 listing/size combinations have zero units everywhere even though another size keeps
+the listing marked in stock. The goalkeeper-glove eval checks size 9 against the stock table for each result.
+
+Order history includes 99 orders with at least one multi-unit line. The swim-club order `ORD-10060` belongs
+to `u1` and contains three pairs of goggles and one swimsuit. Use `u4` to test an empty account.
 
 ## Steps
 
@@ -128,8 +158,8 @@ src/shop/
   intents.py  intent classifier: generated labelled data, TF-IDF or embeddings + logistic regression
   cli.py      shop load | search | ask | chat | eval | photo | size-chart | intents | explain-sql | export-vectors
 tests/        offline tests (no API calls)
-vectors/      model_vectors.npz: 486 × 768 Gemini embeddings
-evals/        cases.json (21 eval cases), intents.jsonl (324 labelled messages, Thai and English)
+vectors/      model_vectors.npz: 552 × 768 Gemini embeddings
+evals/        cases.json (36 shopper scenarios), intents.jsonl (324 labelled classifier messages in Thai and English)
 samples/      shirt_photo.jpg (generated with Gemini's image model), shirt.png (a drawing), size_chart.pdf,
               and the script that makes the drawing and the PDF
 ```
@@ -142,8 +172,8 @@ samples/      shirt_photo.jpg (generated with Gemini's image model), shirt.png (
   vLLM or a LiteLLM gateway; switching is an environment variable.
 - **Filters are extracted, not embedded.** The model fills a fixed JSON schema; pydantic drops any value that isn't in
   the catalog; SQL applies the filters exactly. Embeddings only rank the fuzzy remainder.
-- **One vector per model, not per row.** Colours and banners share a description and colour is a filter: 486 texts
-  instead of 2,048.
+- **One vector per model, not per row.** Colours and banners share a description and colour is a filter: 552 texts
+  instead of 2,327.
 - **A content hash per model** makes embedding incremental (only changed text) and resumable (a crash loses only the
   batches in flight).
 - **A client-side rate limiter** (`EMBED_PER_MINUTE`: 1,500 by default, 90 on the free tier's 100-a-minute limit)
@@ -159,7 +189,10 @@ samples/      shirt_photo.jpg (generated with Gemini's image model), shirt.png (
 - **Guardrails in layers**: PII masked before the model or the log sees it (Thai ID and card numbers validated by
   checksum, so order numbers and prices stay); regex rules then a small model screen scope and injection; every
   price in the answer must appear in a tool result, else one rewrite, else it is removed.
-- **Evals before opinions**: `shop eval` runs 21 cases (search, agent, guard). The first run caught a real false
+- **Repeatable retail cases.** A few fixed listings and baskets sit alongside the seeded random rows. They let us
+  test errors that random volume can miss, such as quoting the other seller's price or promising the wrong size.
+  Pass rates measure coverage of these examples. Estimating how often these errors occur requires real shopper traffic.
+- **Evals before opinions**: `shop eval` runs 36 cases (search, agent, guard). The first run caught a real false
   positive: "what's the date today?" was blocked as out of scope.
 - **Photo search reads attributes, then reuses the text search.** The dominant colour is the filter; a second
   colour goes into the ranking text (a striped navy-and-white shirt filtered on "navy OR white" returned white shirts).

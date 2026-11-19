@@ -6,6 +6,7 @@ Three kinds of case (evals/cases.json):
 - guard:  is a bad message blocked, and is a good one let through (false positives cost sales)?
 """
 import json
+import re
 import time
 from datetime import timedelta
 
@@ -43,11 +44,15 @@ def run_search(conn, c: dict) -> tuple[bool, list[str], dict]:
     rows = {x["product_id"]: x for x in conn.execute(
         f"SELECT * FROM products WHERE product_id IN ({','.join('?' * len(r.hits))})", [h.product_id for h in r.hits])}
     want = c["results"]
+    if "stock_size" in want:
+        size_in_stock = {r["product_id"] for r in conn.execute(
+            "SELECT DISTINCT product_id FROM stock WHERE size = ? AND qty > 0", (want["stock_size"],))}
     bad = 0
     for h in r.hits:
         p = rows[h.product_id]
         if (("category" in want and p["category"] != want["category"]) or ("brand" in want and p["brand"] != want["brand"])
                 or ("color" in want and p["color"] not in want["color"]) or ("max_price" in want and p["price"] > want["max_price"])
+                or ("stock_size" in want and h.product_id not in size_in_stock)
                 or (want.get("in_stock") and not p["in_stock"])):
             bad += 1
     if not r.hits:
@@ -60,10 +65,11 @@ def run_search(conn, c: dict) -> tuple[bool, list[str], dict]:
 def run_agent(conn, c: dict, ctx: dict) -> tuple[bool, list[str], dict]:
     s, cache, notes = Session(user_id=c["user"]), TTLCache(), []
     results = []
+    first = None
     for m in c["turns"]:
         results.append(turn(s, _fill(m, ctx), conn, cache=cache))
-        if len(c["turns"]) > 1 and len(results) == 1:
-            first = (s.state.get("last_results") or [[None]])[0][0]
+        if len(results) == 1 and s.state.get("last_results"):
+            first = s.state["last_results"][0][0]
     last = results[-1]
     calls = [t for t in last.trace if "tool" in t]
     for name in c.get("tools", []):
@@ -71,15 +77,21 @@ def run_agent(conn, c: dict, ctx: dict) -> tuple[bool, list[str], dict]:
             notes.append(f"expected tool {name}, got {last.tools_used}")
     if c.get("tools") == [] and last.tools_used:
         notes.append(f"expected no tools, got {last.tools_used}")
-    for name, args in c.get("args", {}).items():
+    expected_args = dict(c.get("args", {}))
+    if c.get("first_result_in_args"):
+        if first is None:
+            notes.append("follow-up had no first search result")
+        expected_args["check_stock"] = expected_args.get("check_stock", {}) | {"product_id": first}
+    for name, args in expected_args.items():
         if not any(t["tool"] == name and all(t["args"].get(k) == v for k, v in args.items()) for t in calls):
             notes.append(f"{name} not called with {args}")
-    if c.get("first_result_in_args") and not any(t["args"].get("product_id") == first for t in calls):
-        notes.append(f"follow-up didn't use the first result {first}")
-    answer = last.answer
+    # Grade the words the shopper sees. Markdown bold can split a phrase like "**3** pairs".
+    answer = last.answer.replace("**", "")
     for x in c.get("answer_has", []):
         if _fill(x, ctx) not in answer:
             notes.append(f"answer lacks {_fill(x, ctx)!r}")
+    if "answer_pattern" in c and not re.search(c["answer_pattern"], answer, re.IGNORECASE):
+        notes.append(f"answer doesn't match {c['answer_pattern']!r}")
     if c.get("answer_has_any") and not any(_fill(x, ctx).lower() in answer.lower() for x in c["answer_has_any"]):
         notes.append(f"answer has none of {c['answer_has_any']}")
     for x in c.get("answer_lacks", []):
@@ -90,7 +102,7 @@ def run_agent(conn, c: dict, ctx: dict) -> tuple[bool, list[str], dict]:
     if c.get("guard_trace") and not any(c["guard_trace"] in t.get("guard", "") for t in last.trace):
         notes.append(f"no '{c['guard_trace']}' in the trace")
     tokens = sum(r.usage["prompt"] + r.usage["completion"] for r in results)
-    return (not notes), notes, {"answer": answer[:300], "guards": [t["guard"] for t in last.trace if "guard" in t],
+    return (not notes), notes, {"answer": last.answer[:300], "guards": [t["guard"] for t in last.trace if "guard" in t],
                                 "seconds": sum(r.seconds for r in results), "tokens": tokens,
                                 "tools_ok": not any(n.startswith(("expected", "follow")) or " not called" in n for n in notes)}
 
