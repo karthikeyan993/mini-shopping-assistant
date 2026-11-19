@@ -59,7 +59,13 @@ def run_search(conn, c: dict) -> tuple[bool, list[str], dict]:
         notes.append("no results")
     if bad:
         notes.append(f"{bad}/{len(r.hits)} results break the constraints")
-    return (not notes), notes, {"filter_fields": (fields_ok, fields), "results_ok": (len(r.hits) - bad, len(r.hits))}
+    metrics = {"filter_fields": (fields_ok, fields), "results_ok": (len(r.hits) - bad, len(r.hits))}
+    if "top_model" in c:
+        first = r.hits[0].model_id if r.hits else None
+        metrics["top_model_ok"] = first == c["top_model"]
+        if not metrics["top_model_ok"]:
+            notes.append(f"first model {first}, expected {c['top_model']}")
+    return (not notes), notes, metrics
 
 
 def run_agent(conn, c: dict, ctx: dict) -> tuple[bool, list[str], dict]:
@@ -135,6 +141,9 @@ def run(conn, path: str = "evals/cases.json", only: str | None = None, pace: flo
     res = [r["results_ok"] for r in report if "results_ok" in r]
     if res:
         summary["results_meeting_constraints"] = f"{sum(a for a, _ in res)}/{sum(b for _, b in res)}"
+    ranked = [r for r, c in zip(report, cases) if "top_model" in c]
+    if ranked:
+        summary["correct_first_model"] = f"{sum(r.get('top_model_ok', False) for r in ranked)}/{len(ranked)}"
     g = [r for r in report if r["kind"] == "guard"]
     if g:
         summary["guard"] = f"{sum(r['pass'] for r in g)}/{len(g)}"

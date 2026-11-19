@@ -86,7 +86,8 @@ def get_product(ctx: Ctx, a: ProductArgs) -> dict:
         "SELECT DISTINCT color FROM products WHERE model_id = ? ORDER BY color", (r["model_id"],))]
     ctx.state["focus"] = (r["product_id"], r["name"])
     return _product_card(r) | {"brand": r["brand"], "category": r["category"], "sizes": r["sizes"].split(","),
-                               "colours_available": colours, "description": r["description"]}
+                               "colours_available": colours, "description": r["description"],
+                               "description_th": r["description_th"]}
 
 
 def check_stock(ctx: Ctx, a: StockArgs) -> dict:

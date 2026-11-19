@@ -1,11 +1,13 @@
 """Step B, offline: dates, tool permissions, and the agent loop driven by a fake model."""
 import json
 from datetime import datetime
+from pathlib import Path
 from types import SimpleNamespace as NS
 
 import pytest
 
 from shop import agent, catalog, db, evals, guard, timeutil, tools
+from shop.descriptions import MODEL_DETAILS
 from shop.query import Filters
 
 ALLOW = lambda masked: guard.Verdict(True)
@@ -104,6 +106,34 @@ def test_search_eval_grades_stock_in_the_requested_size(conn, monkeypatch, size,
             "results": {"in_stock": True, "stock_size": size}}
     ok, _, _ = evals.run_search(conn, case)
     assert ok == expected
+
+
+@pytest.mark.parametrize("order,expected", [
+    (["SG14-000", "SG14-001"], True), (["SG14-001", "SG14-000"], False), ([], False),
+])
+def test_search_eval_requires_the_right_model_first(conn, monkeypatch, order, expected):
+    hits = []
+    for model_id in order:
+        pid = conn.execute("SELECT product_id FROM products WHERE model_id=? LIMIT 1", (model_id,)).fetchone()[0]
+        hits.append(NS(model_id=model_id, product_id=pid))
+    monkeypatch.setattr(evals, "search", lambda *args: NS(hits=hits, filters=Filters()))
+    case = {"message": "Goggles for a dim pool", "filters": {}, "results": {"category": "swim goggles"},
+            "top_model": "SG14-000"}
+    ok, _, metrics = evals.run_search(conn, case)
+    assert ok == metrics["top_model_ok"] == expected
+
+
+def test_all_models_bilingual_and_rank_cases_point_to_matching_products(conn):
+    assert conn.execute("SELECT count(*) FROM products WHERE description='' OR description_th=''").fetchone()[0] == 0
+    cases = json.loads((Path(__file__).resolve().parents[1] / "evals/cases.json").read_text())
+    ranked = [c for c in cases if "top_model" in c]
+    assert {c["top_model"] for c in ranked} == set(MODEL_DETAILS)
+    for c in ranked:
+        row = conn.execute("SELECT * FROM products WHERE model_id=? LIMIT 1", (c["top_model"],)).fetchone()
+        assert (row["brand"], row["category"]) == (c["filters"]["brand"], c["filters"]["category"])
+        card = tools.get_product(tools.Ctx(conn, "u1", NOW), tools.ProductArgs(product_id=row["product_id"]))
+        en, th = MODEL_DETAILS[c["top_model"]]
+        assert en in card["description"] and th in card["description_th"]
 
 
 def test_trail_shoe_offers_keep_separate_prices_and_pickup_stock(conn):

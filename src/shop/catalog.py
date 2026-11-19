@@ -5,6 +5,8 @@ Real brand names, invented product lines: this is demo data, not real products o
 import random
 from datetime import datetime, timedelta, timezone
 
+from .descriptions import CATEGORY_DETAILS, MODEL_DETAILS
+
 SEED = 7
 
 # The same navy trail shoe is listed twice. Each listing has its own price and inventory.
@@ -56,7 +58,7 @@ CATEGORIES = [
      [("high waist, squat-proof", "เอวสูง ไม่โป๊เวลาย่อ"), ("sweat-wicking", "ระบายเหงื่อ")]),
     ("sports bra", "training", "สปอร์ตบรา", ["Nike", "Adidas", "Under Armour", "Puma"], (690, 1890), ["XS", "S", "M", "L"],
      ["Swoosh Support", "Power Bra", "Studio Bra"],
-     [("medium support", "ซัพพอร์ตระดับกลาง"), ("high support for running", "ซัพพอร์ตสูง เหมาะกับการวิ่ง")]),
+     [("wide underband", "แถบใต้อกกว้าง"), ("sweat-wicking lining", "ซับในช่วยระบายเหงื่อ")]),
     ("running jacket", "running", "แจ็คเก็ตวิ่ง", ["Nike", "Adidas", "The North Face", "Columbia"], (1490, 4990),
      ["S", "M", "L", "XL"], ["Wind Runner", "Rain Shell", "Packable"],
      [("water-repellent", "กันละอองน้ำ"), ("packs into its pocket", "พับเก็บในกระเป๋าได้")]),
@@ -116,9 +118,13 @@ def products(seed: int = SEED) -> list[dict]:
             gender = rng.choice(GENDERS.get(cat, ["men", "women", "unisex"]))
             price = _price(rng, lo, hi)
             f1, f2 = rng.sample(feats, k=min(2, len(feats)))
-            desc = f"{name} {cat} for {sport}. {f1[0].capitalize()}; {f2[0]}."
-            # About a third of products have a Thai description, like a bilingual catalog.
-            desc_th = (f"{cat_th} {BRAND_TH.get(brand, brand)} {f1[1]} {f2[1]}" if rng.random() < 0.35 else "")
+            # Reuse the old Thai-coverage draw so existing SKUs, prices and stock stay reproducible.
+            details = CATEGORY_DETAILS[cat]
+            en, th = details[int(rng.random() * len(details))]
+            body, body_th = MODEL_DETAILS.get(model_id, (
+                f"{f1[0].capitalize()}. {f2[0].capitalize()}. {en}", f"{f1[1]} {f2[1]} {th}"))
+            desc = f"{name} {cat}. {body}"
+            desc_th = f"{cat_th} {BRAND_TH.get(brand, brand)} {body_th}"
             for color in rng.sample(COLORS, k=rng.randint(2, 5)):
                 banners = ["Supersports"] + (["Central"] if rng.random() < 0.2 else [])  # same item on two sites
                 for banner in banners:

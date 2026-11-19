@@ -56,7 +56,7 @@ uv run shop ask "show my orders from last week" --user u1
 ```
 
 ```bash
-uv run shop eval            # 36 cases across search, agent and guard
+uv run shop eval            # 52 cases across search, agent and guard
 ```
 
 ```bash
@@ -126,6 +126,16 @@ the listing marked in stock. The goalkeeper-glove eval checks size 9 against the
 Order history includes 99 orders with at least one multi-unit line. The swim-club order `ORD-10060` belongs
 to `u1` and contains three pairs of goggles and one swimsuit. Use `u4` to test an empty account.
 
+All 552 models have descriptions in English and Thai. This question depends on a detail in the product copy.
+
+```bash
+uv run shop search "มีเป้เดินป่า Columbia ที่หยิบเสื้อกันฝนจากก้นเป้ได้เลยโดยไม่ต้องรื้อของด้านบนไหม"
+```
+
+The expected first result is the **Columbia Trail Pack 2**, model `HB11-011`. Its bottom zip opens into the main
+compartment. The Trail Pack 6 has a ventilated back, and the Trail Pack 4 includes a water reservoir and hose.
+All three satisfy the same brand and category filters.
+
 ## Steps
 
 | Step | What | Status |
@@ -142,6 +152,7 @@ src/shop/
   config.py   settings from environment variables; one OpenAI-compatible client
   llm.py      retries with backoff, embeddings, JSON (structured) output
   catalog.py  synthetic products, stock per store, orders
+  descriptions.py  paired English and Thai details for all categories, with individual copy for 12 similar models
   thai.py     normalisation and Thai word segmentation
   db.py       SQLite schema, indexes, FTS5 keyword index, loading
   index.py    the embedding job: per model, content hashes, rate limiter, export/import
@@ -159,12 +170,16 @@ src/shop/
   cli.py      shop load | search | ask | chat | eval | photo | size-chart | intents | explain-sql | export-vectors
 tests/        offline tests (no API calls)
 vectors/      model_vectors.npz: 552 × 768 Gemini embeddings
-evals/        cases.json (36 shopper scenarios), intents.jsonl (324 labelled classifier messages in Thai and English)
+evals/        cases.json (52 shopper scenarios), intents.jsonl (324 labelled classifier messages in Thai and English)
 samples/      shirt_photo.jpg (generated with Gemini's image model), shirt.png (a drawing), size_chart.pdf,
               and the script that makes the drawing and the PDF
 ```
 
 ## Decisions
+
+- **Score the first model.** Sixteen shopper questions cover four groups of similar products. Each question names
+  a need and a brand. The expected model must rank first, and any colour listing for that model counts. This
+  catches errors hidden by category-level checks. The questions are hand-authored examples of catalog distinctions.
 
 - **SQLite + FTS5 + numpy, not PostgreSQL + pgvector.** Zero setup for a four-day build, with the same ideas: SQL
   filters on real indexes, BM25 keyword ranking, vector ranking. The production version is below.
@@ -192,7 +207,7 @@ samples/      shirt_photo.jpg (generated with Gemini's image model), shirt.png (
 - **Repeatable retail cases.** A few fixed listings and baskets sit alongside the seeded random rows. They let us
   test errors that random volume can miss, such as quoting the other seller's price or promising the wrong size.
   Pass rates measure coverage of these examples. Estimating how often these errors occur requires real shopper traffic.
-- **Evals before opinions**: `shop eval` runs 36 cases (search, agent, guard). The first run caught a real false
+- **Evals before opinions**: `shop eval` runs 52 cases (search, agent, guard). The first run caught a real false
   positive: "what's the date today?" was blocked as out of scope.
 - **Photo search reads attributes, then reuses the text search.** The dominant colour is the filter; a second
   colour goes into the ranking text (a striped navy-and-white shirt filtered on "navy OR white" returned white shirts).
