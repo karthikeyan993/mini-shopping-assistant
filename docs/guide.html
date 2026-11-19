@@ -850,7 +850,7 @@ flowchart TD
 <tr><td><a href="#step-a">A · Catalog and search</a></td><td>Fake catalog (Thai and English), embeddings in batches with retries and content hashes, filter extraction with structured output, SQL filters plus vector ranking.</td><td>done</td></tr>
 <tr><td><a href="#step-b">B · Agent loop</a></td><td>The tool loop by hand, date injection, "orders last week", follow-ups through conversation state, fallback model.</td><td>done</td></tr>
 <tr><td><a href="#step-c">C · Guardrails, PII, evals, cache</a></td><td>PII masking, scope and injection checks, grounding check, a 21-case eval, trace log, a cache, swapping the chat model.</td><td>done</td></tr>
-<tr><td>D · Vision, PDF, classifier</td><td>Shirt photo → attributes → search, a size-chart PDF into rows, an intent classifier with F1 and a confusion matrix.</td><td>Sun morning</td></tr>
+<tr><td><a href="#step-d">D · Vision, PDF, classifier</a></td><td>Shirt photo → attributes → search, a size-chart PDF into rows, an intent classifier with F1 and a confusion matrix.</td><td>done</td></tr>
 </table></div>
 <div id="build-steps">
 
@@ -1145,7 +1145,83 @@ LLM_BASE_URL=http://localhost:11434/v1 LLM_API_KEY=ollama CHAT_MODEL=qwen3:8b FA
 <li><b>How would you evaluate a prompt change?</b> Run the eval set before and after, per kind of case, a few times because outputs vary; never ship on one good-looking example.</li>
 </ul>
 
-<p><i>Step D (vision, PDF, classifier) is added here when it's built.</i></p>
+<h3 id="step-d">Step D · Photo search, PDF tables, intent classifier</h3>
+<p class="pill">done · commit 231d09d</p>
+<h4>Run it</h4>
+<pre><code>uv run shop photo samples/shirt.png                         # then try a photo of your own shirt or shoes
+uv run shop size-chart samples/size_chart.pdf --chest 102
+uv run shop intents train "can I talk to a real person" "มีรองเท้าวิ่งไซส์ 42 ที่สาขาลาดพร้าวไหม"</code></pre>
+
+<h4>D1 · "Do you have this?" with a shirt photo (<code>vision.py</code>, S11)</h4>
+<pre><code>Read from the photo (1223 prompt tokens): {"is_product_photo": true, "category": "polo shirt",
+  "colors": ["navy", "white"], "pattern": "striped", "sleeve": "short", "details": "buttons, short sleeve, striped, collar"}
+Filters: {"category": "polo shirt", "colors": ["navy"], "text": "striped short sleeve white buttons, ..."}
+1. Nike Club Polo 6 · navy        ฿ 1,790  in stock
+2. Nike Club Polo 3 · navy        ฿   690  in stock
+3. Adidas Classic Pique 5 · navy  ฿   790  in stock</code></pre>
+<ul>
+<li><b>Path 1, attributes</b> (built): the photo goes to Flash-Lite as an image part with a JSON schema whose category and colour fields are the catalog's own values. The attributes become the same <code>Filters</code> a typed message produces, and step A's search runs unchanged.</li>
+<li><b>An image costs tokens</b>: this one was 1,223 prompt tokens, against about 15 for the words "navy striped polo". Resize uploads before sending.</li>
+<li><b>A lesson from the build</b>: the first version filtered on "navy OR white" and returned white polos. A striped shirt has two colours; filter on the dominant one and put the others in the ranking text.</li>
+<li>Guards in the prompt and schema: <code>is_product_photo</code> (a selfie or a cat gets "not a product photo"), and "don't guess brands" for <code>visible_text</code>.</li>
+<li><b>Path 2, visual similarity</b> (explained, not built: the synthetic catalog has no images). Embed every catalog image once with an image-text model (CLIP, SigLIP, or a multimodal embedding API), embed the uploaded photo at query time, and take nearest neighbours: "looks like this". In production, combine both: category from path 1 as a filter, ranking by visual similarity.</li>
+<li>Real photos bring real problems: crop the garment first (background clutter, several items in one photo), lighting shifts colours, and faces mean privacy rules. The sample here is a drawing because image generation isn't on the free tier, so try a phone photo on your Mac.</li>
+</ul>
+
+<h4>D2 · A size chart in a PDF (<code>pdftable.py</code>, S12)</h4>
+<pre><code>Text layer (pypdf), structure lost:
+  Size Chest (cm) Body length (cm) | XS 84-88 66 | S 88-96 68 | M 96-104 70 | ...
+Regex over the text layer found 6 rows
+Vision model read 6 rows from the page image: Running T-Shirt - Size Guide (unisex)
+Validation: ok
+Regex and model agree: True
+Chest 102 cm → size M (picked by code, not the model)</code></pre>
+<ul>
+<li><b>Text layer</b>: pypdf gives exact characters but no table structure. Here the rows survive as lines and a regex works. On the next supplier's layout it breaks: that brittleness is why teams use layout-aware parsers (Docling, Unstructured) or a vision model.</li>
+<li><b>Vision model</b>: Gemini's compatible endpoint rejected a PDF part (400), so the code renders each page to a PNG at 2× and sends it with the text layer. That's what Gemini's native API does with a PDF internally: each page as an image plus its text. 2.3 s, six correct rows in a schema.</li>
+<li><b>Validate</b>: ranges must be ranges, sizes must go up, a chest must be 50–180 cm. A test feeds a misread "196" and the check catches it.</li>
+<li><b>Code decides</b>: <code>pick_size</code> uses the numbers, with the chart's own rule on boundaries ("between sizes? choose the larger"): 102 → M, 104 → L, 140 → none. The model reads; it doesn't do the comparison.</li>
+</ul>
+
+<h4>D3 · Intent classifier (<code>intents.py</code>, S23)</h4>
+<ul>
+<li><b>Data</b>: 9 intents × 36 messages = 324, generated once by Gemini (half English, a third Thai, the rest mixed, with typos), committed in <code>evals/intents.jsonl</code>. That's distillation-style labelling; in real work a person checks it.</li>
+<li><b>Split</b>: stratified 80/20, so 259 to train and 65 held out, the same split every run.</li>
+<li><b>Model</b>: character n-grams (1–4) with TF-IDF, then logistic regression with balanced class weights. Character n-grams need no Thai word segmentation and tolerate typos. Training takes about 2 s on a laptop, and a prediction costs nothing.</li>
+</ul>
+<div class="tbl"><table>
+<tr><th>Intent</th><th>Precision</th><th>Recall</th><th>F1</th></tr>
+<tr><td>return_refund</td><td>1.00</td><td>0.86</td><td>0.92</td></tr>
+<tr><td>chitchat</td><td>0.88</td><td>0.88</td><td>0.88</td></tr>
+<tr><td>promotion</td><td>0.86</td><td>0.86</td><td>0.86</td></tr>
+<tr><td>order_status</td><td>0.70</td><td>1.00</td><td>0.82</td></tr>
+<tr><td>product_search</td><td>0.75</td><td>0.75</td><td>0.75</td></tr>
+<tr><td>product_question</td><td>0.54</td><td>1.00</td><td>0.70</td></tr>
+<tr><td>store_stock</td><td>0.80</td><td>0.57</td><td>0.67</td></tr>
+<tr><td>human_agent</td><td>0.75</td><td>0.43</td><td>0.55</td></tr>
+<tr><td>out_of_scope</td><td>0.25</td><td>0.14</td><td>0.18</td></tr>
+<tr><td><b>macro average</b></td><td>0.72</td><td>0.72</td><td><b>0.70</b></td></tr>
+</table></div>
+<ul>
+<li><b>Read the confusion matrix, not just the average.</b> "out_of_scope" fails because it's defined by what a message <i>isn't</i>: "How many calories in an apple?" shares no character patterns with other off-topic messages. "human_agent" leaks into "out_of_scope" and "order_status" ("Where is my order? This is ridiculous!" is both).</li>
+<li><b>Confidence</b>: with 9 classes and little data, top probabilities sit around 0.3–0.45, so many messages come out "unsure" at a 0.45 threshold. In a router, "unsure" goes to the LLM screen. Tune the threshold per class on validation data.</li>
+<li><b>Next rung</b>: embeddings + logistic regression (<code>--features embed</code>) should fix out_of_scope, because embeddings carry meaning rather than spelling. The run was stopped by the free tier's daily embedding limit (the error named 1,000 requests); the code checkpoints after every batch and the comparison is added here once it runs. After that: a fine-tuned small encoder (XLM-R, WangchanBERTa) if the numbers still aren't good enough.</li>
+<li><b>Where it plugs in</b>: in front of the agent. A confident in-scope intent skips the LLM screen (one call and about a second saved per turn) and goes straight to its workflow; confident out-of-scope gets the polite refusal for free; everything else goes to the LLM screen.</li>
+</ul>
+
+<h4>D4 · Try these</h4>
+<ol>
+<li>Photograph a shirt or shoe at home and run <code>shop photo</code>. Then a photo with two items. What does it pick?</li>
+<li>Edit <code>samples/make_samples.py</code> to swap two rows of the size chart, regenerate it (<code>uv run --extra samples python samples/make_samples.py</code>), run <code>shop size-chart</code>: does validation catch it?</li>
+<li>Add ten off-topic messages to <code>evals/intents.jsonl</code> and retrain: does out_of_scope improve?</li>
+</ol>
+
+<h4>D5 · Questions they could ask</h4>
+<ul>
+<li><b>How would you search by photo across 2 million products?</b> Image embeddings for every product image, computed offline, in a vector index; the photo embedded at query time; nearest neighbours filtered by the category the vision model reads. Plus garment cropping first.</li>
+<li><b>How do you read tables from thousands of supplier PDFs?</b> Layout-aware parsing or a vision model page by page into a schema, validation rules, spot checks on a sample, numeric tables into SQL, and code (not the model) for any arithmetic.</li>
+<li><b>Your classifier scores 0.70. Ship it?</b> Not as the only gate. Use it where it's confident, route "unsure" to the LLM, try embeddings next, and add real misrouted messages from the logs to the training data.</li>
+</ul>
 </div>
 
 <!-- ============================ Interview ============================ -->
