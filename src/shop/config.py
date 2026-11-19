@@ -13,6 +13,10 @@ API_KEY = os.environ.get("LLM_API_KEY", GEMINI_KEY)        # e.g. "ollama" for a
 # Embeddings stay on their own setting: the shipped vectors were made by gemini-embedding-001, and a query
 # embedded by any other model would land in a different vector space (see guide §2).
 EMBED_BASE_URL = os.environ.get("EMBED_BASE_URL", GEMINI_URL)
+EMBED_API_KEY = os.environ.get("EMBED_API_KEY", GEMINI_KEY)
+# The fallback can be a different provider (e.g. OpenRouter), so one provider's outage or quota doesn't stop the bot.
+FALLBACK_BASE_URL = os.environ.get("FALLBACK_BASE_URL", BASE_URL)
+FALLBACK_API_KEY = os.environ.get("FALLBACK_API_KEY", API_KEY)
 
 CHAT_MODEL = os.environ.get("CHAT_MODEL", "gemini-flash-lite-latest")   # answers, tool use
 FALLBACK_MODEL = os.environ.get("FALLBACK_MODEL", "gemini-2.5-flash")     # used when CHAT_MODEL keeps failing
@@ -37,4 +41,9 @@ def client() -> OpenAI:
 
 @lru_cache
 def embed_client() -> OpenAI:
-    return OpenAI(base_url=EMBED_BASE_URL, api_key=_need(GEMINI_KEY), timeout=60, max_retries=0)
+    return OpenAI(base_url=EMBED_BASE_URL, api_key=_need(EMBED_API_KEY), timeout=60, max_retries=0)
+
+
+@lru_cache
+def fallback_client() -> OpenAI:
+    return OpenAI(base_url=FALLBACK_BASE_URL, api_key=_need(FALLBACK_API_KEY), timeout=90, max_retries=0)

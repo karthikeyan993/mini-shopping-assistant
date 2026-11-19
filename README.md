@@ -73,11 +73,27 @@ Embed with your own key: `uv run shop load --fresh --limit 45` embeds one batch.
 minutes at the free tier's 100 texts a minute, and the free tier also caps texts per day, so use `--limit` unless you
 need all of them.
 
-Point the chat at another model server without code changes, e.g. a local model in Ollama:
-`LLM_BASE_URL=http://localhost:11434/v1 LLM_API_KEY=ollama CHAT_MODEL=qwen3:8b FAST_MODEL=qwen3:8b`.
-Embeddings keep their own setting (`EMBED_BASE_URL`, `EMBED_MODEL`): the shipped vectors come from
-gemini-embedding-001, and queries must be embedded by the same model. `FALLBACK_MODEL` is used when the chat model
-keeps failing.
+Point the chat at another provider without code changes. Embeddings keep their own settings (`EMBED_BASE_URL`,
+`EMBED_API_KEY`, `EMBED_MODEL`, `EMBED_DIM`): the shipped vectors come from gemini-embedding-001, and queries must be
+embedded by the same model. Switching the embedding model means `shop load --fresh` (re-embed everything).
+
+```bash
+# Gemini first, OpenRouter as the fallback when Gemini is rate-limited or down
+export FALLBACK_BASE_URL=https://openrouter.ai/api/v1 FALLBACK_API_KEY=$OPENROUTER_API_KEY FALLBACK_MODEL=google/gemini-3.5-flash-lite
+```
+
+```bash
+# OpenRouter for all chat calls (faster than Gemini's free tier)
+export LLM_BASE_URL=https://openrouter.ai/api/v1 LLM_API_KEY=$OPENROUTER_API_KEY CHAT_MODEL=google/gemini-3.5-flash-lite FAST_MODEL=google/gemini-3.5-flash-lite
+```
+
+```bash
+# A local model in Ollama for chat
+export LLM_BASE_URL=http://localhost:11434/v1 LLM_API_KEY=ollama CHAT_MODEL=qwen3:8b FAST_MODEL=qwen3:8b
+```
+
+Fireworks works the same way (`https://api.fireworks.ai/inference/v1`), for chat and, after re-embedding, for
+embeddings.
 
 ## Steps
 
@@ -148,6 +164,9 @@ samples/      shirt.png and size_chart.pdf for step D, and the script that makes
   part, so pages are rendered to images (what Gemini's native API does internally).
 - **The classifier starts at the cheapest rung**: character n-gram TF-IDF + logistic regression, macro F1 0.70; it
   can't learn "out of scope" (F1 0.18). Embeddings + logistic regression is the next rung.
+- **Two routes, one eval set.** Same 21 cases: Gemini free tier 21/21 in 3.2 min (11.6 s per agent case);
+  Gemini 3.5 Flash-Lite through OpenRouter 21/21 in 1.0 min (4.3 s). The fallback can be a different provider
+  (`FALLBACK_BASE_URL`); a simulated Gemini outage was answered through OpenRouter.
 - **Free-tier limits met during the build**: 100 embedded texts a minute and a 1,000 limit named in the daily-quota
   error. Hence the shipped vectors and the cached classifier vectors.
 - **Flash-Lite for filter extraction**: a small, frequent job. Its latency varies (1–8 s on the free tier), which the

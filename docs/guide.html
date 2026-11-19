@@ -1128,6 +1128,15 @@ out: call me on &lt;PHONE_1&gt; or &lt;EMAIL_1&gt;, ID &lt;THAI_ID_1&gt;, card &
 <pre><code># chat on a local model in Ollama, embeddings still Gemini (they must match the stored vectors)
 LLM_BASE_URL=http://localhost:11434/v1 LLM_API_KEY=ollama CHAT_MODEL=qwen3:8b FAST_MODEL=qwen3:8b uv run shop eval</code></pre>
 <p>The chat model is a setting; the embedding model is not, because the stored vectors and the query vectors must come from the same model (§2). Running the eval on both models is how you'd decide which tasks a cheaper model can take over (S21).</p>
+<p><b>Done for real, two routes, one eval set:</b></p>
+<div class="tbl"><table>
+<tr><th>Chat route</th><th>Eval</th><th>Whole run</th><th>Avg agent case</th></tr>
+<tr><td>Gemini API, free tier (Flash-Lite)</td><td>21/21</td><td>3.2 min</td><td>11.6 s, 2,822 tokens</td></tr>
+<tr><td>OpenRouter → Gemini 3.5 Flash-Lite</td><td>21/21</td><td>1.0 min</td><td>4.3 s, 2,177 tokens</td></tr>
+</table></div>
+<p>The fallback can be a different provider: <code>FALLBACK_BASE_URL</code> and <code>FALLBACK_API_KEY</code>. With the main endpoint made unreachable on purpose, the client retried twice, logged <code>gemini-flash-lite-latest unavailable (APIConnectionError); falling back</code>, and the answer came through OpenRouter. That's the S21 story with evidence: one provider's quota or outage doesn't stop the bot, and the same eval tells you the second route is safe.</p>
+<pre><code>export FALLBACK_BASE_URL=https://openrouter.ai/api/v1 FALLBACK_API_KEY=$OPENROUTER_API_KEY \
+       FALLBACK_MODEL=google/gemini-3.5-flash-lite</code></pre>
 
 <h4>C8 · Try these</h4>
 <ol>

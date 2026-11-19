@@ -6,7 +6,7 @@ import time
 import numpy as np
 import openai
 
-from .config import CHAT_MODEL, EMBED_DIM, EMBED_MODEL, FALLBACK_MODEL, client, embed_client
+from .config import CHAT_MODEL, EMBED_DIM, EMBED_MODEL, FALLBACK_MODEL, client, embed_client, fallback_client
 
 # Worth retrying: rate limits (429), timeouts, dropped connections, server errors (5xx).
 # Not worth retrying: 400 (our request is wrong), 401/403 (bad key).
@@ -54,9 +54,9 @@ def chat(messages: list[dict], tools: list[dict] | None = None, **kw):
     fall back to a second model: the same idea a gateway such as LiteLLM implements with routing rules.
     Returns (response, model_used)."""
     last = None
-    for model in dict.fromkeys([CHAT_MODEL, FALLBACK_MODEL]):  # de-duplicated, order kept
+    for make, model in [(client, CHAT_MODEL), (fallback_client, FALLBACK_MODEL)]:
         try:
-            resp = with_retries(lambda: client().chat.completions.create(
+            resp = with_retries(lambda: make().chat.completions.create(
                 model=model, messages=messages, tools=tools or None, temperature=0.2, **kw), attempts=3)
             return resp, model
         except RETRYABLE as e:
