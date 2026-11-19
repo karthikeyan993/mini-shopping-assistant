@@ -847,12 +847,140 @@ flowchart TD
 <p>Repo: <a href="https://github.com/karthikeyan993/mini-shopping-assistant">karthikeyan993/mini-shopping-assistant</a> (private). Built AI-native by Claude; every step is explained here in depth. Your job: run it on the Mac, change one thing per step, and be able to explain every line.</p>
 <div class="tbl"><table>
 <tr><th>Step</th><th>What it shows</th><th>Ready by</th></tr>
-<tr><td>A · Catalog and search</td><td>Fake catalog (Thai and English), embeddings in batches with retries and content hashes, filter extraction with structured output, SQL filters plus vector ranking.</td><td>Fri 19:00</td></tr>
+<tr><td><a href="#step-a">A · Catalog and search</a></td><td>Fake catalog (Thai and English), embeddings in batches with retries and content hashes, filter extraction with structured output, SQL filters plus vector ranking.</td><td>done</td></tr>
 <tr><td>B · Agent loop</td><td>The tool loop by hand, date injection, "orders last week", follow-up rewriting, streaming.</td><td>Sat morning</td></tr>
 <tr><td>C · Guardrails, PII, evals, cache</td><td>PII masking, scope and injection checks, grounding check, a 20-question eval, token logging, a cache, swapping Gemini for a local model through LiteLLM.</td><td>Sat morning</td></tr>
 <tr><td>D · Vision, PDF, classifier</td><td>Shirt photo → attributes → search, a size-chart PDF into rows, an intent classifier with F1 and a confusion matrix.</td><td>Sun morning</td></tr>
 </table></div>
-<p id="build-steps"><i>Step-by-step explanations appear here as each step is built.</i></p>
+<div id="build-steps">
+
+<h3 id="step-a">Step A · Catalog and hybrid search</h3>
+<p class="pill">done · commit bf9a13d</p>
+<h4>Run it on the Mac</h4>
+<pre><code>brew install uv                     # once
+git clone https://github.com/karthikeyan993/mini-shopping-assistant
+cd mini-shopping-assistant
+export GEMINI_API_KEY=...           # your AI Studio key
+uv sync --extra dev
+uv run shop load                    # catalog + shipped vectors, no embedding calls
+uv run shop search "blue running shoes in stock under 3000 baht"
+uv run pytest -q                    # 11 offline tests</code></pre>
+<p>What you should see (real output from the build):</p>
+<pre><code>Filters (gemini-flash-lite-latest): {"category": "running shoes", "sport": "running", "colors": ["blue"],
+                                     "max_price": 3000, "in_stock": true}
+SQL: SELECT ... FROM products WHERE category = ? AND sport = ? AND color IN (?) AND price &lt;= ? AND in_stock = 1
+2 candidates after filters → top 2 after fusion and collapsing colours
+
+1. Adidas Cloud Glide 2 · blue     ฿ 2,690  in stock  Supersports  rrf=0.0328  keyword#1  vector#1
+2. Adidas Daily Trainer 4 · blue   ฿ 1,890  in stock  Supersports  rrf=0.0323  keyword#2  vector#2</code></pre>
+
+<pre class="mermaid">
+flowchart LR
+  M[Message] --> P[query.py: Flash-Lite fills a JSON schema] --> V[pydantic drops values not in the catalog]
+  V --> W[search.py: parameterised SQL WHERE] --> C{Any rows?}
+  C -- no --> R[relax: price +20%, any colour, any size, any brand] --> W
+  C -- yes --> K[FTS5 BM25 over candidates]
+  C -- yes --> E[embed query, cosine over candidates]
+  K --> F[RRF fusion]
+  E --> F
+  F --> D[one row per model, max 2 per category] --> T[top k + timings]
+</pre>
+
+<h4>A1 · The data (<code>catalog.py</code>)</h4>
+<ul>
+<li><b>2,048 rows = 486 models</b> × 2–5 colours × banner. About 20% of model-colours are listed on both Supersports and Central: the "same product everywhere" problem (S6) built in on purpose.</li>
+<li>About a third of models have a <b>Thai description</b>; stock is per <b>size per store</b> (CentralWorld, Ladprao, Rama 9, Westgate, Chiang Mai, Online); about a quarter of rows are sold out everywhere.</li>
+<li><b>Orders are dated relative to now</b>, so "my orders from last week" always has data in step B.</li>
+<li><b>Deterministic</b> (fixed seed): your Mac and this build produce the same catalog, which is what lets the shipped vectors match.</li>
+</ul>
+
+<h4>A2 · Storage and indexes (<code>db.py</code>)</h4>
+<ul>
+<li><code>products.in_stock</code> is a <b>precomputed flag</b> derived from the stock table: the "flagging" line in your notes. Filtering on a flag is a cheap index lookup; the price is keeping it in sync (in production a stock-change event updates one row).</li>
+<li>The composite index <code>(category, in_stock, price)</code> follows the <b>leftmost-prefix rule</b>: it serves <i>category</i>, <i>category + in_stock</i> and <i>category + in_stock + price range</i>, but not price alone. Check it yourself:
+<pre><code>uv run shop explain-sql '{"category": "running shoes", "in_stock": true, "max_price": 3000}'
+SEARCH products USING INDEX idx_cat_stock_price (category=? AND in_stock=? AND price&lt;?)
+uv run shop explain-sql '{"colors": ["blue"]}'
+SEARCH products USING INDEX idx_color (color=?)</code></pre>
+Try <code>'{"max_price": 3000}'</code>: you get a full table SCAN. Same idea as <code>EXPLAIN ANALYZE</code> in PostgreSQL.</li>
+<li><code>products_fts</code> is an FTS5 virtual table: an inverted index with <b>BM25</b> ranking (term frequency, rarity of the word across documents, document length).</li>
+</ul>
+
+<h4>A3 · Thai text (<code>thai.py</code>)</h4>
+<ul>
+<li><b>Normalise</b> first: Unicode NFC (the same Thai character can be encoded two ways), Thai digits to Arabic digits, lowercase.</li>
+<li><b>Segment</b>: Thai has no spaces, so "รองเท้าวิ่งสีน้ำเงิน" is one "word" to a keyword index. PyThaiNLP's dictionary segmenter splits it into รองเท้าวิ่ง · สีน้ำเงิน.</li>
+<li><b>Domain dictionary</b>: out of the box it split <b>ไนกี้</b> (Nike) into ไน + กี้, because brand transliterations aren't in a general dictionary. Adding the catalog's brand, colour and category words keeps them whole. In a real system this list comes from the catalog and search logs.</li>
+<li>The <b>same segmenter on both sides</b>, index and query, exactly like using the same embedding model for documents and queries.</li>
+</ul>
+
+<h4>A4 · The embedding job (<code>index.py</code>)</h4>
+<ul>
+<li><b>What gets embedded</b>: model name, brand, category, sport, gender, descriptions. <b>Not</b> price, stock or colour: they change or are exact filters.</li>
+<li><b>One vector per model</b>: colours and banners share the text, so 486 texts instead of 2,048. At 2 million products the same idea (embed the parent, not every variant) can cut cost several-fold.</li>
+<li><b>Content hash</b> per model: the job embeds only models whose text hash changed. That one idea makes it incremental (background sync re-embeds only edits) and resumable (each finished batch is committed; a crash loses only batches in flight). <code>tests/test_index.py</code> proves it: change one description, exactly one embedding call.</li>
+<li><b>The 429 story</b> (this happened during the build): the free tier counts every embedded text as a request, 100 a minute. The first run sent 4 batches of 100 in parallel: one succeeded, the rest got <code>429 ... retry in 45s</code>. Backoff alone (1, 2, 4, 8 s) gives up before 45 s. The fix is a <b>client-side rate limiter</b>, a sliding 60-second window shared by the worker threads. Second run: 486 texts in about 8 minutes, zero errors.</li>
+<li><b>Normalise vectors</b>: Gemini's 768-number embeddings are a truncated 3,072-number vector and are not unit length. After normalising, cosine similarity is a plain dot product.</li>
+<li><b>Vectors are shipped</b> in <code>vectors/model_vectors.npz</code> (1.4 MB): your free-tier daily quota is spent on queries, not re-embedding. <code>shop load --fresh --limit 45</code> runs one real batch so you can watch the job.</li>
+</ul>
+<pre><code>class RateLimiter:
+    """At most per_minute texts in any 60-second window, shared by all worker threads."""
+    def acquire(self, n):
+        while True:
+            with self.lock:
+                drop entries older than 60 s
+                if used + n &lt;= per_minute: record (now, n); return
+                wait = time until the oldest entry leaves the window
+            sleep(wait)</code></pre>
+
+<h4>A5 · Filter extraction (<code>query.py</code>)</h4>
+<ul>
+<li>A hand-written <b>JSON schema</b>: category, sport and colours are enums taken from the catalog; prices are integers; every field is required but nullable. With <code>response_format: json_schema</code> the model must return exactly that shape.</li>
+<li><b>Rules in the system prompt</b>: fill a field only when the shopper said it; map colour words ("dark blue" → navy, "สีดำ" → black); baht; <code>in_stock</code> only when asked; the leftover wishes go into <code>text</code> as English keywords.</li>
+<li><b>Temperature 0</b>: extraction, not creativity.</li>
+<li><b>pydantic validators are the output guardrail</b>: a category the catalog doesn't have becomes <code>None</code> and can never reach SQL (test: "spaceships" is dropped).</li>
+<li><b>Model choice, measured</b>: a thinking model spent 293 hidden reasoning tokens to produce 20 tokens of JSON and took 16 s. Flash-Lite took 1.3 s on a good run and 7.5 s on a slow one. Small job → small model.</li>
+<li><b>Non-determinism, observed</b>: "a gift for my dad who likes hiking, under 2000 baht" once came back with no category (results: five water bottles), and once with an invented category "hiking backpack". Same input, same temperature. That's why extraction gets its own eval set in step C, and why the category diversity rule exists.</li>
+</ul>
+
+<h4>A6 · Search (<code>search.py</code>)</h4>
+<ol>
+<li><b>build_where</b>: filters become a WHERE clause with <code>?</code> parameters. Values never go into the SQL text, so a shopper typing SQL can't inject it.</li>
+<li><b>Relax on zero results</b>: price +20%, then any colour, any size, any brand, and the output says what was relaxed ("No black Nike running shoe; here are other colours").</li>
+<li><b>Keyword ranking</b>: FTS5 <code>MATCH</code> with each word quoted (so FTS operators typed by a user are treated as plain words), ordered by <code>bm25()</code>, kept only for candidates.</li>
+<li><b>Vector ranking</b>: embed the query, dot product with the candidates' vectors. Filtering first, then ranking, is <b>pre-filtering</b>: it can't return zero results because of the filter. Exact search over a few thousand rows takes milliseconds; at 2 million this becomes an HNSW index with filter-aware scanning (README, "Production version").</li>
+<li><b>RRF</b>: score = Σ 1/(60 + rank) over the two lists. It uses ranks only, because BM25 scores and cosine similarities are on different scales. A product near the top of both lists wins.</li>
+<li><b>Collapse</b>: keep the best row per model, so five colours of one shoe don't fill the list (S6).</li>
+<li><b>Diversify</b>: with no category filter, at most two results per category (S8).</li>
+<li><b>Timings</b>: the last line shows where the time went. Typical run: <code>filter extraction (LLM) 7487, SQL filters 0, keyword BM25 0, query embedding + cosine 166</code>. 98% of the latency is one LLM call, so that is where optimisation starts (S22): cache common queries, run extraction and embedding in parallel, or skip the LLM for simple keyword queries.</li>
+</ol>
+<pre><code>def rrf(*rankings, k=60):
+    scores = {}
+    for ranking in rankings:
+        for rank, pid in enumerate(ranking, start=1):
+            scores[pid] = scores.get(pid, 0.0) + 1.0 / (k + rank)
+    return scores</code></pre>
+
+<h4>A7 · Try these (one change at a time, predict first)</h4>
+<ol>
+<li>Run the blue shoes query, then the same without "in stock". How many candidates now?</li>
+<li><code>uv run shop search "รองเท้าวิ่ง ไนกี้ สีดำ ใส่วิ่งไกล"</code>: read the "Relaxed" line. Why did it relax?</li>
+<li><code>uv run shop explain-sql '{"max_price": 3000}'</code>: why a full scan? Which index would fix it?</li>
+<li>Change one description in <code>catalog.py</code>, run <code>uv run shop load</code>: the job should report 1 model to embed.</li>
+<li>Run the "gift for my dad" query three times and compare the filters.</li>
+</ol>
+
+<h4>A8 · Questions they could ask about this step</h4>
+<ul>
+<li><b>Why not put the whole catalog in Gemini's context?</b> 2 million products is far beyond any context window; even a slice costs tokens and seconds on every message, and stock changes by the minute. Retrieve a few candidates instead.</li>
+<li><b>Why RRF and not a weighted sum?</b> BM25 and cosine scores have different, query-dependent scales; ranks don't. RRF needs no tuning. With a labelled set you can learn weights later.</li>
+<li><b>Why isn't stock in the embedding?</b> It changes constantly and must be exact: it is a filter (the flag) and, at answer time, a live tool call (step B).</li>
+<li><b>What changes at 2 million products?</b> pgvector HNSW with iterative scans, or Vertex AI Vector Search; the batch embedding API; change events driving the same hash-based job; the keyword side in OpenSearch or Vertex AI Search.</li>
+<li><b>What if a query has zero results?</b> Relax the least important filter and say so, never silently.</li>
+</ul>
+
+<p><i>Steps B–D are added here as they are built.</i></p>
+</div>
 
 <!-- ============================ Interview ============================ -->
 <h2 id="interview">Stories, questions, company notes</h2>
