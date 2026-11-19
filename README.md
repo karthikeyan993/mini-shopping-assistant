@@ -4,8 +4,10 @@ A small shopping assistant for a sports store, built to learn AI engineering end
 guardrails, evals, vision. Synthetic catalog (real brand names, invented products and prices); not affiliated with any
 retailer.
 
-Every step is explained in depth in the guide: https://claude.ai/artifact/YPMMMc34owP2ZLWq3Sx878 (source:
-[docs/guide.html](docs/guide.html)).
+Built AI-native on 19–20 Nov 2026 as preparation for an AI Engineer interview (a retail chatbot team working with
+Gemini and fine-tuned open models): every module is something to run, read and explain. Every step is explained in
+depth in the guide: https://claude.ai/artifact/YPMMMc34owP2ZLWq3Sx878 (source: [docs/guide.html](docs/guide.html)).
+Working context for coding agents (Claude Code, Codex): [AGENTS.md](AGENTS.md).
 
 ## Run it (Mac)
 
@@ -54,7 +56,7 @@ uv run shop ask "show my orders from last week" --user u1
 ```
 
 ```bash
-uv run shop eval            # 21 cases, about 3 minutes on the free tier
+uv run shop eval            # 21 cases, about 40 s on the paid tier (3 min on the free tier)
 ```
 
 ```bash
@@ -69,9 +71,8 @@ uv run shop size-chart samples/size_chart.pdf --chest 102
 uv run shop intents train "can I talk to a real person"
 ```
 
-Embed with your own key: `uv run shop load --fresh --limit 45` embeds one batch. A full run is 486 texts, about 6
-minutes at the free tier's 100 texts a minute, and the free tier also caps texts per day, so use `--limit` unless you
-need all of them.
+Re-embed with your own key: `uv run shop load --fresh` (486 texts, seconds on the paid tier). On the free tier
+(100 texts a minute and a daily cap) set `EMBED_PER_MINUTE=90` and use `--limit 45` to embed one batch.
 
 Point the chat at another provider without code changes. Embeddings keep their own settings (`EMBED_BASE_URL`,
 `EMBED_API_KEY`, `EMBED_MODEL`, `EMBED_DIM`): the shipped vectors come from gemini-embedding-001, and queries must be
@@ -125,7 +126,7 @@ src/shop/
   vision.py   photo → attributes (vision model, JSON schema) → filters → search
   pdftable.py PDF size chart → text layer vs page image read by the model → validated rows → size picked in code
   intents.py  intent classifier: generated labelled data, TF-IDF or embeddings + logistic regression
-  cli.py      shop load | search | ask | chat | explain-sql | export-vectors
+  cli.py      shop load | search | ask | chat | eval | photo | size-chart | intents | explain-sql | export-vectors
 tests/        offline tests (no API calls)
 vectors/      model_vectors.npz: 486 × 768 Gemini embeddings
 evals/        cases.json (21 eval cases), intents.jsonl (324 labelled messages, Thai and English)
@@ -145,7 +146,8 @@ samples/      shirt_photo.jpg (generated with Gemini's image model), shirt.png (
   instead of 2,048.
 - **A content hash per model** makes embedding incremental (only changed text) and resumable (a crash loses only the
   batches in flight).
-- **A client-side rate limiter** at 90 texts a minute, under the free tier's 100, instead of retrying into 429s.
+- **A client-side rate limiter** (`EMBED_PER_MINUTE`: 1,500 by default, 90 on the free tier's 100-a-minute limit)
+  instead of retrying into 429s.
 - **Reciprocal Rank Fusion** combines keyword and vector ranks without calibrating their scores.
 - **Thai**: PyThaiNLP segmentation, with brand and colour spellings added to its dictionary so ไนกี้ stays one word.
 - **The agent loop is written by hand** (about 60 lines in `agent.py`): every step visible; a framework (LangGraph)
