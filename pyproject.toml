@@ -8,10 +8,17 @@ dependencies = [
     "pydantic>=2.6",     # validate what the model returns
     "numpy>=1.26",       # vector maths
     "pythainlp>=5.0",    # Thai word segmentation for keyword search
+    "scikit-learn>=1.9.1",
+    "pypdf>=7.1.1",
+    "pillow>=13.0.0",
+    "pypdfium2>=5.15.2",
 ]
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]
+samples = [
+    "fpdf2>=2.9.0",
+]
 
 [project.scripts]
 shop = "shop.cli:main"

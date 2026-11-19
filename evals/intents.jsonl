@@ -1,0 +1,324 @@
+{"text": "I want to return this shirt, it is too small.", "intent": "return_refund"}
+{"text": "Badminton shoes Asics", "intent": "product_search"}
+{"text": "Any sale coming up soon?", "intent": "promotion"}
+{"text": "ขอบคุณครับ", "intent": "chitchat"}
+{"text": "Any promotion for Nike shoes?", "intent": "promotion"}
+{"text": "Sale items available?", "intent": "promotion"}
+{"text": "What is the drop on these running shoes?", "intent": "product_question"}
+{"text": "Who is going to win the parliament vote?", "intent": "out_of_scope"}
+{"text": "ของจะ deliver วันไหนเหรอครับ", "intent": "order_status"}
+{"text": "ส่งของช้ามาก I want to complaint to manager", "intent": "human_agent"}
+{"text": "Thank u", "intent": "chitchat"}
+{"text": "Have a good one", "intent": "chitchat"}
+{"text": "เช็คสต็อกให้หน่อยครับ รองเท้าสตั๊ด Nike เบอร์ 42", "intent": "store_stock"}
+{"text": "ร้องเรียนการบริการ", "intent": "human_agent"}
+{"text": "ที่ร้านมีลูกฟุตบอล Molten ขายมั้ยครับ", "intent": "store_stock"}
+{"text": "สั่งรองเท้าไปเมื่อวาน จะได้ของวันไหนเหรอครับ", "intent": "order_status"}
+{"text": "คุยกับคน", "intent": "human_agent"}
+{"text": "Any weekend sale?", "intent": "promotion"}
+{"text": "มีบริการรับหน้าร้านไหม", "intent": "store_stock"}
+{"text": "ช่วยโอนให้ agent ทีครับ ตอบไม่ตรงคำถามเลย", "intent": "human_agent"}
+{"text": "เช็คสถานะให้หน่อยครับ", "intent": "order_status"}
+{"text": "Transfer to human", "intent": "human_agent"}
+{"text": "หาซื้อดัมบ์เบลปรับน้ำหนักได้", "intent": "product_search"}
+{"text": "ใช้แต้มแลกส่วนลดได้กี่บาท", "intent": "promotion"}
+{"text": "Do you have stock for Adidas Predator boots size 10?", "intent": "store_stock"}
+{"text": "Store open today?", "intent": "store_stock"}
+{"text": "มีคนอยู่ไหม ทำไมตอบแต่บอท", "intent": "human_agent"}
+{"text": "How's it going?", "intent": "chitchat"}
+{"text": "Do you have size L for the new Bangkok United jersey?", "intent": "store_stock"}
+{"text": "พิกัดร้านอยู่ตรงไหนคะ", "intent": "store_stock"}
+{"text": "Hello adminnn", "intent": "chitchat"}
+{"text": "Coupon expired already", "intent": "promotion"}
+{"text": "Find me a good badminton racket please", "intent": "product_search"}
+{"text": "Where is my stuff??", "intent": "order_status"}
+{"text": "ช่วยทำการบ้านฟิสิกส์ให้หน่อย", "intent": "out_of_scope"}
+{"text": "Branch at Central Ladprao open mai?", "intent": "store_stock"}
+{"text": "ขอโปรโมชั่นเด็ดๆ หน่อย", "intent": "promotion"}
+{"text": "Sports bra Nike high support", "intent": "product_search"}
+{"text": "Cycling helmet Kask size L", "intent": "product_search"}
+{"text": "หาซื้อแผ่นน้ำหนัก barbell", "intent": "product_search"}
+{"text": "ไม้เทนนิสหนักกี่ออนซ์คะ", "intent": "product_question"}
+{"text": "ติดต่อเจ้าหน้าที่ customer service", "intent": "human_agent"}
+{"text": "Want promo code plz", "intent": "promotion"}
+{"text": "Thanks!", "intent": "chitchat"}
+{"text": "Can you give me the tracking number for order #45892?", "intent": "order_status"}
+{"text": "อยากคุยกับคนค่ะ บอทไม่รู้เรื่อง", "intent": "human_agent"}
+{"text": "สบายดีไหมครับ", "intent": "chitchat"}
+{"text": "What material is the Nike Dri-FIT running shirt made of?", "intent": "product_question"}
+{"text": "Wrong size sent, I ordered L not S.", "intent": "return_refund"}
+{"text": "Open hours plz", "intent": "store_stock"}
+{"text": "Football boots under 2000 baht", "intent": "product_search"}
+{"text": "เสื้อวิ่งรุ่นนี้ใส่แล้วคันไหมคะ", "intent": "product_question"}
+{"text": "Nobody is helping me properly", "intent": "human_agent"}
+{"text": "เสื้อกีฬาตัวนี้แห้งไวไหมครับ", "intent": "product_question"}
+{"text": "Have a nice day kub", "intent": "chitchat"}
+{"text": "Any update on my shipping?", "intent": "order_status"}
+{"text": "Hello, I would like to know the current status of my recent purchase.", "intent": "order_status"}
+{"text": "หารองเท้าบาส Under Armour สีแดง", "intent": "product_search"}
+{"text": "Please send return label, wrong item.", "intent": "return_refund"}
+{"text": "ร้านเปิดวันหยุดราชการป่าว", "intent": "store_stock"}
+{"text": "How are you?", "intent": "chitchat"}
+{"text": "Any discount for bulk order?", "intent": "promotion"}
+{"text": "เล่าเรื่องตลกให้ฟังหน่อย", "intent": "out_of_scope"}
+{"text": "เป็นไข้หวัดใหญ่ต้องนอนกี่วัน", "intent": "out_of_scope"}
+{"text": "Is the red LeBron shoes available at Mega Bangna?", "intent": "store_stock"}
+{"text": "Puma football boots sale", "intent": "product_search"}
+{"text": "Thanks a lot", "intent": "chitchat"}
+{"text": "Foam roller for muscle pain", "intent": "product_search"}
+{"text": "Swimming goggles Arena anti fog", "intent": "product_search"}
+{"text": "Good morning", "intent": "chitchat"}
+{"text": "มีลูกฟุตบอล Molten เบอร์ 5 มั๊ย", "intent": "product_search"}
+{"text": "กินข้าวหรือยังครับ", "intent": "chitchat"}
+{"text": "ส่งผิดรุ่น ขอเปลี่ยนครับ", "intent": "return_refund"}
+{"text": "มีโปรโมชั่นส่วนลดอะไรบ้างคะ", "intent": "promotion"}
+{"text": "เลือกตั้ง", "intent": "out_of_scope"}
+{"text": "มีแว่นตากว่ายน้ำเด็กขายไหมคะ", "intent": "store_stock"}
+{"text": "ต้องการความช่วยเหลือจากพนักงาน", "intent": "human_agent"}
+{"text": "Any special discount for students?", "intent": "promotion"}
+{"text": "สาขาพระราม 9 มีเสื่อโยคะขายมั้ย", "intent": "store_stock"}
+{"text": "ส่งผิดไซส์คับ ขอเปลี่ยนเป็นไซส์ L", "intent": "return_refund"}
+{"text": "Open?", "intent": "store_stock"}
+{"text": "Morningrr", "intent": "chitchat"}
+{"text": "Where is my order งับ", "intent": "order_status"}
+{"text": "จักรวาลกว้างแค่ไหน", "intent": "out_of_scope"}
+{"text": "Where is my order?", "intent": "order_status"}
+{"text": "Hello!", "intent": "chitchat"}
+{"text": "Member discount available?", "intent": "promotion"}
+{"text": "เป็นไงบ้างคะ", "intent": "chitchat"}
+{"text": "ขอบคุณมากๆ นะคะ", "intent": "chitchat"}
+{"text": "สูตรทำเค้กช็อกโกแลต", "intent": "out_of_scope"}
+{"text": "มีหมวกวิ่งสีดำลดราคาป่าว", "intent": "product_search"}
+{"text": "ผ้าของกางเกงวิ่งรุ่นนี้ระบายเหงื่อได้ดีไหมครับ?", "intent": "product_question"}
+{"text": "ลดราคาตอนไหนคะ", "intent": "promotion"}
+{"text": "Fix this bug", "intent": "out_of_scope"}
+{"text": "Running belt for phone and keys", "intent": "product_search"}
+{"text": "Does the Adidas Predator boot run true to size or should I size up?", "intent": "product_question"}
+{"text": "Can u write a javascript function for me?", "intent": "out_of_scope"}
+{"text": "Bot ไม่ช่วยอะไรเลย ขอคุยกับ human หน่อย", "intent": "human_agent"}
+{"text": "Have a great day krub", "intent": "chitchat"}
+{"text": "เปลี่ยนไซส์ได้ไหมคับ อกมันแน่นไป", "intent": "return_refund"}
+{"text": "โค้ดส่วนลด 50 บาทใช้ยังไง", "intent": "promotion"}
+{"text": "ช่วยแก้โจทย์แคลคูลัสข้อนี้ให้หน่อยครับ", "intent": "out_of_scope"}
+{"text": "Who made you?", "intent": "out_of_scope"}
+{"text": "Check status please", "intent": "order_status"}
+{"text": "Good night krub", "intent": "chitchat"}
+{"text": "ลูกฟุตบอลเบอร์ 5 หนักกี่กรัม?", "intent": "product_question"}
+{"text": "ช่วยโอนสายให้คนจริง ๆ ที", "intent": "human_agent"}
+{"text": "Excuse me, is my order still on track to arrive by Friday?", "intent": "order_status"}
+{"text": "ชุดว่ายน้ำกัน UV ได้กี่เปอร์เซ็นต์ครับ", "intent": "product_question"}
+{"text": "What time does the store close?", "intent": "store_stock"}
+{"text": "Any clearance sale?", "intent": "promotion"}
+{"text": "บริการแย่มาก ขอ complain หน่อย", "intent": "human_agent"}
+{"text": "สาขาไหนมีดัมเบล 10 โลบ้างครับ", "intent": "store_stock"}
+{"text": "Wher is my parcel?", "intent": "order_status"}
+{"text": "Could you please check the estimated delivery date for my football boots?", "intent": "order_status"}
+{"text": "Closed yet?", "intent": "store_stock"}
+{"text": "Discount for new member?", "intent": "promotion"}
+{"text": "Where is your shop located?", "intent": "store_stock"}
+{"text": "What is the maximum weight capacity for this bench press?", "intent": "product_question"}
+{"text": "ของถึงไหนแล้วคะ", "intent": "order_status"}
+{"text": "มีของมั้ย", "intent": "store_stock"}
+{"text": "Customer service available?", "intent": "human_agent"}
+{"text": "เสื้อขาดอ่ะ ขอเปลี่ยนตัวใหม่", "intent": "return_refund"}
+{"text": "Compression tights Under Armour", "intent": "product_search"}
+{"text": "ขอคืนสินค้า สินค้ามีรอยขาด", "intent": "return_refund"}
+{"text": "Track หน่อยจ้า", "intent": "order_status"}
+{"text": "เมืองหลวงของออสเตรเลียคืออะไร", "intent": "out_of_scope"}
+{"text": "Is this tennis racket suitable for beginners?", "intent": "product_question"}
+{"text": "Check tracking #9921 ให้หน่อยครับ", "intent": "order_status"}
+{"text": "มีหมวกกันน็อคจักรยานไหมคับ", "intent": "store_stock"}
+{"text": "ถุงมือมวยไทยหนังแท้หรือหนังเทียมครับ", "intent": "product_question"}
+{"text": "มีกางเกงวิ่งขาสั้นผู้ชาย Adidas มั้ย", "intent": "product_search"}
+{"text": "ช่วยเขียน SQL query ให้หน่อย", "intent": "out_of_scope"}
+{"text": "Can I wash this hydration vest in the washing machine?", "intent": "product_question"}
+{"text": "What is the meaning of life?", "intent": "out_of_scope"}
+{"text": "How thick is this yoga mat?", "intent": "product_question"}
+{"text": "หาซื้อเชือกกระโดด Speed rope", "intent": "product_search"}
+{"text": "รองเท้าสตั๊ดปุ่ม AG กับ FG ต่างกันตรงไหนคะ", "intent": "product_question"}
+{"text": "ช่วยหน่อย ทำการบ้านไม่ทัน", "intent": "out_of_scope"}
+{"text": "What is the capital of France?", "intent": "out_of_scope"}
+{"text": "เลขพัสดุอะไรหรอคะ ยังไม่ได้เลย", "intent": "order_status"}
+{"text": "อยากได้โค้ดส่วนลดซื้อชุดกีฬา", "intent": "promotion"}
+{"text": "I haven't received any updates about my delivery this week.", "intent": "order_status"}
+{"text": "Basketball shoes Nike size 10", "intent": "product_search"}
+{"text": "มีกระเป๋าใส่รองเท้ากีฬาไหม", "intent": "product_search"}
+{"text": "เปลี่ยนได้ป่ะ สั่งผิดไซส์", "intent": "return_refund"}
+{"text": "รบกวนคืนเงินให้ด้วยนะครับ ของพังตอนส่ง", "intent": "return_refund"}
+{"text": "Hi team, just checking if my yoga mat order has left the warehouse?", "intent": "order_status"}
+{"text": "Ordered shoes size 42 but got 40. Need exchange.", "intent": "return_refund"}
+{"text": "Has my package shipped yet?", "intent": "order_status"}
+{"text": "What is the frame material of this badminton racket?", "intent": "product_question"}
+{"text": "ติดต่อพนักงานด่วน", "intent": "human_agent"}
+{"text": "ส่งของไม่ตรงปก ขอเงินคืนด่วนๆ", "intent": "return_refund"}
+{"text": "Where can I find your physical store?", "intent": "store_stock"}
+{"text": "รองเท้าฟุตบอลคู่นี้ใช้วิ่งบนหญ้าเทียมได้หรือเปล่าคะ", "intent": "product_question"}
+{"text": "Is this yoga mat anti-slip?", "intent": "product_question"}
+{"text": "Thank you so much", "intent": "chitchat"}
+{"text": "Track shipping", "intent": "order_status"}
+{"text": "ลดเยอะๆ หน่อยจ้า", "intent": "promotion"}
+{"text": "Is the handle on this dumbbell rubber or metal?", "intent": "product_question"}
+{"text": "มีโปรลด 50% สำหรับรองเท้าวิ่งไหมครับ", "intent": "promotion"}
+{"text": "Swimsuit Arena size M", "intent": "product_search"}
+{"text": "How to bake a chocolate cake?", "intent": "out_of_scope"}
+{"text": "Are these hiking boots waterproof?", "intent": "product_question"}
+{"text": "Is this protein shaker BPA free?", "intent": "product_question"}
+{"text": "ต้องการคุยกับคนจริง ๆ", "intent": "human_agent"}
+{"text": "ส่งของผิดรุ่นมาอ่ะคับ ทำไงดี", "intent": "return_refund"}
+{"text": "มลพิษทางการเมืองไทยตอนนี้แย่มาก", "intent": "out_of_scope"}
+{"text": "มีรองเท้าฟุตซอล Pan ไซส์ 41 ป่าว", "intent": "product_search"}
+{"text": "Boxing gloves Fairtex 12 oz", "intent": "product_search"}
+{"text": "Looking for yoga mat thick and non slip", "intent": "product_search"}
+{"text": "Is the basketball official size?", "intent": "product_question"}
+{"text": "Flash sale when?", "intent": "promotion"}
+{"text": "หาซื้อสนับเข่าวิ่ง", "intent": "product_search"}
+{"text": "ไม้แบด Yonex รุ่นนี้ก้านแข็งไหมคะ", "intent": "product_question"}
+{"text": "มีเสื้อทีมชาติไทยไซส์ M มั้ยครับ", "intent": "store_stock"}
+{"text": "Call staff", "intent": "human_agent"}
+{"text": "เสื้อฟุตบอลเกรด player กับ replica ต่างกันยังไงครับ", "intent": "product_question"}
+{"text": "How many calories in an apple?", "intent": "out_of_scope"}
+{"text": "ขอคุยกับเจ้าหน้าที่หน่อยครับ", "intent": "human_agent"}
+{"text": "Talk to human ด่วน ๆ เลย", "intent": "human_agent"}
+{"text": "สาขาบางนาเปิดถึงกี่โมงคะ", "intent": "store_stock"}
+{"text": "Connect me to human", "intent": "human_agent"}
+{"text": "สั่งของไปตั้งแต่ Monday แล้ว ยังไม่เห็นมาเลย", "intent": "order_status"}
+{"text": "Stock check please", "intent": "store_stock"}
+{"text": "Are you open on Sundays?", "intent": "store_stock"}
+{"text": "แก้โค้ด", "intent": "out_of_scope"}
+{"text": "ของพัง ขอเคลม", "intent": "return_refund"}
+{"text": "Looking for running shoes under 3000 baht", "intent": "product_search"}
+{"text": "Talk to human", "intent": "human_agent"}
+{"text": "When delivery?", "intent": "order_status"}
+{"text": "Order นี้ถึงไหนละคะ", "intent": "order_status"}
+{"text": "สวัสดีตอนเช้าครับ", "intent": "chitchat"}
+{"text": "ขอเลขออเดอร์หน่อย", "intent": "order_status"}
+{"text": "ไซส์ M เล็กไป ขอเปลี่ยนเป็น L ได้ป่าว", "intent": "return_refund"}
+{"text": "Human", "intent": "human_agent"}
+{"text": "Refund plz.", "intent": "return_refund"}
+{"text": "Thx!", "intent": "chitchat"}
+{"text": "ส่งของยังอ่า", "intent": "order_status"}
+{"text": "Refund req. Item quality is bad.", "intent": "return_refund"}
+{"text": "ปวดหัวตัวร้อนกินยาอะไรดี", "intent": "out_of_scope"}
+{"text": "Refund please, the box was totally crushed.", "intent": "return_refund"}
+{"text": "รัฐบาลชุดนี้จะอยู่รอดไหม", "intent": "out_of_scope"}
+{"text": "ไม่รับของละ ส่งช้าแถมผิดไซส์ ขอเงินคืน", "intent": "return_refund"}
+{"text": "สวัสดีครับ", "intent": "chitchat"}
+{"text": "Exchange size L to M pls.", "intent": "return_refund"}
+{"text": "มีเสื้อกล้ามวิ่งมาราธอนไหมครับ", "intent": "product_search"}
+{"text": "มีส่วนลด 10% สำหรับสมาชิกใหม่มั้ยคะ", "intent": "promotion"}
+{"text": "Stop using the bot, let me talk to someone", "intent": "human_agent"}
+{"text": "มีส่วนลดวันเกิดไหม", "intent": "promotion"}
+{"text": "Discount code pls", "intent": "promotion"}
+{"text": "Track order #88392 ให้หน่อยสิคะ", "intent": "order_status"}
+{"text": "Vote for me", "intent": "out_of_scope"}
+{"text": "Any member points promo?", "intent": "promotion"}
+{"text": "How to treat a sprained ankle at home?", "intent": "out_of_scope"}
+{"text": "Let me talk to a human agent", "intent": "human_agent"}
+{"text": "Is badminton net in stock?", "intent": "store_stock"}
+{"text": "ใครสร้างคุณขึ้นมา", "intent": "out_of_scope"}
+{"text": "วิธีลดน้ำหนักแบบเร่งด่วน", "intent": "out_of_scope"}
+{"text": "เช็ค status ให้หน่อยค่า", "intent": "order_status"}
+{"text": "Store hours?", "intent": "store_stock"}
+{"text": "Thank youuu", "intent": "chitchat"}
+{"text": "สวัสดีค่ะ", "intent": "chitchat"}
+{"text": "Item broken, need money back.", "intent": "return_refund"}
+{"text": "ส่งของวันนี้นะคะ?", "intent": "order_status"}
+{"text": "Do these football socks have grip pads on the bottom?", "intent": "product_question"}
+{"text": "Exchange possible? Too big.", "intent": "return_refund"}
+{"text": "Get me a manager", "intent": "human_agent"}
+{"text": "Got damaged item, need refund asap.", "intent": "return_refund"}
+{"text": "How are things?", "intent": "chitchat"}
+{"text": "ลดราคาเพิ่มได้อีกมั้ย", "intent": "promotion"}
+{"text": "หาซื้อลูกเทนนิส Wilson ครับ", "intent": "product_search"}
+{"text": "Is there a warranty for this heart rate monitor?", "intent": "product_question"}
+{"text": "รองเท้ามีตำหนิ ขอเปลี่ยนคู่ใหม่หน่อยครับ", "intent": "return_refund"}
+{"text": "Can you write a python script to sort a list?", "intent": "out_of_scope"}
+{"text": "How many liters is the North Face backpack?", "intent": "product_question"}
+{"text": "สาขาฟิวเจอร์มีลูกเทนนิสไหม", "intent": "store_stock"}
+{"text": "Human pls", "intent": "human_agent"}
+{"text": "How is your day?", "intent": "chitchat"}
+{"text": "Is it normal to have chest pain?", "intent": "out_of_scope"}
+{"text": "มีฮูล่าฮูปขายที่ร้านไหม", "intent": "store_stock"}
+{"text": "Can I talk to an agent please", "intent": "human_agent"}
+{"text": "Have any discount codes today?", "intent": "promotion"}
+{"text": "When will my running shoes arrive?", "intent": "order_status"}
+{"text": "What are you doing?", "intent": "chitchat"}
+{"text": "แย่มาก ส่งของชำรุดมาให้ ขอคืนเงินค่ะ", "intent": "return_refund"}
+{"text": "หาเสื้อฟุตบอลทีมแมนยูของแท้", "intent": "product_search"}
+{"text": "ขอบคุณค่า", "intent": "chitchat"}
+{"text": "Exchange pls, color fade.", "intent": "return_refund"}
+{"text": "เช็ค tracking ให้หน่อยครับ", "intent": "order_status"}
+{"text": "Status ออเดอร์ผมไปถึงไหนแล้วเนี่ย", "intent": "order_status"}
+{"text": "โค้ดลดราคาหมดอายุยัง", "intent": "promotion"}
+{"text": "Bad quality, return.", "intent": "return_refund"}
+{"text": "ระหว่าง Wilson กับ Head รケットอันไหนทนกว่ากัน?", "intent": "product_question"}
+{"text": "Medical help", "intent": "out_of_scope"}
+{"text": "Is this golf glove made of real leather?", "intent": "product_question"}
+{"text": "What do you think about the upcoming election?", "intent": "out_of_scope"}
+{"text": "Can I use these swimming goggles in saltwater?", "intent": "product_question"}
+{"text": "ขอโค้ดส่งฟรีหน่อยครับ", "intent": "promotion"}
+{"text": "แจกโค้ดส่วนลดหน่อยค้าบ", "intent": "promotion"}
+{"text": "รบกวนเช็คสถานะออเดอร์ #12938 ให้หน่อยครับ ส่งรึยัง", "intent": "order_status"}
+{"text": "Sale now?", "intent": "promotion"}
+{"text": "Sale today?", "intent": "promotion"}
+{"text": "Want to return. Not like the pic.", "intent": "return_refund"}
+{"text": "พนักงานไปไหนหมด ส่งของผิดไซส์เนี่ย", "intent": "human_agent"}
+{"text": "มีเสื้อกีฬาผู้หญิงสีชมพูมั้ยคะ", "intent": "product_search"}
+{"text": "มีโปรสะสมแต้ม x2 ไหม", "intent": "promotion"}
+{"text": "หวัดดีครับผม", "intent": "chitchat"}
+{"text": "สวัสดีค่าาา", "intent": "chitchat"}
+{"text": "มีรองเท้าวิ่ง Nike ไซส์ 9 เหลือไหมคะ", "intent": "store_stock"}
+{"text": "เสื้อฟุตบอลลิเวอร์พูลไซส์ S มีของป่าวคับ", "intent": "store_stock"}
+{"text": "เช็ค delivery date ให้หน่อยครับ", "intent": "order_status"}
+{"text": "Hey", "intent": "chitchat"}
+{"text": "Can you debug my Java code?", "intent": "out_of_scope"}
+{"text": "Hi there!", "intent": "chitchat"}
+{"text": "มีเสื้อแบดมินตัน Yonex ไซส์ L ไหมคะ", "intent": "store_stock"}
+{"text": "จักรยานออกกำลังกายตัวนี้ปรับความหนืดได้กี่ระดับครับ?", "intent": "product_question"}
+{"text": "Is the Yonex badminton racket in stock at Siam Paragon?", "intent": "store_stock"}
+{"text": "สถานะ order ตอนนี้คืออะไรคะ", "intent": "order_status"}
+{"text": "รองเท้าบาส Nike คู่นี้ support ข้อเท้าดีไหมครับ", "intent": "product_question"}
+{"text": "มีโปรโมชั่นผ่อน 0% ไหมครับ", "intent": "promotion"}
+{"text": "Write a quicksort algorithm in C++", "intent": "out_of_scope"}
+{"text": "สโตร์เปิดกี่โมงครับวันนี้", "intent": "store_stock"}
+{"text": "แย่มาก ส่งของผิด อยากคุยกับผู้จัดการ", "intent": "human_agent"}
+{"text": "ได้รับสินค้าแล้วครับ ผิดสี ส่งมาสีแดงแต่สั่งสีดำ ขอเปลี่ยนด่วนครับ", "intent": "return_refund"}
+{"text": "Can I get a refund? This doesn't match the description.", "intent": "return_refund"}
+{"text": "Do you have size M for the Arsenal home kit?", "intent": "store_stock"}
+{"text": "Wrong item received. I bought football boots, got running shoes.", "intent": "return_refund"}
+{"text": "Have a good day!", "intent": "chitchat"}
+{"text": "Tell me a joke", "intent": "out_of_scope"}
+{"text": "I have a serious complaint", "intent": "human_agent"}
+{"text": "ของเสียหายใช้งานไม่ได้ ขอเงินคืนด้วย", "intent": "return_refund"}
+{"text": "ขอบใจจ้า", "intent": "chitchat"}
+{"text": "หาหมอ", "intent": "out_of_scope"}
+{"text": "I want to speak to a real person right now", "intent": "human_agent"}
+{"text": "Can I exchange this racket for a heavier one?", "intent": "return_refund"}
+{"text": "มีโปรซื้อ 1 แถม 1 ป่าว", "intent": "promotion"}
+{"text": "Yonex carbonex badminton racket price?", "intent": "product_search"}
+{"text": "What's up", "intent": "chitchat"}
+{"text": "มีถุงเท้าวิ่งข้อสูงไหมคะ", "intent": "product_search"}
+{"text": "หาซื้อเป้ใส่วิ่งเทรล Salomon", "intent": "product_search"}
+{"text": "หาไม้เทนนิส Head Graphene", "intent": "product_search"}
+{"text": "มีกางเกงวิ่งผู้ชายไซส์ XL เหลือมั้ย", "intent": "store_stock"}
+{"text": "กางเกงเลกกิ้งเป้าไม่ย้อยใช่ไหมคะ", "intent": "product_question"}
+{"text": "What is your political stance?", "intent": "out_of_scope"}
+{"text": "Product is defective. The zipper is broken.", "intent": "return_refund"}
+{"text": "เปลี่ยนสีได้มั้ย สั่งผิดสี", "intent": "return_refund"}
+{"text": "Call me now", "intent": "human_agent"}
+{"text": "มีรองเท้าวิ่ง Nike สีขาวไซส์ 42 ไหมครับ", "intent": "product_search"}
+{"text": "Where is my order? This is ridiculous!", "intent": "human_agent"}
+{"text": "โปรโมชั่นบัตรเครดิตมีอะไรบ้างครับ", "intent": "promotion"}
+{"text": "Tennis balls Dunlop 4 cans", "intent": "product_search"}
+{"text": "อยากคุยกับคนค้าบบบ", "intent": "human_agent"}
+{"text": "Does the Garmin watch track swimming strokes?", "intent": "product_question"}
+{"text": "เช็คพัสดุด่วนจี๋", "intent": "order_status"}
+{"text": "Promo code not working", "intent": "promotion"}
+{"text": "Can i talk to staff please ต้องการคุยกับคน", "intent": "human_agent"}
+{"text": "Speak to human", "intent": "human_agent"}
+{"text": "Hi admin", "intent": "chitchat"}
+{"text": "What is the water resistance rating of this sports watch?", "intent": "product_question"}
+{"text": "Wrong color, want refund.", "intent": "return_refund"}
+{"text": "Golf gloves for men", "intent": "product_search"}
+{"text": "ช่วยแปลบทความการเมืองอันนี้ให้หน่อย", "intent": "out_of_scope"}
+{"text": "Can I replace the battery in this bike computer?", "intent": "product_question"}

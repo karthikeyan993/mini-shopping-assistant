@@ -95,6 +95,55 @@ def cmd_eval(args):
     print("Full report: data/eval_report.json")
 
 
+def cmd_photo(args):
+    from . import vision
+    conn = db.connect(DB_PATH)
+    attrs, r = vision.search_by_photo(conn, args.path, k=args.k)
+    tokens = attrs.pop("_tokens", None)
+    print(f"Read from the photo ({tokens} prompt tokens): {json.dumps(attrs, ensure_ascii=False)}")
+    if r is None:
+        print("Not a product photo.")
+        return
+    print(f"Filters: {json.dumps(r.filters.model_dump(exclude_defaults=True), ensure_ascii=False)}"
+          + (f"  relaxed: {', '.join(r.relaxed)}" if r.relaxed else ""))
+    for i, h in enumerate(r.hits, 1):
+        print(f"{i}. {h.name:<44} ฿{h.price:>6,}  {'in stock' if h.in_stock else 'sold out'}")
+
+
+def cmd_size_chart(args):
+    from . import pdftable
+    text = pdftable.text_layer(args.path)
+    print("Text layer (pypdf), structure lost:\n  " + text.replace("\n", "\n  ")[:600])
+    regex_rows = pdftable.rows_from_text(text)
+    print(f"\nRegex over the text layer found {len(regex_rows)} rows")
+    out = pdftable.read_with_model(args.path)
+    print(f"Vision model read {len(out['rows'])} rows from the page image: {out['title']}")
+    for r in out["rows"]:
+        print(f"  {r['size']:<4} chest {r['chest_min_cm']:g}-{r['chest_max_cm']:g} cm  length {r['length_cm']}")
+    problems = pdftable.validate(out["rows"])
+    print("Validation: " + ("ok" if not problems else "; ".join(problems)))
+    print(f"Regex and model agree: {regex_rows == out['rows']}")
+    if args.chest:
+        print(f"\nChest {args.chest} cm → size {pdftable.pick_size(out['rows'], args.chest)} (picked by code, not the model)")
+
+
+def cmd_intents(args):
+    from . import intents
+    if args.action == "generate":
+        print(intents.generate(), "messages written to", intents.DATA)
+        return
+    model, r = intents.train(features=args.features)
+    print(f"Features: {args.features}. Trained on {r['n_train']}, tested on {r['n_test']} held-out messages. "
+          f"Macro F1 {r['macro_f1']}\n")
+    print(r["report"])
+    short = [l[:8] for l in r["labels"]]
+    print("Confusion matrix (rows = true intent, columns = predicted):\n" + " " * 9 + " ".join(f"{l:>8}" for l in short))
+    for l, row in zip(short, r["confusion"]):
+        print(f"{l:>8} " + " ".join(f"{v:>8}" for v in row))
+    for m in args.messages or []:
+        print(f"\n{m!r} → {intents.predict(model, m)}")
+
+
 def main():
     p = argparse.ArgumentParser(prog="shop")
     sub = p.add_subparsers(required=True)
@@ -124,6 +173,19 @@ def main():
     v.add_argument("--only", help="a kind (search, agent, guard) or a case id")
     v.add_argument("--pace", type=float, default=2.0, help="seconds between cases (free-tier rate limits)")
     v.set_defaults(fn=cmd_eval)
+    ph = sub.add_parser("photo", help="search the catalog with a product photo")
+    ph.add_argument("path")
+    ph.add_argument("-k", type=int, default=5)
+    ph.set_defaults(fn=cmd_photo)
+    sc = sub.add_parser("size-chart", help="read a size table from a PDF and pick a size")
+    sc.add_argument("path")
+    sc.add_argument("--chest", type=float)
+    sc.set_defaults(fn=cmd_size_chart)
+    it = sub.add_parser("intents", help="train and evaluate the intent classifier")
+    it.add_argument("action", choices=["train", "generate"], nargs="?", default="train")
+    it.add_argument("--features", choices=["tfidf", "embed"], default="tfidf")
+    it.add_argument("messages", nargs="*", help="messages to classify after training")
+    it.set_defaults(fn=cmd_intents)
     x = sub.add_parser("export-vectors", help="write model vectors to vectors/model_vectors.npz")
     x.set_defaults(fn=lambda a: print(index.export_vectors(db.connect(DB_PATH)), "vectors exported"))
     args = p.parse_args()

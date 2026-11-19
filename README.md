@@ -57,6 +57,18 @@ uv run shop ask "show my orders from last week" --user u1
 uv run shop eval            # 21 cases, about 3 minutes on the free tier
 ```
 
+```bash
+uv run shop photo samples/shirt.png          # or a photo of your own
+```
+
+```bash
+uv run shop size-chart samples/size_chart.pdf --chest 102
+```
+
+```bash
+uv run shop intents train "can I talk to a real person"
+```
+
 Embed with your own key: `uv run shop load --fresh --limit 45` embeds one batch. A full run is 486 texts, about 6
 minutes at the free tier's 100 texts a minute, and the free tier also caps texts per day, so use `--limit` unless you
 need all of them.
@@ -74,7 +86,7 @@ keeps failing.
 | A | Catalog, filter extraction, hybrid search (SQL + BM25 + vectors), Thai segmentation, incremental embedding job | done |
 | B | Agent loop by hand: tools for search, stock and orders, date injection, follow-ups | done |
 | C | Guardrails, PII masking, grounding check, eval set, cache, model fallback | done |
-| D | Shirt photo → attributes → search, PDF size chart → rows, intent classifier | next |
+| D | Shirt photo → attributes → search, PDF size chart → rows, intent classifier | done |
 
 ## Layout
 
@@ -94,9 +106,14 @@ src/shop/
   guard.py    PII masking (with checksums), scope and injection screening, price grounding
   cache.py    a TTL cache for search results (Redis in production)
   evals.py    the eval runner for evals/cases.json
+  vision.py   photo → attributes (vision model, JSON schema) → filters → search
+  pdftable.py PDF size chart → text layer vs page image read by the model → validated rows → size picked in code
+  intents.py  intent classifier: generated labelled data, TF-IDF or embeddings + logistic regression
   cli.py      shop load | search | ask | chat | explain-sql | export-vectors
 tests/        offline tests (no API calls)
 vectors/      model_vectors.npz: 486 × 768 Gemini embeddings
+evals/        cases.json (21 eval cases), intents.jsonl (324 labelled messages, Thai and English)
+samples/      shirt.png and size_chart.pdf for step D, and the script that makes them
 ```
 
 ## Decisions
@@ -125,6 +142,14 @@ vectors/      model_vectors.npz: 486 × 768 Gemini embeddings
   price in the answer must appear in a tool result, else one rewrite, else it is removed.
 - **Evals before opinions**: `shop eval` runs 21 cases (search, agent, guard). The first run caught a real false
   positive: "what's the date today?" was blocked as out of scope.
+- **Photo search reads attributes, then reuses the text search.** The dominant colour is the filter; a second
+  colour goes into the ranking text (a striped navy-and-white shirt filtered on "navy OR white" returned white shirts).
+- **PDF tables: the model reads the page image, code validates and decides.** The compatible endpoint rejected a PDF
+  part, so pages are rendered to images (what Gemini's native API does internally).
+- **The classifier starts at the cheapest rung**: character n-gram TF-IDF + logistic regression, macro F1 0.70; it
+  can't learn "out of scope" (F1 0.18). Embeddings + logistic regression is the next rung.
+- **Free-tier limits met during the build**: 100 embedded texts a minute and a 1,000 limit named in the daily-quota
+  error. Hence the shipped vectors and the cached classifier vectors.
 - **Flash-Lite for filter extraction**: a small, frequent job. Its latency varies (1–8 s on the free tier), which the
   timing line in `shop search` shows.
 
