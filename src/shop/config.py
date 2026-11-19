@@ -7,29 +7,49 @@ from openai import OpenAI
 # Gemini's OpenAI-compatible endpoint. Point LLM_BASE_URL at Ollama (http://localhost:11434/v1)
 # or a LiteLLM proxy and nothing else in the code changes.
 GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"
-BASE_URL = os.environ.get("LLM_BASE_URL", GEMINI_URL)
+OPENROUTER_URL = "https://openrouter.ai/api/v1"
 GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "")
-API_KEY = os.environ.get("LLM_API_KEY", GEMINI_KEY)        # e.g. "ollama" for a local server
-# Embeddings stay on their own setting: the shipped vectors were made by gemini-embedding-001, and a query
-# embedded by any other model would land in a different vector space (see guide §2).
-EMBED_BASE_URL = os.environ.get("EMBED_BASE_URL", GEMINI_URL)
-EMBED_API_KEY = os.environ.get("EMBED_API_KEY", GEMINI_KEY)
-# The fallback can be a different provider (e.g. OpenRouter), so one provider's outage or quota doesn't stop the bot.
-FALLBACK_BASE_URL = os.environ.get("FALLBACK_BASE_URL", BASE_URL)
-FALLBACK_API_KEY = os.environ.get("FALLBACK_API_KEY", API_KEY)
+OPENROUTER_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 
-CHAT_MODEL = os.environ.get("CHAT_MODEL", "gemini-flash-lite-latest")   # answers, tool use
-FALLBACK_MODEL = os.environ.get("FALLBACK_MODEL", "gemini-2.5-flash")     # used when CHAT_MODEL keeps failing
-FAST_MODEL = os.environ.get("FAST_MODEL", "gemini-flash-lite-latest")   # small jobs: filter extraction
-EMBED_MODEL = os.environ.get("EMBED_MODEL", "gemini-embedding-001")
-EMBED_DIM = int(os.environ.get("EMBED_DIM", "768"))                     # 3072 by default; 768 is 4x smaller
+# One switch for the usual setups; every single setting below can still be overridden by its own variable.
+#   gemini      (default) everything on the Gemini API with GEMINI_API_KEY
+#   openrouter  chat and embeddings through OpenRouter with OPENROUTER_API_KEY. Same embedding model
+#               (google/gemini-embedding-001: identical vectors, so the shipped ones stay valid); the fallback
+#               goes to the Gemini API directly when GEMINI_API_KEY is set.
+PROVIDER = os.environ.get("SHOP_PROVIDER", "gemini")
+if PROVIDER == "openrouter":
+    _d = dict(url=OPENROUTER_URL, key=OPENROUTER_KEY, chat="google/gemini-3.5-flash-lite",
+              fast="google/gemini-3.5-flash-lite", embed="google/gemini-embedding-001",
+              fb_url=GEMINI_URL if GEMINI_KEY else OPENROUTER_URL, fb_key=GEMINI_KEY or OPENROUTER_KEY,
+              fb_model="gemini-flash-lite-latest" if GEMINI_KEY else "google/gemini-3.5-flash")
+else:
+    _d = dict(url=GEMINI_URL, key=GEMINI_KEY, chat="gemini-flash-lite-latest", fast="gemini-flash-lite-latest",
+              embed="gemini-embedding-001", fb_url=GEMINI_URL, fb_key=GEMINI_KEY, fb_model="gemini-2.5-flash")
+
+# Chat. Point LLM_BASE_URL at Ollama (http://localhost:11434/v1) or a LiteLLM proxy and nothing else changes.
+BASE_URL = os.environ.get("LLM_BASE_URL", _d["url"])
+API_KEY = os.environ.get("LLM_API_KEY", _d["key"])
+CHAT_MODEL = os.environ.get("CHAT_MODEL", _d["chat"])          # answers, tool use
+FAST_MODEL = os.environ.get("FAST_MODEL", _d["fast"])          # small jobs: filter extraction, screening
+# The fallback can be another provider, so one provider's outage or quota doesn't stop the bot.
+FALLBACK_BASE_URL = os.environ.get("FALLBACK_BASE_URL", _d["fb_url"])
+FALLBACK_API_KEY = os.environ.get("FALLBACK_API_KEY", _d["fb_key"])
+FALLBACK_MODEL = os.environ.get("FALLBACK_MODEL", _d["fb_model"])
+# Embeddings keep their own settings: the shipped vectors come from gemini-embedding-001, and a query embedded by
+# any other model lands in a different vector space (guide §2). Switching models means `shop load --fresh`.
+EMBED_BASE_URL = os.environ.get("EMBED_BASE_URL", _d["url"])
+EMBED_API_KEY = os.environ.get("EMBED_API_KEY", _d["key"])
+EMBED_MODEL = os.environ.get("EMBED_MODEL", _d["embed"])
+EMBED_DIM = int(os.environ.get("EMBED_DIM", "768"))            # 3072 by default; 768 is 4x smaller
+# Client-side rate limit for embedding jobs: the Gemini free tier allows 100 texts a minute.
+EMBED_PER_MINUTE = int(os.environ.get("EMBED_PER_MINUTE", "90" if PROVIDER == "gemini" else "3000"))
 
 DB_PATH = os.environ.get("SHOP_DB", "data/shop.db")
 
 
 def _need(key: str) -> str:
     if not key:
-        raise SystemExit("Set GEMINI_API_KEY to your Google AI Studio key, e.g. export GEMINI_API_KEY=...")
+        raise SystemExit("Set GEMINI_API_KEY (or OPENROUTER_API_KEY with SHOP_PROVIDER=openrouter); see the README.")
     return key
 
 

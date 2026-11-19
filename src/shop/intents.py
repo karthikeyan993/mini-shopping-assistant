@@ -71,7 +71,8 @@ class Embedder:
         from .index import RateLimiter
         from .llm import embed
         missing = [x for x in dict.fromkeys(X) if x not in self.cache]
-        limiter = RateLimiter(90)
+        from .config import EMBED_PER_MINUTE
+        limiter = RateLimiter(EMBED_PER_MINUTE)
         for i in range(0, len(missing), 45):
             batch = missing[i:i + 45]
             limiter.acquire(len(batch))

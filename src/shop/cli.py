@@ -4,7 +4,7 @@ import json
 import time
 
 from . import db, index
-from .config import DB_PATH, EMBED_MODEL, FAST_MODEL
+from .config import DB_PATH, EMBED_MODEL, EMBED_PER_MINUTE, FAST_MODEL
 from .cache import TTLCache
 from .search import build_where, search
 
@@ -22,7 +22,7 @@ def cmd_load(args):
             print(f"Imported {n} model vectors shipped in vectors/ (no API calls; use --fresh to embed yourself)")
     if not args.no_embed:
         print(f"Embedding what is missing or changed with {EMBED_MODEL} ...")
-        print(index.run(conn, batch_size=args.batch, workers=args.workers, per_minute=args.per_minute, limit=args.limit))
+        print(index.run(conn, batch_size=args.batch, workers=args.workers, per_minute=args.per_minute or EMBED_PER_MINUTE, limit=args.limit))
 
 
 def cmd_search(args):
@@ -152,7 +152,7 @@ def main():
     a.add_argument("--fresh", action="store_true", help="ignore the shipped vectors and embed with your own key")
     a.add_argument("--batch", type=int, default=45)
     a.add_argument("--workers", type=int, default=2)
-    a.add_argument("--per-minute", type=int, default=90, help="free tier allows 100 embedded texts a minute")
+    a.add_argument("--per-minute", type=int, default=None, help="texts per minute (default: EMBED_PER_MINUTE)")
     a.add_argument("--limit", type=int, default=None, help="embed only this many (a quick test)")
     a.set_defaults(fn=cmd_load)
     s = sub.add_parser("search", help="search the catalog with a natural-language message")

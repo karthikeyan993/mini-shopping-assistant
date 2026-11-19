@@ -18,7 +18,7 @@ git clone https://github.com/karthikeyan993/mini-shopping-assistant && cd mini-s
 ```
 
 ```bash
-export GEMINI_API_KEY=...   # your Google AI Studio key; never commit it
+export OPENROUTER_API_KEY=... SHOP_PROVIDER=openrouter   # fastest; or GEMINI_API_KEY=... for the Gemini API directly
 ```
 
 ```bash
@@ -162,8 +162,12 @@ samples/      shirt.png and size_chart.pdf for step D, and the script that makes
   colour goes into the ranking text (a striped navy-and-white shirt filtered on "navy OR white" returned white shirts).
 - **PDF tables: the model reads the page image, code validates and decides.** The compatible endpoint rejected a PDF
   part, so pages are rendered to images (what Gemini's native API does internally).
-- **The classifier starts at the cheapest rung**: character n-gram TF-IDF + logistic regression, macro F1 0.70; it
-  can't learn "out of scope" (F1 0.18). Embeddings + logistic regression is the next rung.
+- **The classifier ladder, measured** on the same 65 held-out messages: character n-gram TF-IDF + logistic regression,
+  macro F1 0.70 ("out of scope" 0.18: spelling can't capture "not about shopping"); Gemini embeddings + logistic
+  regression, macro F1 0.97 ("out of scope" 1.00). The messages are model-generated, so real chats will score lower.
+- **OpenRouter serves the same embedding model** (google/gemini-embedding-001): cosine 1.0 against the stored vector,
+  so `SHOP_PROVIDER=openrouter` keeps the shipped vectors. OpenAI's text-embedding-3-small scored Thai vs English
+  "blue running shoe" at 0.36 against Gemini's 0.86: for a Thai shop, test multilingual quality before choosing.
 - **Two routes, one eval set.** Same 21 cases: Gemini free tier 21/21 in 3.2 min (11.6 s per agent case);
   Gemini 3.5 Flash-Lite through OpenRouter 21/21 in 1.0 min (4.3 s). The fallback can be a different provider
   (`FALLBACK_BASE_URL`); a simulated Gemini outage was answered through OpenRouter.
