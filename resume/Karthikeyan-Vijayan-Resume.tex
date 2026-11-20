@@ -1,51 +1,29 @@
 %-------------------------
-% Resume in Latex
-% Author : Karthikeyan Vijayan
-%------------------------
+% Resume in LaTeX
+% Author: Karthikeyan Vijayan
+%-------------------------
 
 \documentclass[letterpaper,11pt]{article}
 
-\usepackage{latexsym}
 \usepackage[empty]{fullpage}
 \usepackage{titlesec}
-\usepackage{marvosym}
 \usepackage[usenames,dvipsnames]{color}
-\usepackage{verbatim}
 \usepackage{enumitem}
 \usepackage[hidelinks]{hyperref}
-\usepackage{fancyhdr}
 \usepackage[english]{babel}
 \usepackage{tabularx}
 
-
-
-%----------FONT OPTIONS----------
-% sans-serif
-% \usepackage[sfdefault]{FiraSans}
-% \usepackage[sfdefault]{roboto}
-% \usepackage[sfdefault]{noto-sans}
-% \usepackage[default]{sourcesanspro}
-
-% serif
-% \usepackage{CormorantGaramond}
-% \usepackage{charter}
-
-
-\pagestyle{fancy}
-\fancyhf{} % clear all header and footer fields
-\fancyfoot{}
-\renewcommand{\headrulewidth}{0pt}
-\renewcommand{\footrulewidth}{0pt}
+\pagestyle{empty}
 
 % Adjust margins
 \addtolength{\oddsidemargin}{-0.5in}
 \addtolength{\evensidemargin}{-0.5in}
 \addtolength{\textwidth}{1in}
-\addtolength{\topmargin}{-.57in}
-\addtolength{\textheight}{1.35in}
+\addtolength{\topmargin}{-.65in}
+\addtolength{\textheight}{1.45in}
 
 \urlstyle{same}
-\titlespacing*{\section}{0pt}{8pt}{4pt}
+\titlespacing*{\section}{0pt}{6pt}{3pt}
 
 \raggedbottom
 \raggedright
@@ -65,12 +43,12 @@
 %-------------------------
 % Experience layout: one employer margin, one date edge, and a fixed gap between jobs.
 \newcommand{\resumeSubheading}[4]{%
-  \par\addvspace{5pt}\noindent\textbf{#1}\hfill #2\par
+  \par\addvspace{4pt}\noindent\textbf{#1}\hfill #2\par
   {\small\itshape #3 \textperiodcentered{} #4\par}%
 }
 \newcommand{\resumeItemListStart}{%
   \begin{itemize}[leftmargin=1.6em,label=\textbullet,labelsep=.55em,
-    topsep=1.75pt,partopsep=0pt,parsep=0pt,itemsep=.8pt]\small
+    topsep=1.75pt,partopsep=0pt,parsep=0pt,itemsep=.3pt]\small
 }
 \newcommand{\resumeItem}[1]{\item #1}
 \newcommand{\resumeItemListEnd}{\end{itemize}}
@@ -83,7 +61,7 @@
 \setlength{\parindent}{0pt}\setlength{\parskip}{0pt}
 {\centering
     \textbf{\Huge \scshape Karthikeyan Vijayan} \\ \vspace{1pt}
-    \small +919789009097 $|$ \href{mailto:karthikeyanvijayan93@gmail.com}{\underline{karthikeyanvijayan93@gmail.com}} $|$ 
+    \small +91 97890 09097 $|$ \href{mailto:karthikeyanvijayan93@gmail.com}{\underline{karthikeyanvijayan93@gmail.com}} $|$
     \href{https://www.linkedin.com/in/karthikeyan993/}{\underline{linkedin.com/in/karthikeyan993}} $|$
     \href{https://github.com/karthikeyan993}{\underline{github.com/karthikeyan993}}
 \par}
@@ -92,33 +70,36 @@
 
   \resumeSubheading{Thoughtworks}{Mar 2025 -- Present}{Developer}{Bengaluru, India}
   \workGroup{Buddy AI support chatbot}
-    \resumeItem{Co-built and piloted Buddy, an IT chatbot that won a best client award from Zendesk. Built its Google Chat gateway on Cloud Run to connect Zendesk Advanced AI and custom agents.}
-    \resumeItem{Synced Confluence content and used an LLM to flag content gaps and technical failures in anonymized chats. Grouped questions by domain with embeddings and BigQuery ML and shared findings in Looker Studio.}
-    \resumeItem{Prototyped an API-backed chatbot with Google ADK for an internal talk on migrating Buddy from Zendesk. Proposed delivering actionable security alerts through the bot.}
-    \resumeItem{Help design and build a shared coding-agent harness for the whole team with OpenSpec, Herdr, Pi and OpenCode, drawing on nearly a year of AI-native development.}
+    \resumeItem{Co-built and piloted Buddy, an IT support chatbot that runs in Google Chat rather than the usual Zendesk web widget. The project helped Thoughtworks win Zendesk's annual best client award.}
+    \resumeItem{Built its Google Chat gateway on Cloud Run to connect Zendesk Advanced AI and custom agents.}
+    \resumeItem{Built an application that syncs Confluence pages into the Zendesk knowledge base with country tags, so Zendesk Advanced AI can serve each region its own content.}
+    \resumeItem{Used an LLM to flag content gaps and technical failures in anonymized chats. Grouped questions by domain with embeddings and BigQuery ML and shared the findings in Looker Studio.}
+    \resumeItem{Prototyped an API-backed chatbot with Google ADK for an internal talk on migrating Buddy from Zendesk. Proposed sending security alerts through the bot.}
+    \resumeItem{As the team's harness champion, design and build a shared coding-agent harness (OpenSpec, OpenCode, Herdr, Pi).}
     \resumeItem{Led a team of four handling maintenance and day-to-day operations after the initial build.}
   \resumeItemListEnd
   \workGroup{Security}
     \resumeItem{Serve as security champion for seven teams. Meet weekly with InfoSec, track policy adoption with leadership and coordinate fixes with the teams responsible.}
-    \resumeItem{Automated Snyk alerts in Google Chat with Apps Script and added a load balancer for Mythos readiness. Now prototyping self-healing workflows that use the harness to route Wiz findings and service-level alerts to cloud agents.}
+    \resumeItem{Took part in Thoughtworks' application hardening after the Claude Mythos release: tightened CircleCI pipelines, sped up fixes for security findings, added a load balancer and automated Snyk alerts in Google Chat.}
+    \resumeItem{Prototyping self-healing workflows that use the harness to route Wiz findings and service alerts to cloud agents.}
   \resumeItemListEnd
   \workGroup{Internal applications}
-    \resumeItem{Contributed to myTW, a React and Node.js request portal, and Asset Lifecycle Management (ALM), a separate Python application. The portal uses ALM to handle requests through ServiceNow.}
-    \resumeItem{Cut licensing costs by automating license renewal and release with Apps Script. Demonstrated a Backstage prototype for self-service access to AWS, Google Cloud and Azure.}
+    \resumeItem{Contributed to myTW, a React and Node.js request portal, and Asset Lifecycle Management (ALM), the Python service it uses to process requests through ServiceNow.}
+    \resumeItem{Automated license renewal and release with Apps Script, replacing a no-reply revocation email with a one-click response. Responses rose by 80\%, freeing unused licenses and cutting costs.}
+    \resumeItem{Demonstrated a Backstage prototype for self-service access to AWS, Google Cloud and Azure.}
+    \resumeItem{Contributed to the Thoughtworks Technology Radar.}
   \resumeItemListEnd
-  {\small Internal contributor to the Thoughtworks Technology Radar.\par}
-  % Additional interview example: contributed a reusable skill for auditing service-level objectives.
-  \resumeSubheading{Freelance}{2024 -- early 2025}{Web Developer (project-based)}{Chennai, India}
+  \resumeSubheading{Freelance}{2024 -- 2025}{Web Developer (project-based)}{Chennai, India}
   \resumeItemListStart
     \resumeItem{Built responsive registration forms and server-rendered pages for playu.in using JavaScript, Node.js and Hapi.}
     \resumeItem{Extracted data from 75,000 web pages with Node.js and Cheerio and stored the results in MongoDB.}
   \resumeItemListEnd
   \resumeSubheading{Central Tech}{Mar 2022 -- Dec 2023}{Full Stack Developer (Contractor)}{Remote}
   \resumeItemListStart
-    \resumeItem{Ran 20+ A/B tests on the conversion rate optimization (CRO) team using Google Optimize and Insider across the desktop and mobile sites for Central (CDS), Supersports, Powerbuy and Tops.}
+    \resumeItem{As part of the conversion rate optimization (CRO) team, ran 20+ A/B tests with Google Optimize and Insider across the desktop and mobile sites for Central (CDS), Supersports, Powerbuy and Tops.}
     \resumeItem{Helped develop the 10.10 campaign page, tested the 11.11 and 12.12 campaign pages, and shipped winning A/B variants to the React storefront.}
     \resumeItem{Used DOM manipulation to present the existing mobile checkout on one page, simplifying the flow and avoiding a costly change request. Supported the homepage migration with the AEM and product teams.}
-    \resumeItem{After migration, supported mobile testing with the UX team and analyzed conversion funnels for the product team.}
+    \resumeItem{After the migration, supported mobile testing with the UX team and analyzed conversion funnels for the product team.}
   \resumeItemListEnd
   \resumeSubheading{Amazon}{Jan 2020 -- Feb 2022}{Catalog Associate}{Chennai, India}
   \resumeItemListStart
@@ -129,12 +110,12 @@
 \section{Technical Skills}
 {\small
 \noindent\begin{tabularx}{\linewidth}{@{}l@{\hspace{1em}}>{\raggedright\arraybackslash}X@{}}
-  \textbf{Languages} & Python, JavaScript, TypeScript, SQL \\
+  \textbf{Languages} & Python, JavaScript, TypeScript, SQL, Google Apps Script, HTML, CSS \\
   \textbf{Applied AI} & Vertex AI, Google ADK, LiteLLM, BigQuery ML, LLM evaluation \\
-  \textbf{Backend} & Node.js (Express, Hapi, Fastify), FastAPI, Functions Framework for Python \\
+  \textbf{Frameworks} & React, Node.js (Express, Hapi, Fastify), FastAPI, Functions Framework for Python \\
   \textbf{Cloud} & Google Cloud (Cloud Run services and functions, IAM), AWS (Lambda) \\
   \textbf{Data} & Cloud SQL, BigQuery, MongoDB \\
-  \textbf{Infrastructure and security} & Docker, Terraform, CircleCI, GitHub Actions, Snyk, Wiz \\
+  \textbf{DevOps \& Security} & Docker, Terraform, CircleCI, GitHub Actions, Snyk, Wiz \\
 \end{tabularx}\par}
 
 \section{Education}
