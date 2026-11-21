@@ -9,6 +9,9 @@ Gemini and fine-tuned open models): every module is something to run, read and e
 depth in the guide: https://claude.ai/artifact/YPMMMc34owP2ZLWq3Sx878 (source: [docs/guide.html](docs/guide.html)).
 Working context for coding agents (Claude Code, Codex): [AGENTS.md](AGENTS.md).
 
+For a coding interview, open the [Emergency DSA guide](docs/dsa/index.html) in a browser.
+Start with the Python primer and eight core problems, then work through the remaining patterns as time allows.
+
 ## Run it (Mac)
 
 ```bash
@@ -168,7 +171,8 @@ src/shop/
   pdftable.py PDF size chart → text layer vs page image read by the model → validated rows → size picked in code
   intents.py  intent classifier: generated labelled data, TF-IDF or embeddings + logistic regression
   cli.py      shop load | search | ask | chat | eval | photo | size-chart | intents | explain-sql | export-vectors
-tests/        offline tests (no API calls)
+docs/dsa/     standalone Python interview guide with worked problems and practice links
+tests/        offline tests (no API calls), including the examples in the DSA guide
 vectors/      model_vectors.npz: 552 × 768 Gemini embeddings
 evals/        cases.json (52 shopper scenarios), intents.jsonl (324 labelled classifier messages in Thai and English)
 samples/      shirt_photo.jpg (generated with Gemini's image model), shirt.png (a drawing), size_chart.pdf,

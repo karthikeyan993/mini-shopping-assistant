@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Emergency DSA · Python interview field guide</title>
+<style>
+:root {color-scheme:light;--paper:#fbfaf6;--ink:#172c29;--quiet:#465d55;--line:#cdd6ce;--mint:#daebe0;--green:#14563d;--rust:#8b3c22;--mono:"SFMono-Regular",Consolas,monospace}
+*{box-sizing:border-box}html{scroll-padding-top:1rem}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.62 "Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+a{color:var(--green);text-underline-offset:.2em}a:hover{text-decoration-thickness:2px}a:focus-visible,summary:focus-visible{outline:3px solid #c3662a;outline-offset:3px}
+main{width:min(1140px,100%);margin:auto;padding:0 clamp(16px,4vw,56px) 4rem}.hero{background:#173a31;color:#fff;padding:clamp(28px,6vw,70px) max(calc((100vw - 1030px)/2),5vw);border-bottom:6px solid #a8caad}.hero p{max-width:63ch;color:#e1ede5}.hero a{display:inline-block;background:#dcefd4;color:#153c2c;padding:.6rem 1.1rem;border-radius:5px;font-weight:700}
+h1,h2,h3{font-family:"Iowan Old Style",Georgia,serif;line-height:1.1;letter-spacing:-.028em}h1{font-size:clamp(2.8rem,7vw,5.6rem);margin:.22em 0}h2{font-size:clamp(2rem,4vw,3rem);margin:0 0 .5em}h3{font-size:clamp(1.55rem,3vw,2.25rem);margin:.2em 0}.hero .meta{color:#b9d8c2}.meta,figcaption,.group{color:var(--quiet);font:700 .75rem/1.5 var(--mono);text-transform:uppercase;letter-spacing:.08em}
+section{padding-top:3.4rem}p{margin:.65em 0 1em}.routes,.primer-grid,.toc{display:grid;gap:1rem}.routes,.toc{grid-template-columns:repeat(auto-fit,minmax(min(100%,235px),1fr))}.primer-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,355px),1fr))}
+.panel,.toc nav{border:1px solid var(--line);border-radius:8px;padding:1.1rem 1.25rem;background:#fff}.panel h3,.toc h3{font-weight:700;font-family:inherit;font-size:1.08rem;letter-spacing:0;line-height:1.45}.panel p:last-child{margin-bottom:0}.panel:first-child{border-top:3px solid var(--green)}.routes .panel{border-top:3px solid var(--green)}.toc nav{background:#f0f4ed}.toc ol{padding-left:1.9rem}.toc li{margin:.4rem 0}.toc li::marker{font: .78rem var(--mono);color:var(--quiet)}.toc a{font-size:.94rem}.toc .problem-name{display:block;font-size:.82rem;color:var(--quiet);text-decoration-color:#9ba99d}
+.lesson{border-top:2px solid var(--green);padding:1.7rem 0 1rem;margin:1.6rem auto 2.2rem;max-width:810px;scroll-margin-top:1rem}.lesson header{border-bottom:1px solid var(--line)}.problem{margin:.35em 0 .8em;font-weight:650}.problem small{font: .75rem var(--mono);color:var(--quiet);white-space:nowrap}.needs{color:var(--quiet);font-size:.92rem}.needs b,.lesson details p b{margin-right:.35rem}.task{font-size:1.16rem;font-weight:620}h4{margin:1.15rem 0 .25rem;font-size:1rem}h4+p{margin-top:.25rem}
+figure{margin:1.1rem 0;background:#eaf1e8;border-left:3px solid #729d7c;padding:.85rem 1rem;border-radius:0 5px 5px 0}
+pre{font: .88rem/1.55 var(--mono);overflow-x:auto;tab-size:4;margin:.4rem 0;padding:.2rem 0}code{font-family:var(--mono);font-size:.94em}pre code{font:inherit}details{border:1px solid var(--line);background:#fff;border-radius:6px;margin:.6rem 0;padding:0 1rem}summary{cursor:pointer;color:var(--green);font-weight:670;padding:.72rem 0}details[open] summary{margin-bottom:.25rem}pre.solution{background:#182e29;color:#f3f8ec;border-radius:4px;padding:1rem}pre.checks{background:#f0f3ec;padding:.8rem;color:#22382f}
+.lesson footer{text-align:right;font-size:.82rem}.part{border-bottom:1px solid var(--line);padding-bottom:.75rem}.part p{max-width:72ch;margin-bottom:0}.end{max-width:810px;margin:auto}ul,ol{padding-left:1.4rem}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;text-align:left}td,th{padding:.55em .6em;vertical-align:top;border-bottom:1px solid var(--line)}th{color:var(--green)}.skip{position:absolute;left:-10000px}.skip:focus{left:8px;top:8px;background:white;padding:.4rem}
+@media print{body{background:white;font-size:11pt}.hero{background:white;color:var(--ink);padding:0;border:0}.hero p,.hero .meta{color:var(--ink)}main{width:100%;padding:0}.hero a,.lesson footer,.skip{display:none}section{padding-top:1.2rem}.lesson{break-before:page;margin:0;max-width:none}pre{white-space:pre-wrap;overflow:visible;font-size:9pt}pre.solution{background:#f3f3f3;color:#111}details{border:0;padding:0}.routes,.primer-grid,.toc{display:block}.panel,.toc nav{margin-bottom:.5rem}figure,pre,h2,h3,summary{break-inside:avoid}h2,h3,summary{break-after:avoid}}
+</style></head><body>
+<a href="#primer" class="skip">Skip to prerequisites</a>
+<header class="hero"><div class="meta">Interview preparation / Python 3</div>
+<h1>Emergency DSA</h1>
+<p>Twenty problems, ordered by what you need to know first. Start with eight. For each one, draw the changing state, write the Python from memory, and explain why it works.</p>
+<a href="#primer">Start with prerequisites ↓</a></header>
+<main><section id="route"><h2>Choose your study time</h2><div class="routes">
+<div class="panel"><h3>Three hours · lessons 1–8</h3><p>Spend 20 minutes on the primer, 18 minutes on each of the first eight problems, then 16 minutes redoing the one you found hardest. This pass ends with trees and graph traversal.</p></div>
+<div class="panel"><h3>One more hour · 9, 10, 16</h3><p>Spend 20 minutes each on merging ranges, keeping the top k scores, and making a take-or-skip decision. For lesson 16, read the take/skip diagram in 14 first.</p></div>
+<div class="panel"><h3>Time for full coverage · 1–20</h3><p>Follow the study order below. In an 18-minute drill, spend 2 minutes clarifying, 4 drawing, 8 coding and 4 testing aloud. Open the solution after your attempt. Redo any miss from a blank page the next day.</p></div></div></section>
+
+<section id="primer"><h2>Before problem one</h2><p>DSA stands for data structures and algorithms. A data structure determines which operations are cheap. An algorithm is the sequence of steps that turns the input into the answer.</p>
+<div class="primer-grid"><div class="panel"><h3>Read Python by hand</h3>
+<p><code>nums = [4, 7, 9]</code> puts 4 at index 0. <code>nums[-1]</code> is 9. <code>nums[0:2]</code> copies [4, 7]. The stop index is excluded. Strings use the same indexing rules and their characters cannot be overwritten.</p>
+<pre><code>for i, x in enumerate([4, 7]):
+    print(i, x)
+# 0 4
+# 1 7</code></pre>
+<p><code>range(3)</code> yields 0, 1, 2. A <code>while</code> loop repeats while its condition is true. <code>return</code> ends the function immediately. Indentation tells you which statements repeat.</p></div>
+<div class="panel"><h3>Estimate cost from the input</h3><p>Let n count input items. Doubling n leaves constant work alone, adds about one step to binary search, doubles a linear scan, and roughly quadruples all-pairs work. Two consecutive scans are still O(n).</p>
+<pre><code>n = 1,024 items
+one lookup           ≈ 1 operation on average
+halve until one      = 10 halvings
+visit every item     = 1,024 visits
+try all i &lt; j pairs  = 523,776 pairs</code></pre>
+<p>Big O describes growth. Name extra storage separately, including call frames. Copying a list of n elements takes O(n) time and space.</p></div>
+<div class="panel"><h3>Pick a container by operation</h3>
+<div class="table-wrap"><table><thead><tr><th>Need</th><th>Python operation</th></tr></thead><tbody>
+<tr><td>Index or use a stack</td><td><code>a[i]</code>, <code>a.append(x)</code>, <code>a.pop()</code>. Appending is amortized O(1).</td></tr>
+<tr><td>Membership or lookup</td><td><code>x in seen</code> on a set, <code>d.get(x, 0)</code> on a dict. Expected O(1). Membership in a list scans it.</td></tr>
+<tr><td>Oldest item first</td><td><code>deque.append(x)</code> and <code>deque.popleft()</code> take O(1). A list’s <code>pop(0)</code> shifts later items.</td></tr>
+<tr><td>Smallest item first</td><td><code>heapq.heappush(h, x)</code> and <code>heapq.heappop(h)</code>. Peek with <code>h[0]</code>.</td></tr>
+</tbody></table></div><p>Use <code>set()</code> for an empty set. <code>{}</code> creates an empty dictionary. Dictionary keys and set members must be hashable, such as a string, integer, or pair of integers.</p></div>
+<div class="panel"><h3>See what Python shares</h3>
+<pre><code>a = [4]
+b = a
+b.append(7)    # a is now [4, 7]
+c = a.copy()
+c.pop()        # a still holds [4, 7]</code></pre>
+<p>Assignment gives an object another name. A shallow copy creates a new outer list and shares any children. For independent matrix rows use <code>[[0] * cols for _ in range(rows)]</code>. A node reference works like a name. Setting <code>node.next</code> changes the link on that object.</p></div>
+<div class="panel"><h3>Recognize repeated work</h3><p>With recursion, each call solves a smaller case. It must reach a stopping case. For a sum through n, sum(3) asks for 3 + sum(2), then 2 + sum(1), ending at sum(0) = 0. Values return through the waiting calls.</p>
+<pre><code>go down     3 → 2 → 1 → 0
+come back   6 ← 3 ← 1 ← 0</code></pre><p>DFS uses this last-in, first-out order. Backtracking explores several choices and undoes each change. When different choices repeatedly ask for the same smaller answer, store it. This leads to dynamic programming.</p></div>
+<div class="panel"><h3>Say the contract and invariant</h3><p>The contract states what goes in and what must come out. An invariant is a fact that remains true at a chosen point in each loop. It explains why your next move is safe.</p>
+<p>For Two Sum, ask “Indices or values? Can I use an element twice?” Then say “Before each lookup, my dictionary contains only earlier indices.” Try [4, 4] with target 8. Returning [0, 1] respects both the contract and the invariant.</p>
+<p>Know the words <b>substring</b> (contiguous characters), <b>subsequence</b> (may skip items, preserves order), and <b>subset</b> (select any items). For “abc”, “ac” is a subsequence.</p></div>
+</div></section>
+<section id="contents"><h2>Study order</h2><p>Pick a topic to jump to its worked example. Each problem title opens the public LeetCode prompt. The examples use ordinary Python functions. On LeetCode, move the function body into the provided method and keep its signature. For linked lists and trees, the platform supplies the node classes.</p><div class="toc"><nav aria-label="First eight"><h3>First eight</h3><ol start="1"><li><a href="#lesson-01">Arrays &amp; hash maps</a><a class="problem-name" href="https://leetcode.com/problems/two-sum/">Two Sum ↗</a></li><li><a href="#lesson-02">Strings &amp; two pointers</a><a class="problem-name" href="https://leetcode.com/problems/valid-palindrome/">Valid Palindrome ↗</a></li><li><a href="#lesson-03">Sliding window</a><a class="problem-name" href="https://leetcode.com/problems/longest-substring-without-repeating-characters/">Longest Substring Without Repeating Characters ↗</a></li><li><a href="#lesson-04">Stacks</a><a class="problem-name" href="https://leetcode.com/problems/valid-parentheses/">Valid Parentheses ↗</a></li><li><a href="#lesson-05">Binary search</a><a class="problem-name" href="https://leetcode.com/problems/binary-search/">Binary Search ↗</a></li><li><a href="#lesson-06">Linked lists</a><a class="problem-name" href="https://leetcode.com/problems/reverse-linked-list/">Reverse Linked List ↗</a></li><li><a href="#lesson-07">Trees &amp; depth-first search</a><a class="problem-name" href="https://leetcode.com/problems/validate-binary-search-tree/">Validate Binary Search Tree ↗</a></li><li><a href="#lesson-08">Grids &amp; breadth-first search</a><a class="problem-name" href="https://leetcode.com/problems/number-of-islands/">Number of Islands ↗</a></li></ol></nav><nav aria-label="Extend the toolkit"><h3>Extend the toolkit</h3><ol start="9"><li><a href="#lesson-09">Sorting &amp; intervals</a><a class="problem-name" href="https://leetcode.com/problems/merge-intervals/">Merge Intervals ↗</a></li><li><a href="#lesson-10">Heaps &amp; top k</a><a class="problem-name" href="https://leetcode.com/problems/kth-largest-element-in-an-array/">Kth Largest Element in an Array ↗</a></li><li><a href="#lesson-11">Prefix sums &amp; counting</a><a class="problem-name" href="https://leetcode.com/problems/subarray-sum-equals-k/">Subarray Sum Equals K ↗</a></li><li><a href="#lesson-12">Directed graphs &amp; topological sort</a><a class="problem-name" href="https://leetcode.com/problems/course-schedule/">Course Schedule ↗</a></li><li><a href="#lesson-13">Weighted graphs &amp; Dijkstra</a><a class="problem-name" href="https://leetcode.com/problems/network-delay-time/">Network Delay Time ↗</a></li><li><a href="#lesson-14">Recursion &amp; backtracking</a><a class="problem-name" href="https://leetcode.com/problems/subsets/">Subsets ↗</a></li><li><a href="#lesson-15">Prefix trees (tries)</a><a class="problem-name" href="https://leetcode.com/problems/implement-trie-prefix-tree/">Implement Trie (Prefix Tree) ↗</a></li></ol></nav><nav aria-label="Decisions, bits &amp; geometry"><h3>Decisions, bits &amp; geometry</h3><ol start="16"><li><a href="#lesson-16">One-dimensional dynamic programming</a><a class="problem-name" href="https://leetcode.com/problems/house-robber/">House Robber ↗</a></li><li><a href="#lesson-17">Two-dimensional dynamic programming</a><a class="problem-name" href="https://leetcode.com/problems/unique-paths/">Unique Paths ↗</a></li><li><a href="#lesson-18">Greedy reachability</a><a class="problem-name" href="https://leetcode.com/problems/jump-game/">Jump Game ↗</a></li><li><a href="#lesson-19">Bit manipulation</a><a class="problem-name" href="https://leetcode.com/problems/single-number/">Single Number ↗</a></li><li><a href="#lesson-20">Matrix geometry</a><a class="problem-name" href="https://leetcode.com/problems/rotate-image/">Rotate Image ↗</a></li></ol></nav></div></section><section><header class="part"><div class="group">Lessons 01–08</div><h2>First eight</h2><p>Start with a lookup. Then practice moving boundaries, storing unfinished work, and traversing linked structures.</p></header>
+<article id="lesson-01" class="lesson">
+  <header><div class="meta">Lesson 01 / Easy</div><h3>Arrays &amp; hash maps</h3>
+  <p class="problem"><a href="https://leetcode.com/problems/two-sum/">Two Sum ↗</a> <small>LC 1</small></p></header>
+  <p class="needs"><b>Know first</b> Index, enumerate, dictionary lookup.</p>
+  <p class="task">Two prices sum to a target. Return their two different positions. Assume exactly one pair exists.</p>
+  <h4>Reason it out</h4><p>Trying every pair costs O(n²). For each price x, ask whether target − x has already appeared. Keep the index of each earlier price so a successful lookup gives both positions.</p>
+  <figure><figcaption>Trace by hand</figcaption><pre class="trace"><code>prices       [4, 7, 4]    target = 8
+index  price  need   earlier prices
+  0      4      4    {}            → save 4 at 0
+  1      7      1    {4: 0}        → save 7 at 1
+  2      4      4    {4: 0, 7: 1}  → return [0, 2]</code></pre></figure>
+  <details><summary>Python solution &amp; edge cases</summary>
+    <pre class="solution"><code>def two_sum(nums, target):
+    seen = {}
+    for i, value in enumerate(nums):
+        needed = target - value
+        if needed in seen:
+            return [seen[needed], i]
+        seen[value] = i</code></pre><h4>Run these checks</h4><pre class="checks"><code>assert two_sum([4, 7, 4], 8) == [0, 2]
+assert two_sum([-3, 5, 1], 2) == [0, 1]</code></pre>
+    <p><b>Cost</b> O(n) expected time · O(n) extra space. One expected constant-time lookup per price.</p><p><b>Pitfall</b> Inserting first can pair a price with itself. Also, index 0 is falsy in Python. Use membership to check whether a price exists.</p>
+  </details>
+  <details class="recall"><summary>Could you use less memory if the prices were sorted?</summary><p>Yes. Compare the sum of the two ends to the target. A small sum rules out the current left end, and a large sum rules out the right end. This takes O(n) time and O(1) extra space.</p></details>
+  <footer><a href="#contents">Back to study order ↑</a></footer>
+</article>
+
+<article id="lesson-02" class="lesson">
+  <header><div class="meta">Lesson 02 / Easy</div><h3>Strings &amp; two pointers</h3>
+  <p class="problem"><a href="https://leetcode.com/problems/valid-palindrome/">Valid Palindrome ↗</a> <small>LC 125</small></p></header>
+  <p class="needs"><b>Know first</b> String indexing, inclusive endpoints, isalnum() and lower().</p>
+  <p class="task">Read a phrase forward and backward, ignoring punctuation, spaces and letter case. Do the letters and digits match?</p>
+  <h4>Reason it out</h4><p>Building a cleaned string and reversing it is simple but allocates O(n) space. Instead, skip punctuation at each end. Once the two outer characters match, only the middle can still fail.</p>
+  <figure><figcaption>Trace by hand</figcaption><pre class="trace"><code>&#x27;A, ba&#x27;
+ ↑   ↑     A/a match → move both
+  ↑ ↑      comma and space skip from the left
+    b      middle character is enough → True</code></pre></figure>
+  <details><summary>Python solution &amp; edge cases</summary>
+    <pre class="solution"><code>def is_palindrome(s):
+    left, right = 0, len(s) - 1
+    while left &lt; right:
+        if not s[left].isalnum():
+            left += 1
+        elif not s[right].isalnum():
+            right -= 1
+        elif s[left].lower() != s[right].lower():
+            return False
+        else:
+            left += 1
+            right -= 1
+    return True</code></pre><h4>Run these checks</h4><pre class="checks"><code>assert is_palindrome(&quot;A, ba&quot;)
+assert is_palindrome(&quot;., &quot;)
+assert not is_palindrome(&quot;0P&quot;)</code></pre>
+    <p><b>Cost</b> O(n) time · O(1) extra space for the ASCII input. Each pointer crosses each position at most once.</p><p><b>Pitfall</b> Digits count. Test punctuation-only input and a pair like &#x27;0P&#x27;. Guard both pointers when skipping characters.</p>
+  </details>
+  <details class="recall"><summary>What does an empty cleaned string return?</summary><p>True. There is no conflicting pair. The loop also handles a single remaining character.</p></details>
+  <footer><a href="#contents">Back to study order ↑</a></footer>
+</article>
+
+<article id="lesson-03" class="lesson">
+  <header><div class="meta">Lesson 03 / Medium</div><h3>Sliding window</h3>
+  <p class="problem"><a href="https://leetcode.com/problems/longest-substring-without-repeating-characters/">Longest Substring Without Repeating Characters ↗</a> <small>LC 3</small></p></header>
+  <p class="needs"><b>Know first</b> Two pointers from lesson 2, set membership, contiguous slices.</p>
+  <p class="task">Find the length of the longest uninterrupted stretch of distinct characters.</p>
+  <h4>Reason it out</h4><p>Grow the right edge by one character. If that character is already in the window, remove characters from the left until its old copy leaves. After insertion the set contains exactly the current window, with one copy of each character.</p>
+  <figure><figcaption>Trace by hand</figcaption><pre class="trace"><code>text     a  b  b  a
+right    0  1  2  3
+window   a  ab b  ba
+best     1  2  2  2
+At index 2, evict a, then the earlier b.</code></pre></figure>
+  <details><summary>Python solution &amp; edge cases</summary>
+    <pre class="solution"><code>def longest_unique(s):
+    window = set()
+    left = best = 0
+    for right, char in enumerate(s):
+        while char in window:
+            window.remove(s[left])
+            left += 1
+        window.add(char)
+        best = max(best, right - left + 1)
+    return best</code></pre><h4>Run these checks</h4><pre class="checks"><code>assert longest_unique(&quot;abba&quot;) == 2
+assert longest_unique(&quot;abcc&quot;) == 3
+assert longest_unique(&quot;&quot;) == 0</code></pre>
+    <p><b>Cost</b> O(n) time on average · O(u) extra space for up to u distinct characters. Across all iterations, each character enters and leaves at most once.</p><p><b>Pitfall</b> A single if can leave the duplicate inside the window. A substring must be contiguous. Skipping the middle character changes the problem.</p>
+  </details>
+  <details class="recall"><summary>Why can the best length stay the same after a shrink?</summary><p>The required answer may end earlier. For &#x27;abcc&#x27;, the best is 3 even though the final window contains only the last &#x27;c&#x27;.</p></details>
+  <footer><a href="#contents">Back to study order ↑</a></footer>
+</article>
+
+<article id="lesson-04" class="lesson">
+  <header><div class="meta">Lesson 04 / Easy</div><h3>Stacks</h3>
+  <p class="problem"><a href="https://leetcode.com/problems/valid-parentheses/">Valid Parentheses ↗</a> <small>LC 20</small></p></header>
+  <p class="needs"><b>Know first</b> List append/pop, dictionary lookup. Input consists only of brackets.</p>
+  <p class="task">Does each closing bracket match the most recent unmatched opening bracket, with every opener eventually closed?</p>
+  <h4>Reason it out</h4><p>A stack stores unfinished openers. A closer must match the top because a nested pair closes before its parent. Counting bracket types loses that order.</p>
+  <figure><figcaption>Trace by hand</figcaption><pre class="trace"><code>input     (    [    ]    )
+stack     (    ([   (    ∅   → True
+crossed   (    [    )        → top is [, reject</code></pre></figure>
+  <details><summary>Python solution &amp; edge cases</summary>
+    <pre class="solution"><code>def valid_brackets(s):
+    matching = {&quot;)&quot;: &quot;(&quot;, &quot;]&quot;: &quot;[&quot;, &quot;}&quot;: &quot;{&quot;}
+    stack = []
+    for char in s:
+        if char in matching:
+            if not stack or stack.pop() != matching[char]:
+                return False
+        else:
+            stack.append(char)
+    return not stack</code></pre><h4>Run these checks</h4><pre class="checks"><code>assert valid_brackets(&quot;([])&quot;)
+assert not valid_brackets(&quot;([)]&quot;)
+assert not valid_brackets(&quot;)&quot;)
+assert not valid_brackets(&quot;(&quot;)</code></pre>
+    <p><b>Cost</b> O(n) time · O(n) extra space in the worst case of n opening brackets.</p><p><b>Pitfall</b> Check for an empty stack before popping. After the scan, an opener left on the stack means the input is incomplete.</p>
+  </details>
+  <details class="recall"><summary>Could one integer replace the stack?</summary><p>For a single bracket type, count openers minus closers, reject a negative prefix and require zero at the end. Multiple types also require the order.</p></details>
+  <footer><a href="#contents">Back to study order ↑</a></footer>
+</article>
+
+<article id="lesson-05" class="lesson">
+  <header><div class="meta">Lesson 05 / Easy</div><h3>Binary search</h3>
+  <p class="problem"><a href="https://leetcode.com/problems/binary-search/">Binary Search ↗</a> <small>LC 704</small></p></header>
+  <p class="needs"><b>Know first</b> Sorted order, list indexing, integer division //.</p>
+  <p class="task">Find the index of a target in an ascending array of distinct integers. Return −1 if absent.</p>
+  <h4>Reason it out</h4><p>A linear scan checks each element. In a sorted array, comparing against the middle rules out a whole half. Keep a closed interval [left, right] that still contains every possible answer.</p>
+  <figure><figcaption>Trace by hand</figcaption><pre class="trace"><code>values    2   5   9  12  17     target = 12
+indices   0   1   2   3   4
+          L       M       R      9 &lt; 12 → L = 3
+                      M   R     12 found at 3</code></pre></figure>
+  <details><summary>Python solution &amp; edge cases</summary>
+    <pre class="solution"><code>def binary_search(nums, target):
+    left, right = 0, len(nums) - 1
+    while left &lt;= right:
+        mid = (left + right) // 2
+        if nums[mid] == target:
+            return mid
+        if nums[mid] &lt; target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return -1</code></pre><h4>Run these checks</h4><pre class="checks"><code>assert binary_search([2, 5, 9, 12, 17], 12) == 3
+assert binary_search([2], 2) == 0
+assert binary_search([2], 1) == -1</code></pre>
+    <p><b>Cost</b> O(log n) time · O(1) extra space. Each miss at least halves the remaining candidates.</p><p><b>Pitfall</b> For closed bounds, use left &lt;= right. Move past mid on a miss or the last candidate can repeat forever.</p>
+  </details>
+  <details class="recall"><summary>How would you find the first value ≥ target?</summary><p>Use [left, right) with right = len(nums). While left &lt; right, set right = mid when nums[mid] &gt;= target, otherwise left = mid + 1. Return left. It can equal len(nums).</p></details>
+  <footer><a href="#contents">Back to study order ↑</a></footer>
+</article>
+
+<article id="lesson-06" class="lesson">
+  <header><div class="meta">Lesson 06 / Easy</div><h3>Linked lists</h3>
+  <p class="problem"><a href="https://leetcode.com/problems/reverse-linked-list/">Reverse Linked List ↗</a> <small>LC 206</small></p></header>
+  <p class="needs"><b>Know first</b> A node stores a value and a reference called next. None marks the end.</p>
+  <p class="task">Reverse the links of a singly linked list and return the new head.</p>
+  <h4>Reason it out</h4><p>Keep the reversed prefix in prev and the untouched suffix in head. Save the next node before turning the current link around. Each step transfers exactly one node from the suffix to the prefix.</p>
+  <figure><figcaption>Trace by hand</figcaption><pre class="trace"><code>start     ∅      4 → 7 → 9 → ∅
+step 1    ∅ ← 4      7 → 9 → ∅
+step 2    ∅ ← 4 ← 7      9 → ∅
+finish    ∅ ← 4 ← 7 ← 9       return 9</code></pre></figure>
+  <details><summary>Python solution &amp; edge cases</summary>
+    <pre class="solution"><code>def reverse_list(head):
+    prev = None
+    while head is not None:
+        following = head.next
+        head.next = prev
+        prev = head
+        head = following
+    return prev</code></pre><h4>Run these checks</h4><pre class="checks"><code>from types import SimpleNamespace
+tail = SimpleNamespace(val=9, next=None)
+middle = SimpleNamespace(val=7, next=tail)
+head = SimpleNamespace(val=4, next=middle)
+assert reverse_list(head) is tail
+assert tail.next is middle and middle.next is head
+assert head.next is None
+assert reverse_list(None) is None</code></pre>
+    <p><b>Cost</b> O(n) time · O(1) extra space. Recursive reversal also visits n nodes but uses a call frame per node.</p><p><b>Pitfall</b> Overwriting head.next too soon loses the rest of the list. Moving the local name head alone does not change a link.</p>
+  </details>
+  <details class="recall"><summary>How would you check for a cycle before reversing?</summary><p>Move a slow pointer one link and a fast pointer two links. Inside a cycle the faster pointer gains one position per turn until they meet. If fast reaches the end, there is no cycle.</p></details>
+  <footer><a href="#contents">Back to study order ↑</a></footer>
+</article>
+
+<article id="lesson-07" class="lesson">
+  <header><div class="meta">Lesson 07 / Medium</div><h3>Trees &amp; depth-first search</h3>
+  <p class="problem"><a href="https://leetcode.com/problems/validate-binary-search-tree/">Validate Binary Search Tree ↗</a> <small>LC 98</small></p></header>
+  <p class="needs"><b>Know first</b> A binary node has val, left and right. A subtree is a node and all its descendants. Review the stack in lesson 4.</p>
+  <p class="task">Every value on a node’s left must be smaller, and every value on its right larger. Decide whether the entire tree obeys this rule.</p>
+  <h4>Reason it out</h4><p>A depth-first search (DFS) follows one branch before returning to a sibling. Carry the tightest lower and upper bounds from all ancestors. The left child inherits a tighter upper bound, the right child a tighter lower bound.</p>
+  <figure><figcaption>Trace by hand</figcaption><pre class="trace"><code>5           allowed for 5: (−∞, ∞)
+ / \          allowed for 8: (5, ∞)
+2   8         allowed for 4: (5, 8)
+   /
+  4           violates the bound from 5 → False</code></pre></figure>
+  <details><summary>Python solution &amp; edge cases</summary>
+    <pre class="solution"><code>def valid_bst(root):
+    stack = [(root, float(&quot;-inf&quot;), float(&quot;inf&quot;))]
+    while stack:
+        node, low, high = stack.pop()
+        if node is None:
+            continue
+        if not low &lt; node.val &lt; high:
+            return False
+        stack.append((node.right, node.val, high))
+        stack.append((node.left, low, node.val))
+    return True</code></pre><h4>Run these checks</h4><pre class="checks"><code>from types import SimpleNamespace
+def node(value, left=None, right=None):
+    return SimpleNamespace(val=value, left=left, right=right)
+
+assert valid_bst(node(5, node(2), node(8)))
+assert not valid_bst(node(5, node(2), node(8, node(4))))
+assert not valid_bst(node(5, node(5)))</code></pre>
+    <p><b>Cost</b> O(n) time · O(h) extra space, where h is tree height. A skewed tree can have h = n.</p><p><b>Pitfall</b> A parent-only check accepts the 4 under 8. Equality also fails the strict BST rule. An explicit stack works for trees deeper than Python’s recursion limit.</p>
+  </details>
+  <details class="recall"><summary>Could an inorder walk validate the same tree?</summary><p>Yes. Visit left subtree, node, then right subtree. The values must increase strictly. Remembering just the previous value plus the traversal stack is enough.</p></details>
+  <footer><a href="#contents">Back to study order ↑</a></footer>
+</article>
+
+<article id="lesson-08" class="lesson">
+  <header><div class="meta">Lesson 08 / Medium</div><h3>Grids &amp; breadth-first search</h3>
+  <p class="problem"><a href="https://leetcode.com/problems/number-of-islands/">Number of Islands ↗</a> <small>LC 200</small></p></header>
+  <p class="needs"><b>Know first</b> A grid cell (r, c) is a graph vertex. Its up to four side-neighbors are connected by edges. A deque visits the oldest pending cell first.</p>
+  <p class="task">Count groups of land cells (&#x27;1&#x27;) connected up, down, left or right in a rectangular grid.</p>
+  <h4>Reason it out</h4><p>Scan for unseen land. Each fresh starting cell belongs to a new island. Use breadth-first search (BFS) to flood its whole component before resuming the scan. Mark cells as water as soon as they enter the queue.</p>
+  <figure><figcaption>Trace by hand</figcaption><pre class="trace"><code>land map      after first flood    after second flood
+1 1 0         0 0 0                0 0 0
+0 1 0    →    0 0 0           →    0 0 0
+0 0 1         0 0 1                0 0 0      count = 2</code></pre></figure>
+  <details><summary>Python solution &amp; edge cases</summary>
+    <pre class="solution"><code>from collections import deque
+
+def count_islands(grid):
+    if not grid or not grid[0]:
+        return 0
+    rows, cols = len(grid), len(grid[0])
+    count = 0
+    for r in range(rows):
+        for c in range(cols):
+            if grid[r][c] != &quot;1&quot;:
+                continue
+            count += 1
+            grid[r][c] = &quot;0&quot;
+            queue = deque([(r, c)])
+            while queue:
+                row, col = queue.popleft()
+                for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nr, nc = row + dr, col + dc
+                    if 0 &lt;= nr &lt; rows and 0 &lt;= nc &lt; cols and grid[nr][nc] == &quot;1&quot;:
+                        grid[nr][nc] = &quot;0&quot;
+                        queue.append((nr, nc))
+    return count</code></pre><h4>Run these checks</h4><pre class="checks"><code>assert count_islands([list(s) for s in (&quot;110&quot;, &quot;010&quot;, &quot;001&quot;)]) == 2
+assert count_islands([list(&quot;000&quot;)]) == 0
+assert count_islands([list(&quot;111&quot;)]) == 1</code></pre>
+    <p><b>Cost</b> O(R × C) time · O(R × C) worst-case queue space. Each land cell is enqueued once.</p><p><b>Pitfall</b> Diagonals do not connect. Python accepts negative indices, so check both lower bounds. This version consumes the input grid.</p>
+  </details>
+  <details class="recall"><summary>What if the interviewer needs the grid unchanged?</summary><p>Track discovered coordinates in a set. A DFS stack also counts components. A FIFO queue additionally visits cells in order of edge distance from the start.</p></details>
+  <footer><a href="#contents">Back to study order ↑</a></footer>
+</article>
+</section><section><header class="part"><div class="group">Lessons 09–15</div><h2>Extend the toolkit</h2><p>Use sorting, heaps and prefix counts to avoid repeated scans. Then combine familiar structures to solve graph and prefix problems.</p></header>
+<article id="lesson-09" class="lesson">
+  <header><div class="meta">Lesson 09 / Medium</div><h3>Sorting &amp; intervals</h3>
+  <p class="problem"><a href="https://leetcode.com/problems/merge-intervals/">Merge Intervals ↗</a> <small>LC 56</small></p></header>
+  <p class="needs"><b>Know first</b> A closed interval [a, b] includes both endpoints. sorted() orders pairs by start, then end.</p>
+  <p class="task">Combine overlapping closed intervals and return disjoint ranges that cover the same points.</p>
+  <h4>Reason it out</h4><p>Sort by start. Keep the output ranges in order. Only the last one can overlap the next interval because all earlier ones already end before the last one starts.</p>
+  <figure><figcaption>Trace by hand</figcaption><pre class="trace"><code>input      [5,7] [1,3] [3,6] [9,9]
+by start   [1,3] [3,6] [5,7] [9,9]
+output     [1,3] → [1,6] → [1,7] → [1,7] [9,9]</code></pre></figure>
+  <details><summary>Python solution &amp; edge cases</summary>
+    <pre class="solution"><code>def merge_intervals(intervals):
+    merged = []
+    for start, end in sorted(intervals):
+        if merged and start &lt;= merged[-1][1]:
+            merged[-1][1] = max(merged[-1][1], end)
+        else:
+            merged.append([start, end])
+    return merged</code></pre><h4>Run these checks</h4><pre class="checks"><code>assert merge_intervals([[5,7], [1,3], [3,6], [9,9]]) == [[1,7], [9,9]]
+assert merge_intervals([[1,9], [3,4]]) == [[1,9]]</code></pre>
+    <p><b>Cost</b> O(n log n) time · O(n) extra space for sorted input and up to n output ranges.</p><p><b>Pitfall</b> Use max for the merged end. Replacing the end with the next end shrinks [1,9] when [3,4] arrives.</p>
+  </details>
+  <details class="recall"><summary>Would the touching ranges [1,3) and [3,5) overlap?</summary><p>They share no point. If the specification combines only overlaps, start a new range at equality for half-open intervals. In this exercise both endpoints are inclusive.</p></details>
+  <footer><a href="#contents">Back to study order ↑</a></footer>
+</article>
+
+<article id="lesson-10" class="lesson">
+  <header><div class="meta">Lesson 10 / Medium</div><h3>Heaps &amp; top k</h3>
+  <p class="problem"><a href="https://leetcode.com/problems/kth-largest-element-in-an-array/">Kth Largest Element in an Array ↗</a> <small>LC 215</small></p></header>
+  <p class="needs"><b>Know first</b> A min-heap is a collection whose smallest member is at index 0. Insertion and removing the minimum each cost O(log k) for k items.</p>
+  <p class="task">Return the kth largest value, counting duplicates. For example, the second largest of [8,8,1] is 8.</p>
+  <h4>Reason it out</h4><p>Keep the largest k values seen. The smallest retained value is the cutoff. When a larger score arrives, replace that cutoff. This also works when scores arrive one at a time.</p>
+  <figure><figcaption>Trace by hand</figcaption><pre class="trace"><code>scores, k = 2     retained (shown sorted)    cutoff
+4, 7              [4, 7]                     4
+then 3            [4, 7]                     4
+then 6            [6, 7]                     6 → answer</code></pre></figure>
+  <details><summary>Python solution &amp; edge cases</summary>
+    <pre class="solution"><code>from heapq import heappush, heapreplace
+
+def kth_largest(nums, k):
+    heap = []
+    for value in nums:
+        if len(heap) &lt; k:
+            heappush(heap, value)
+        elif value &gt; heap[0]:
+            heapreplace(heap, value)
+    return heap[0]</code></pre><h4>Run these checks</h4><pre class="checks"><code>assert kth_largest([4, 7, 3, 6], 2) == 6
+assert kth_largest([8, 8, 1], 2) == 8
+assert kth_largest([-5, -2], 1) == -2</code></pre>
+    <p><b>Cost</b> O(n log(k+1)) time · O(k) extra space. Reading every value still takes O(n) when k = 1.</p><p><b>Pitfall</b> A heap’s internal list is only partially ordered. heap[0] is the cutoff. Converting the scores to a set loses repeated ranks.</p>
+  </details>
+  <details class="recall"><summary>Why choose this for the best ten search results?</summary><p>An incoming score can be discarded immediately or replace the weakest retained score. Sorting all n scores is simpler for a small batch, but stores the batch and takes O(n log n) time.</p></details>
+  <footer><a href="#contents">Back to study order ↑</a></footer>
+</article>
+
+<article id="lesson-11" class="lesson">
+  <header><div class="meta">Lesson 11 / Medium</div><h3>Prefix sums &amp; counting</h3>
+  <p class="problem"><a href="https://leetcode.com/problems/subarray-sum-equals-k/">Subarray Sum Equals K ↗</a> <small>LC 560</small></p></header>
+  <p class="needs"><b>Know first</b> Lesson 1’s complement lookup. A prefix sum is the sum of everything before a boundary.</p>
+  <p class="task">Count contiguous, nonempty slices summing to k. Values can be negative or zero.</p>
+  <h4>Reason it out</h4><p>If the running total is s, any earlier boundary with total s − k starts a slice ending here with sum k. Count how often each earlier total occurred. Seed the empty prefix so slices starting at index 0 count.</p>
+  <figure><figcaption>Trace by hand</figcaption><pre class="trace"><code>array            1   −1    1     k = 1
+prefix totals  0   1    0    1
+at first 1     one earlier 0   → +1
+at final 1     two earlier 0s  → +2     total 3</code></pre></figure>
+  <details><summary>Python solution &amp; edge cases</summary>
+    <pre class="solution"><code>def count_subarrays(nums, k):
+    frequency = {0: 1}
+    total = count = 0
+    for value in nums:
+        total += value
+        count += frequency.get(total - k, 0)
+        frequency[total] = frequency.get(total, 0) + 1
+    return count</code></pre><h4>Run these checks</h4><pre class="checks"><code>assert count_subarrays([1, -1, 1], 1) == 3
+assert count_subarrays([0, 0], 0) == 3
+assert count_subarrays([4, -1], 3) == 1</code></pre>
+    <p><b>Cost</b> O(n) expected time · O(n) extra space for distinct prefix totals.</p><p><b>Pitfall</b> Look up the frequency before incrementing it. When k = 0 the opposite order counts an empty slice. A set loses multiple boundaries with the same total.</p>
+  </details>
+  <details class="recall"><summary>Why can’t we shrink a window whenever the sum exceeds k?</summary><p>Negative numbers can bring the sum down later. For [4, −1] and k = 3, dropping the 4 early throws away the only answer.</p></details>
+  <footer><a href="#contents">Back to study order ↑</a></footer>
+</article>
+
+<article id="lesson-12" class="lesson">
+  <header><div class="meta">Lesson 12 / Medium</div><h3>Directed graphs &amp; topological sort</h3>
+  <p class="problem"><a href="https://leetcode.com/problems/course-schedule/">Course Schedule ↗</a> <small>LC 207</small></p></header>
+  <p class="needs"><b>Know first</b> Lesson 8’s queue. An adjacency list stores outgoing neighbors. Indegree counts incoming edges.</p>
+  <p class="task">Can you complete every course? Each pair [course, prerequisite] requires the prerequisite to finish first.</p>
+  <h4>Reason it out</h4><p>Draw edges from prerequisite to course. Queue all courses with zero remaining prerequisites. Finishing one removes one dependency from each outgoing neighbor. If some courses remain but none is ready, a dependency cycle blocks completion.</p>
+  <figure><figcaption>Trace by hand</figcaption><pre class="trace"><code>edges       0 → 2 ← 1       2 → 3
+indegree    0:0  1:0  2:2  3:1
+ready       [0,1] → [1] → [2] → [3] → []
+finished    4 of 4 → True</code></pre></figure>
+  <details><summary>Python solution &amp; edge cases</summary>
+    <pre class="solution"><code>from collections import deque
+
+def can_finish(n, prerequisites):
+    outgoing = [[] for _ in range(n)]
+    degree = [0] * n
+    for course, pre in prerequisites:
+        outgoing[pre].append(course)
+        degree[course] += 1
+    ready = deque(i for i in range(n) if degree[i] == 0)
+    finished = 0
+    while ready:
+        course = ready.popleft()
+        finished += 1
+        for neighbor in outgoing[course]:
+            degree[neighbor] -= 1
+            if degree[neighbor] == 0:
+                ready.append(neighbor)
+    return finished == n</code></pre><h4>Run these checks</h4><pre class="checks"><code>assert can_finish(4, [[2,0], [2,1], [3,2]])
+assert not can_finish(3, [[0,1], [1,0]])
+assert can_finish(2, [])</code></pre>
+    <p><b>Cost</b> O(V + E) time · O(V + E) extra space for V courses and E prerequisite pairs.</p><p><b>Pitfall</b> Start from all zero-indegree courses, including isolated vertices. A directed cycle in one component blocks a full schedule even when another component finishes.</p>
+  </details>
+  <details class="recall"><summary>How would you return one valid order?</summary><p>Append each course to a list as it leaves the queue. Return that list only if it contains all courses. Several orders can be correct when multiple courses are ready.</p></details>
+  <footer><a href="#contents">Back to study order ↑</a></footer>
+</article>
+
+<article id="lesson-13" class="lesson">
+  <header><div class="meta">Lesson 13 / Medium</div><h3>Weighted graphs &amp; Dijkstra</h3>
+  <p class="problem"><a href="https://leetcode.com/problems/network-delay-time/">Network Delay Time ↗</a> <small>LC 743</small></p></header>
+  <p class="needs"><b>Know first</b> Lesson 10’s heap and lesson 12’s outgoing edges. Edge weights are nonnegative travel times.</p>
+  <p class="task">A signal starts at k. Find the earliest time by which every node has received it, or −1 if any node is unreachable.</p>
+  <h4>Reason it out</h4><p>Keep the fastest known arrival for each node. A min-heap gives the next earliest arrival. When the cheapest live entry is popped, no unfinished route can improve it because every additional edge costs at least zero. The last recipient determines the answer.</p>
+  <figure><figcaption>Trace by hand</figcaption><pre class="trace"><code>1 ──8──→ 2       start at 1
+│        ↑       direct offer for 2 = 8
+1        2       via 3 gives 1 + 2 = 3
+↓        │       final times: 1→0, 3→1, 2→3
+3 ───────┘       all reached by time 3</code></pre></figure>
+  <details><summary>Python solution &amp; edge cases</summary>
+    <pre class="solution"><code>from heapq import heappop, heappush
+
+def network_delay(times, n, k):
+    outgoing = [[] for _ in range(n + 1)]
+    for start, end, weight in times:
+        outgoing[start].append((end, weight))
+    dist = [float(&quot;inf&quot;)] * (n + 1)
+    dist[k] = 0
+    heap = [(0, k)]
+    while heap:
+        time, node = heappop(heap)
+        if time != dist[node]:
+            continue
+        for neighbor, weight in outgoing[node]:
+            arrival = time + weight
+            if arrival &lt; dist[neighbor]:
+                dist[neighbor] = arrival
+                heappush(heap, (arrival, neighbor))
+    last = max(dist[1:])
+    return -1 if last == float(&quot;inf&quot;) else last</code></pre><h4>Run these checks</h4><pre class="checks"><code>assert network_delay([[1,2,8], [1,3,1], [3,2,2]], 3, 1) == 3
+assert network_delay([[1,2,2]], 3, 1) == -1
+assert network_delay([[2,1,0]], 2, 2) == 0</code></pre>
+    <p><b>Cost</b> O((V + E) log(V + E + 1)) time · O(V + E) extra space, including queued offers and the adjacency list.</p><p><b>Pitfall</b> A vertex can enter the heap more than once. Skip an offer if its time is stale. Marking it finished at first discovery would lock in the direct time 8.</p>
+  </details>
+  <details class="recall"><summary>When is ordinary BFS enough?</summary><p>When each edge costs the same, fewer edges gives a cheapest path. With differing costs a longer route can arrive first. Negative weights require a different method such as Bellman–Ford.</p></details>
+  <footer><a href="#contents">Back to study order ↑</a></footer>
+</article>
+
+<article id="lesson-14" class="lesson">
+  <header><div class="meta">Lesson 14 / Medium</div><h3>Recursion &amp; backtracking</h3>
+  <p class="problem"><a href="https://leetcode.com/problems/subsets/">Subsets ↗</a> <small>LC 78</small></p></header>
+  <p class="needs"><b>Know first</b> A function call remembers its own index. A list passed through nested calls remains the same mutable object.</p>
+  <p class="task">Generate every subset of a list of distinct values, including the empty subset. Any order is valid.</p>
+  <h4>Reason it out</h4><p>For each value make two choices, skip it or take it. At the end of a path save a copy. Undo a take when returning so the caller sees exactly the choices it had before.</p>
+  <figure><figcaption>Trace by hand</figcaption><pre class="trace"><code>[]
+                    skip 2  take 2
+                     []       [2]
+skip/take 5       []  [5]   [2]  [2,5]
+Each leaf represents one distinct decision sequence.</code></pre></figure>
+  <details><summary>Python solution &amp; edge cases</summary>
+    <pre class="solution"><code>def subsets(nums):
+    result = []
+    path = []
+
+    def visit(i):
+        if i == len(nums):
+            result.append(path.copy())
+            return
+        visit(i + 1)
+        path.append(nums[i])
+        visit(i + 1)
+        path.pop()
+
+    visit(0)
+    return result</code></pre><h4>Run these checks</h4><pre class="checks"><code>assert sorted(subsets([2, 5])) == [[], [2], [2, 5], [5]]
+assert subsets([]) == [[]]</code></pre>
+    <p><b>Cost</b> O(n × 2ⁿ) time including copying · O(n) working space plus O(n × 2ⁿ) output for n ≥ 1.</p><p><b>Pitfall</b> Appending path itself stores the same list repeatedly. Forgetting pop also leaks choices into sibling branches.</p>
+  </details>
+  <details class="recall"><summary>Why can’t a much faster algorithm return all the same lists?</summary><p>There are 2ⁿ subsets and each of the n items appears in half of them. Returning explicit lists requires writing n × 2ⁿ⁻¹ item references for n ≥ 1.</p></details>
+  <footer><a href="#contents">Back to study order ↑</a></footer>
+</article>
+
+<article id="lesson-15" class="lesson">
+  <header><div class="meta">Lesson 15 / Medium</div><h3>Prefix trees (tries)</h3>
+  <p class="problem"><a href="https://leetcode.com/problems/implement-trie-prefix-tree/">Implement Trie (Prefix Tree) ↗</a> <small>LC 208</small></p></header>
+  <p class="needs"><b>Know first</b> Dictionary lookup from lesson 1. Each edge in this tree represents one character.</p>
+  <p class="task">Support inserting lowercase words, looking up whole words and testing whether any stored word begins with a prefix.</p>
+  <h4>Reason it out</h4><p>Share the work for common prefixes. Each node owns a dictionary of children and one flag saying a whole word ends here. A walk that reaches a node proves the prefix exists. Read the flag for a full-word query.</p>
+  <figure><figcaption>Trace by hand</figcaption><pre class="trace"><code>insert &#x27;cart&#x27; and &#x27;car&#x27;
+root → c → a → r● → t●       ● = a word ends here
+&#x27;ca&#x27;    reaches a  → prefix True, word False
+&#x27;car&#x27;   reaches r● → prefix True, word True</code></pre></figure>
+  <details><summary>Python solution &amp; edge cases</summary>
+    <pre class="solution"><code>class Trie:
+    def __init__(self):
+        self.children = {}
+        self.word_end = False
+
+    def insert(self, word):
+        node = self
+        for char in word:
+            if char not in node.children:
+                node.children[char] = Trie()
+            node = node.children[char]
+        node.word_end = True
+
+    def _walk(self, text):
+        node = self
+        for char in text:
+            if char not in node.children:
+                return None
+            node = node.children[char]
+        return node
+
+    def search(self, word):
+        node = self._walk(word)
+        return node is not None and node.word_end
+
+    def startsWith(self, prefix):
+        return self._walk(prefix) is not None</code></pre><h4>Run these checks</h4><pre class="checks"><code>trie = Trie()
+trie.insert(&quot;cart&quot;)
+assert trie.startsWith(&quot;ca&quot;) and not trie.search(&quot;ca&quot;)
+assert not trie.search(&quot;car&quot;)
+trie.insert(&quot;car&quot;)
+assert trie.search(&quot;car&quot;) and trie.search(&quot;cart&quot;)
+assert not trie.startsWith(&quot;cat&quot;)</code></pre>
+    <p><b>Cost</b> O(L) expected time per operation for L characters · up to O(L) new nodes per insertion. Storage is proportional to the number of distinct prefixes.</p><p><b>Pitfall</b> A leaf-only word test loses &#x27;car&#x27; after inserting &#x27;cart&#x27;. Searching for a missing edge should leave the trie unchanged.</p>
+  </details>
+  <details class="recall"><summary>Would a set of full words work?</summary><p>Yes for exact membership. Prefix lookup would require scanning words or maintaining a second index. A trie also lets autocomplete descend from the final prefix node.</p></details>
+  <footer><a href="#contents">Back to study order ↑</a></footer>
+</article>
+</section><section><header class="part"><div class="group">Lessons 16–20</div><h2>Decisions, bits &amp; geometry</h2><p>Compare dynamic programming with a greedy boundary, then finish with bit cancellation and coordinate transforms.</p></header>
+<article id="lesson-16" class="lesson">
+  <header><div class="meta">Lesson 16 / Medium</div><h3>One-dimensional dynamic programming</h3>
+  <p class="problem"><a href="https://leetcode.com/problems/house-robber/">House Robber ↗</a> <small>LC 198</small></p></header>
+  <p class="needs"><b>Know first</b> Lesson 14’s take/skip choices. A DP state is an answer to a smaller version of the same question.</p>
+  <p class="task">Choose nonadjacent houses from a line of nonnegative amounts. Maximize the total.</p>
+  <h4>Reason it out</h4><p>Let best(i) mean the most money from the first i houses. Skip the last house and keep best(i−1), or take it and add its money to best(i−2). These exhaust the possibilities. Start both saved totals at zero for the empty prefix.</p>
+  <figure><figcaption>Trace by hand</figcaption><pre class="trace"><code>houses          4   5   4
+best prefix   0 → 4 → 5 → 8
+last step     skip: 5     take: 4 + 4 = 8
+Taking the biggest house first would give only 5.</code></pre></figure>
+  <details><summary>Python solution &amp; edge cases</summary>
+    <pre class="solution"><code>def rob(nums):
+    two_back = one_back = 0
+    for money in nums:
+        current = max(one_back, two_back + money)
+        two_back, one_back = one_back, current
+    return one_back</code></pre><h4>Run these checks</h4><pre class="checks"><code>assert rob([4, 5, 4]) == 8
+assert rob([6]) == 6
+assert rob([0, 0]) == 0</code></pre>
+    <p><b>Cost</b> O(n) time · O(1) extra space. The recurrence reads only the previous two totals.</p><p><b>Pitfall</b> Both updates need the old values. Assigning prev first and then using its new value in the sum can allow adjacent houses.</p>
+  </details>
+  <details class="recall"><summary>How could you return the chosen houses as well?</summary><p>Keep a table of prefix answers. Walk backward. If a skip preserves the optimum, skip that house. Otherwise record it and move back two positions.</p></details>
+  <footer><a href="#contents">Back to study order ↑</a></footer>
+</article>
+
+<article id="lesson-17" class="lesson">
+  <header><div class="meta">Lesson 17 / Medium</div><h3>Two-dimensional dynamic programming</h3>
+  <p class="problem"><a href="https://leetcode.com/problems/unique-paths/">Unique Paths ↗</a> <small>LC 62</small></p></header>
+  <p class="needs"><b>Know first</b> Grid coordinates from lesson 8 and the state/recurrence idea from lesson 16. Rows and columns both have positive size.</p>
+  <p class="task">Count routes from the upper left to lower right of a grid. Each move goes either one cell down or one cell right.</p>
+  <h4>Reason it out</h4><p>Let ways[r,c] count routes ending at a cell. Its last move came from above or from the left. Those two groups cannot overlap, so add their counts. The first row and column each have one route. Reuse one row since later cells need only their upper and left neighbors.</p>
+  <figure><figcaption>Trace by hand</figcaption><pre class="trace"><code>c0 c1 c2 c3
+row 0     1  1  1  1
+row 1     1  2  3  4
+row 2     1  3  6 10    final cell = 4 above + 6 left</code></pre></figure>
+  <details><summary>Python solution &amp; edge cases</summary>
+    <pre class="solution"><code>def unique_paths(rows, cols):
+    ways = [1] * cols
+    for r in range(1, rows):
+        for c in range(1, cols):
+            ways[c] += ways[c - 1]
+    return ways[-1]</code></pre><h4>Run these checks</h4><pre class="checks"><code>assert unique_paths(3, 4) == 10
+assert unique_paths(1, 5) == 1
+assert unique_paths(5, 1) == 1</code></pre>
+    <p><b>Cost</b> O(rows × cols) time · O(cols) extra space. A full table is easier to draw and gives the same answer.</p><p><b>Pitfall</b> Iterate columns from left to right. ways[c−1] must already belong to the current row, while ways[c] still belongs to the previous row.</p>
+  </details>
+  <details class="recall"><summary>What changes if there are blocked cells?</summary><p>Use a zero-filled row and seed the starting column with one. Scan the whole grid. Set a blocked cell to zero. For other cells with c &gt; 0 add ways[c−1]. This also handles a blocked start.</p></details>
+  <footer><a href="#contents">Back to study order ↑</a></footer>
+</article>
+
+<article id="lesson-18" class="lesson">
+  <header><div class="meta">Lesson 18 / Medium</div><h3>Greedy reachability</h3>
+  <p class="problem"><a href="https://leetcode.com/problems/jump-game/">Jump Game ↗</a> <small>LC 55</small></p></header>
+  <p class="needs"><b>Know first</b> Index arithmetic and a running maximum. Each value gives a maximum forward jump, so all shorter jumps are legal.</p>
+  <p class="task">Starting at index 0 of a nonempty list, can you reach the last index?</p>
+  <h4>Reason it out</h4><p>All reachable indices form a continuous prefix starting at zero. From any reachable i, jumps extend that prefix up to i + nums[i]. Keep the largest such endpoint. A gap beyond it can never be crossed by an earlier position.</p>
+  <figure><figcaption>Trace by hand</figcaption><pre class="trace"><code>index       0  1  2  3  4
+jump        2  2  0  1  0
+farthest    2  3  3  4  4     last index reachable
+[1,0,2]     1  1  ×           index 2 is out of reach</code></pre></figure>
+  <details><summary>Python solution &amp; edge cases</summary>
+    <pre class="solution"><code>def can_jump(nums):
+    farthest = 0
+    for i, jump in enumerate(nums):
+        if i &gt; farthest:
+            return False
+        farthest = max(farthest, i + jump)
+    return True</code></pre><h4>Run these checks</h4><pre class="checks"><code>assert can_jump([2, 2, 0, 1, 0])
+assert not can_jump([1, 0, 2])
+assert can_jump([0])</code></pre>
+    <p><b>Cost</b> O(n) time · O(1) extra space. One boundary replaces a table of reachable positions.</p><p><b>Pitfall</b> A zero can be jumped over. Always check that i is reachable before using its jump length.</p>
+  </details>
+  <details class="recall"><summary>Does success also tell you the fewest jumps?</summary><p>It only proves reachability. For minimum jumps, track the end of the current jump range and the farthest end seen inside it. Crossing a range boundary consumes one more jump.</p></details>
+  <footer><a href="#contents">Back to study order ↑</a></footer>
+</article>
+
+<article id="lesson-19" class="lesson">
+  <header><div class="meta">Lesson 19 / Easy</div><h3>Bit manipulation</h3>
+  <p class="problem"><a href="https://leetcode.com/problems/single-number/">Single Number ↗</a> <small>LC 136</small></p></header>
+  <p class="needs"><b>Know first</b> An integer is a sequence of bits. XOR (^) sets a bit to 1 exactly when its two input bits differ.</p>
+  <p class="task">Exactly one integer appears once. Every other integer appears twice. Recover the single value using constant extra space.</p>
+  <h4>Reason it out</h4><p>XOR with zero preserves a number. XOR with itself gives zero. Since order and grouping do not affect XOR, all complete pairs cancel even when separated.</p>
+  <figure><figcaption>Trace by hand</figcaption><pre class="trace"><code>values        6      3      6
+binary       110    011    110
+running XOR  110 →  101 →  011    3 survives</code></pre></figure>
+  <details><summary>Python solution &amp; edge cases</summary>
+    <pre class="solution"><code>def single_number(nums):
+    result = 0
+    for value in nums:
+        result ^= value
+    return result</code></pre><h4>Run these checks</h4><pre class="checks"><code>assert single_number([6, 3, 6]) == 3
+assert single_number([-2, 0, 0]) == -2
+assert single_number([0]) == 0</code></pre>
+    <p><b>Cost</b> O(n) time · O(1) extra space for fixed-width input integers. Python’s cost per XOR grows with integer bit length.</p><p><b>Pitfall</b> ^ is XOR in Python. ** raises to a power. Pair cancellation relies on the promised occurrence counts.</p>
+  </details>
+  <details class="recall"><summary>What if two different numbers each occur once?</summary><p>The XOR of all values becomes a ^ b. Pick a set bit in that result. Split values by that bit and XOR within each group. The two unique values land in different groups and the pairs still cancel.</p></details>
+  <footer><a href="#contents">Back to study order ↑</a></footer>
+</article>
+
+<article id="lesson-20" class="lesson">
+  <header><div class="meta">Lesson 20 / Medium</div><h3>Matrix geometry</h3>
+  <p class="problem"><a href="https://leetcode.com/problems/rotate-image/">Rotate Image ↗</a> <small>LC 48</small></p></header>
+  <p class="needs"><b>Know first</b> Square n × n grid, row and column indices, swapping two values in Python.</p>
+  <p class="task">Rotate an n × n image clockwise by 90° in place. The caller should see the change in the same matrix.</p>
+  <h4>Reason it out</h4><p>Follow one cell at (r,c). A transpose sends it to (c,r). Reversing each row then sends it to (c,n−1−r), exactly the clockwise destination. Transpose only across one triangle so each pair swaps once.</p>
+  <figure><figcaption>Trace by hand</figcaption><pre class="trace"><code>original       transpose      reverse rows
+1 2 3          1 4 7          7 4 1
+4 5 6    →     2 5 8    →     8 5 2
+7 8 9          3 6 9          9 6 3
+Top-left 1 ends at top-right.</code></pre></figure>
+  <details><summary>Python solution &amp; edge cases</summary>
+    <pre class="solution"><code>def rotate(matrix):
+    n = len(matrix)
+    for r in range(n):
+        for c in range(r + 1, n):
+            matrix[r][c], matrix[c][r] = matrix[c][r], matrix[r][c]
+    for row in matrix:
+        row.reverse()</code></pre><h4>Run these checks</h4><pre class="checks"><code>matrix = [[1,2,3], [4,5,6], [7,8,9]]
+rotate(matrix)
+assert matrix == [[7,4,1], [8,5,2], [9,6,3]]
+matrix = [[1]]
+rotate(matrix)
+assert matrix == [[1]]</code></pre>
+    <p><b>Cost</b> O(n²) time · O(1) extra space. The swaps and row reversals operate on the input.</p><p><b>Pitfall</b> Swapping the full square undoes every exchange. matrix = rotated only rebinds a local name. Verify the direction with a corner cell.</p>
+  </details>
+  <details class="recall"><summary>How would you rotate counterclockwise?</summary><p>After transposing, reverse the order of the rows. The destination becomes (n−1−c,r). A fresh output grid also makes either coordinate mapping easy when extra space is allowed.</p></details>
+  <footer><a href="#contents">Back to study order ↑</a></footer>
+</article>
+</section><section class="end" id="rehearsal"><h2>Final interview rehearsal</h2>
+<p>Close the solutions. For each prompt, name the state you would keep, give its cost, and trace one input that breaks a tempting shortcut.</p>
+<details><summary>Scores arrive continuously. How do you keep the best five?</summary><p>A size-five min-heap keeps the weakest retained score at its root. On a larger arrival, replace the root. Ask how ties should be handled and whether the five must be displayed in order. Lesson 10 covers the cutoff.</p></details>
+<details><summary>A job waits on two other jobs. Can all jobs run?</summary><p>Use a directed graph and count unfinished prerequisites. Start each job when that count becomes zero. If the queue drains before all jobs finish, look for a cycle. Try a two-job cycle plus one independent job. See lesson 12.</p></details>
+<details><summary>A range of daily changes must total three. Is a moving window safe?</summary><p>Clarify whether changes can be negative. The range [4, −1] totals three even though the first value exceeds three. Count earlier prefix totals equal to current total minus three. See lesson 11.</p></details>
+<p><b>When you get stuck</b>, give a correct brute-force solution and name its repeated operation. Ask what would let you avoid doing that operation twice. Before finishing, test the smallest allowed input and a case with duplicates, a boundary, or a disconnected component.</p>
+<h3>How the problems were selected</h3><p>The study order is an editorial choice for a short Python interview sprint. It uses one representative per pattern or combination of patterns across the main interview categories. The public curricula establish common preparation topics. They do not establish company-specific question frequency. The full set is a foundation for coding rounds, with specialist topics such as segment trees and network flow outside this sprint.</p>
+<p><a href="https://leetcode.com/studyplan/top-interview-150/">LeetCode Top Interview 150</a> · <a href="https://neetcode.io/practice/practice/neetcode150">NeetCode 150 topic list</a></p>
+<a href="#contents">Return to the study order ↑</a></section></main>
+<script>
+let previouslyClosed = [];
+window.addEventListener("beforeprint", () => {
+  previouslyClosed = Array.from(document.querySelectorAll("details:not([open])"));
+  for (const section of previouslyClosed) section.open = true;
+});
+window.addEventListener("afterprint", () => {
+  for (const section of previouslyClosed) section.open = false;
+  previouslyClosed = [];
+});
+</script></body></html>
